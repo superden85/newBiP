@@ -43,7 +43,7 @@ def lin_4(input_dim=3072, hidden_dim=100, num_classes=10):
     return model
 
 
-def mnist_model(conv_layer, linear_layer, init_type, **kwargs):
+def mnist_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
     assert init_type == "kaiming_normal", "only supporting kaiming_normal init"
     model = nn.Sequential(
         conv_layer(1, 16, 4, stride=2, padding=1),
