@@ -218,7 +218,6 @@ def main():
             f"Epoch {epoch}, val-method {args.val_method}, validation accuracy {prec1}, best_prec {best_prec1}"
         )
     
-    #log the number of popup scores of the model
 
     #calculate the number of popup scores of the model
     mask_dim = 0

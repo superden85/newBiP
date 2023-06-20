@@ -23,7 +23,7 @@ warmup_lr: 0.1
 
 #hyperparameters of penalty term
 lambd : 100
-alpha : 100
+alpha : 0.01
 
 
 # ->->->->-> Eval <-<-<-<-<-
