@@ -158,7 +158,10 @@ def train(
             loss = criterion(output, train_targets)
 
             #add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
-            loss += args.lambd * (1 - torch.exp(-args.alpha * model.mask)).sum()
+            #we have to loop over all the modules and their popup_scores attribute
+            for (name, vec) in model.named_modules():
+                if hasattr(vec, 'popup_scores'):
+                    loss += args.lambd * (1 - torch.exp(-args.alpha * vec.popup_scores)).sum()
             loss.backward()
 
             #define g = grad(loss) w.r.t. to the mask only 

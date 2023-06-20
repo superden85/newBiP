@@ -49,7 +49,7 @@ def parse_args():
 
     #Lambda argument for penalized BiP
     parser.add_argument(
-        "--lambda",
+        "--lambd",
         type=float,
         default=0.0,
         help="Lambda for penalized BiP",
