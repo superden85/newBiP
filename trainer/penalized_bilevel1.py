@@ -177,6 +177,10 @@ def train(
             #minimize the linearization of the loss around the current mask
 
             c = mask_grad_vec.cpu().numpy()
+
+            #print if c has inf, nan or None values, boolean values:
+            print(np.isnan(c).any(), np.isinf(c).any(), c is None)
+
             lp = linprog(c, bounds=(0, 1))
             m_star = torch.from_numpy(lp.x).to(device)
 
