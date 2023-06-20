@@ -62,6 +62,7 @@ def lin_4(input_dim=3072, hidden_dim=100, num_classes=10):
 class MnistModel(nn.Module):
 
     def __init__(self, conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
+        super(MnistModel, self).__init__()
         self.conv1 = conv_layer(1, 16, 4, stride=2, padding=1)
         self.conv2 = conv_layer(16, 32, 4, stride=2, padding=1)
         self.fc1 = linear_layer(32 * 7 * 7, 100)
