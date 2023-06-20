@@ -1,12 +1,12 @@
 # ->->->->-> Primary <-<-<-<-<-
-arch: "resnet20s"
+arch: "mnist_model"
 result_dir: "./trained_models"
-exp_name: "CIFAR10_resnet20s_Unstructured_BiP_K0.1"
+exp_name: "MNIST_mnist_model_Penalized_Bilevel1"
 exp_mode: "prune"
 normalize: True
 scaled_score_init: True
 
-k: 0.1
+#k: 0.1 no k here but a lambda and alpha
 
 # ->->->->-> Train <-<-<-<-<-
 trainer: "penalized_bilevel1"

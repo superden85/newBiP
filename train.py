@@ -217,7 +217,11 @@ def main():
         logger.info(
             f"Epoch {epoch}, val-method {args.val_method}, validation accuracy {prec1}, best_prec {best_prec1}"
         )
-
+    
+    #log the final L0 norm and L1 norm of the model
+    logger.info(f"Final L0 norm of the model: {model.get_l0_norm()}")
+    logger.info(f"Final L1 norm of the model: {model.get_l1_norm()}")
+    
     save_checkpoint(
         {
             "epoch": args.epochs,

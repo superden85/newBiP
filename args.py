@@ -47,6 +47,14 @@ def parse_args():
         help="Fraction of weight variables kept in subnet",
     )
 
+    #Lambda argument for penalized BiP
+    parser.add_argument(
+        "--lambda",
+        type=float,
+        default=0.0,
+        help="Lambda for penalized BiP",
+    )
+
     parser.add_argument(
         "--scaled-score-init",
         action="store_true",
