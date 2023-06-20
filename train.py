@@ -218,10 +218,25 @@ def main():
             f"Epoch {epoch}, val-method {args.val_method}, validation accuracy {prec1}, best_prec {best_prec1}"
         )
     
-    #log the final L0 norm and L1 norm of the model
+    #log the number of popup scores of the model
+
+    #calculate the number of popup scores of the model
+    mask_dim = 0
+    for (name, vec) in self.named_modules():
+                if hasattr(vec, "popup_scores"):
+                    attr = getattr(vec, "popup_scores")
+                    if attr is not None:
+                        mask_dim += attr.numel()
+    
+    #log the number of popup scores of the model
+    logger.info(f"Dimension of the mask: {mask_dim}")
+
+    #log the final L0 norm and L1 norm of the model a
     logger.info(f"Final L0 norm of the model: {model.get_l0_norm()}")
     logger.info(f"Final L1 norm of the model: {model.get_l1_norm()}")
-    
+
+    #
+
     save_checkpoint(
         {
             "epoch": args.epochs,
