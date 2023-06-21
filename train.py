@@ -161,6 +161,16 @@ def main():
         if args.evaluate:
             return
 
+    #calculate the number of popup scores of the model
+    mask_dim = 0
+    for (name, vec) in self.named_modules():
+                if hasattr(vec, "popup_scores"):
+                    attr = getattr(vec, "popup_scores")
+                    if attr is not None:
+                        mask_dim += attr.numel()
+    print(f"Number of popup scores: {mask_dim}")
+
+    
     # Start training
     for epoch in range(start_epoch, args.epochs + args.warmup_epochs):
         start = time.time()
@@ -217,32 +227,21 @@ def main():
         logger.info(
             f"Epoch {epoch}, val-method {args.val_method}, validation accuracy {prec1}, best_prec {best_prec1}"
         )
+        
 
-        #print the dimension, l0 and l1 norms of the mask
-        #log the number of popup scores of the model
-        print(f"Dimension of the mask: {mask_dim}")
-
-        #log the final L0 norm and L1 norm of the model a
-        print(f"Final L0 norm of the model: {model.get_l0_norm()}")
-        print(f"Final L1 norm of the model: {model.get_l1_norm()}")
+        l0, l1 = 0, 0
+        for (name, vec) in model.named_modules():
+            if hasattr(vec, "popup_scores"):
+                attr = getattr(vec, "popup_scores")
+                if attr is not None:
+                    l0 += torch.sum(attr == 0).item()
+                    l1 += torch.sum(attr).item()
+                    
+        #print the l0 and l1 norms of the mask
+        print(f"L0 norm of the mask: {l0}")
+        print(f"L1 norm of the mask: {l1}")
     
 
-    #calculate the number of popup scores of the model
-    mask_dim = 0
-    for (name, vec) in self.named_modules():
-                if hasattr(vec, "popup_scores"):
-                    attr = getattr(vec, "popup_scores")
-                    if attr is not None:
-                        mask_dim += attr.numel()
-    
-    #log the number of popup scores of the model
-    logger.info(f"Dimension of the mask: {mask_dim}")
-
-    #log the final L0 norm and L1 norm of the model a
-    logger.info(f"Final L0 norm of the model: {model.get_l0_norm()}")
-    logger.info(f"Final L1 norm of the model: {model.get_l1_norm()}")
-
-    #
 
     save_checkpoint(
         {
