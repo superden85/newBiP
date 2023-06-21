@@ -174,21 +174,36 @@ def train(
             
             mask_grad_vec = grad2vec(model.parameters())
 
-            #minimize the linearization of the loss around the current mask
 
-            c = mask_grad_vec.cpu().numpy()
+            #the linear minimization problem is very simple we don't need to use a solver
+            #mstar is equal to 1 if c is negative, 0 otherwise
+            #mask_grad_vec will contain None values:
 
-            #print if c has inf, nan or None values, boolean values:
-            print(np.isnan(c).any(), np.isinf(c).any(), c is None)
-
-            lp = linprog(c, bounds=(0, 1))
-            m_star = torch.from_numpy(lp.x).to(device)
+            m_star = torch.zeros_like(mask_grad_vec)
+            m_star[mask_grad_vec < 0] = 1
 
             #compute the step size
-            step_size = 2 / (i + 2)
+            #step_size = 2 / (i + 2)
 
-            #update the mask
-            model.mask.data = (1 - step_size) * model.mask.data + step_size * m_star
+            #update the mask with the step size
+
+            def set_grad_to_vec(vec, parameters):
+
+                if not isinstance(vec, torch.Tensor):
+                    raise TypeError('expected torch.Tensor, but got: {}'
+                                    .format(torch.typename(vec)))
+
+                pointer = 0
+                for param in parameters:
+                    num_param = param.numel()
+
+                    param.grad.copy_(vec[pointer:pointer + num_param].view_as(param).data)
+
+                    pointer += num_param
+
+
+            set_grad_to_vec(mstar, model.parameters())
+            mask_optimizer.step()
 
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
