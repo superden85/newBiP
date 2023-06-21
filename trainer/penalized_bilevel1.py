@@ -202,7 +202,7 @@ def train(
                     pointer += num_param
 
 
-            set_grad_to_vec(mstar, model.parameters())
+            set_grad_to_vec(m_star, model.parameters())
             mask_optimizer.step()
 
             output = model(train_images)
