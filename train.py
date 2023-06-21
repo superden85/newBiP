@@ -234,8 +234,8 @@ def main():
             if hasattr(vec, "popup_scores"):
                 attr = getattr(vec, "popup_scores")
                 if attr is not None:
-                    l0 += torch.sum(attr == 0).item()
-                    l1 += torch.sum(attr).item()
+                    l0 += torch.sum(attr != 0).item()
+                    l1 += abs(torch.sum(attr).item())
                     
         #print the l0 and l1 norms of the mask
         print(f"L0 norm of the mask: {l0}")
