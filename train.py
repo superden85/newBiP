@@ -163,14 +163,14 @@ def main():
 
     #calculate the number of popup scores of the model
     mask_dim = 0
-    for (name, vec) in self.named_modules():
+    for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
                     attr = getattr(vec, "popup_scores")
                     if attr is not None:
                         mask_dim += attr.numel()
     print(f"Number of popup scores: {mask_dim}")
 
-    
+
     # Start training
     for epoch in range(start_epoch, args.epochs + args.warmup_epochs):
         start = time.time()
