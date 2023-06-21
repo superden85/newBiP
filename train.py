@@ -190,7 +190,7 @@ def main():
         prec1, _ = val(model, device, test_loader, criterion, args, epoch)
 
         # remember best prec@1 and save checkpoint
-        if args.trainer == "bilevel":
+        if args.trainer == "bilevel" or args.trainer == "penalized_bilevel1":
             optimizer = optimizer[0]
         is_best = prec1 > best_prec1
         best_prec1 = max(prec1, best_prec1)
@@ -217,6 +217,14 @@ def main():
         logger.info(
             f"Epoch {epoch}, val-method {args.val_method}, validation accuracy {prec1}, best_prec {best_prec1}"
         )
+
+        #print the dimension, l0 and l1 norms of the mask
+        #log the number of popup scores of the model
+        print(f"Dimension of the mask: {mask_dim}")
+
+        #log the final L0 norm and L1 norm of the model a
+        print(f"Final L0 norm of the model: {model.get_l0_norm()}")
+        print(f"Final L1 norm of the model: {model.get_l1_norm()}")
     
 
     #calculate the number of popup scores of the model
