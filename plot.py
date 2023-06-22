@@ -6,7 +6,7 @@ from torch import load
 
 path = 'trained_models/MNIST_mnist_model_PenBip_L100/prune/latest_exp/checkpoint/model_best.pth.tar'
 
-checkpoint = torch.load(path)
+checkpoint = load(path)
 model = checkpoint['state_dict']
 
 
