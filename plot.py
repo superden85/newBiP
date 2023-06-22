@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 from torch import load
 from numpy import linspace, zeros
+import os
 
 #given a checkpoint, we want to plot the repartition function of the popup scores 
 #and save the image of the plot in images/plot.png
@@ -41,8 +42,12 @@ for i in range(n_points):
 
 plt.plot(x, probs)
 
-#save the plot
-plt.savefig('images/plot.png')
+# Save the plot
+save_directory = 'plots'
+os.makedirs(save_directory, exist_ok=True)  # Create the directory if it doesn't exist
+
+save_path = os.path.join(save_directory, 'plot.png')
+plt.savefig(save_path)
 
 print('Plot saved.')
 
