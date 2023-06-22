@@ -221,14 +221,14 @@ def main():
         clone_results_to_latest_subdir(
             result_sub_dir, os.path.join(result_main_dir, "latest_exp")
         )
-        
-        #detailed log of the sparsity of the model
+
+        #detailed log of the sparsity of the mask:        
         if args.trainer == "penalized_bilevel1":
             l0, l1, linf = 0, 0, 0
             l001, l01, l05 = 0, 0, 0
             for (name, vec) in model.named_modules():
-                if hasattr(vec, "mask"):
-                    attr = getattr(vec, "mask")
+                if hasattr(vec, "popup_scores"):
+                    attr = getattr(vec, "popup_scores")
                     if attr is not None:
                         l0 += torch.sum(attr != 0).item()
                         l1 += abs(torch.sum(attr).item())
@@ -239,8 +239,7 @@ def main():
             logger.info(
                 f"Epoch {epoch}, l0 norm : {l0}, l1 norm : {l1}, linf norm: {linf}, \n Below 0.01: {l001}, Below 0.1: {l01}, Below 0.5: {l05}"
             )
-
-            print(f"Epoch {epoch}, l0 norm : {l0}, l1 norm : {l1}, linf norm: {linf}, \n Below 0.01: {l001}, Below 0.1: {l01}, Below 0.5: {l05}")
+            #print(f"Epoch {epoch}, l0 norm : {l0}, l1 norm : {l1}, linf norm: {linf}, \n Below 0.01: {l001}, Below 0.1: {l01}, Below 0.5: {l05}")
                     
 
         logger.info("This epoch duration :{}".format(time.time() - start))
