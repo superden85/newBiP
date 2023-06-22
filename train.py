@@ -161,14 +161,14 @@ def main():
         if args.evaluate:
             return
 
-    #calculate the number of popup scores of the model
+    """ calculate the number of popup scores of the model
     mask_dim = 0
     for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
                     attr = getattr(vec, "popup_scores")
                     if attr is not None:
                         mask_dim += attr.numel()
-    print(f"Number of popup scores: {mask_dim}")
+    print(f"Number of popup scores: {mask_dim}") """
 
 
     # Start training
@@ -222,14 +222,9 @@ def main():
             result_sub_dir, os.path.join(result_main_dir, "latest_exp")
         )
 
-        logger.info("This epoch duration :{}".format(time.time() - start))
-
-        logger.info(
-            f"Epoch {epoch}, val-method {args.val_method}, validation accuracy {prec1}, best_prec {best_prec1}"
-        )
-        
-
+        #detailed log of the sparsity of the mask:
         l0, l1, linf = 0, 0, 0
+        l001, l01, l05 = 0, 0, 0, 0
         for (name, vec) in model.named_modules():
             if hasattr(vec, "popup_scores"):
                 attr = getattr(vec, "popup_scores")
@@ -237,10 +232,33 @@ def main():
                     l0 += torch.sum(attr != 0).item()
                     l1 += abs(torch.sum(attr).item())
                     linf = max(linf, abs(torch.max(attr).item()))
+                    l001 += torch.sum(abs(attr) < 0.01).item()
+                    l01 += torch.sum(abs(attr) < 0.1).item()
+                    l05 += torch.sum(abs(attr) < 0.5).item()
+        
+        if args.trainer == "penalized_bilevel1":
+            l0, l1, linf = 0, 0, 0
+            l001, l01, l05 = 0, 0, 0, 0
+            for (name, vec) in model.named_modules():
+                if hasattr(vec, "mask"):
+                    attr = getattr(vec, "mask")
+                    if attr is not None:
+                        l0 += torch.sum(attr != 0).item()
+                        l1 += abs(torch.sum(attr).item())
+                        linf = max(linf, abs(torch.max(attr).item()))
+                        l001 += torch.sum(abs(attr) < 0.01).item()
+                        l01 += torch.sum(abs(attr) < 0.1).item()
+                        l05 += torch.sum(abs(attr) < 0.5).item()
+            logger.info(
+                f"Epoch {epoch}, l0 norm : {l0}, l1 norm : {l1}, linf norm: {linf}, \n Below 0.01: {l001}, Below 0.1: {l01}, Below 0.5: {l05}"
+            )
                     
-        #print the l0 and l1 norms of the mask
-        print(f"L0 norm of the mask: {l0}")
-        print(f"L1 norm of the mask: {l1}")
+
+        logger.info("This epoch duration :{}".format(time.time() - start))
+
+        logger.info(
+            f"Epoch {epoch}, val-method {args.val_method}, validation accuracy {prec1}, best_prec {best_prec1}"
+        )
     
 
 

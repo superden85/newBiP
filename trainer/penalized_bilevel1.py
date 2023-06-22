@@ -174,10 +174,8 @@ def train(
             
             mask_grad_vec = grad2vec(model.parameters())
 
-
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
-            #mask_grad_vec will contain None values:
 
             m_star = torch.zeros_like(mask_grad_vec)
             m_star[mask_grad_vec < 0] = 1
