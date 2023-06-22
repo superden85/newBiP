@@ -231,7 +231,7 @@ def main():
                     attr = getattr(vec, "popup_scores")
                     if attr is not None:
                         l0 += torch.sum(attr != 0).item()
-                        l1 += abs(torch.sum(attr).item())
+                        l1 += (torch.sum(torch.abs(attr)).item())
                         linf = max(linf, abs(torch.max(attr).item()))
                         l001 += torch.sum(abs(attr) < 0.01).item()
                         l01 += torch.sum(abs(attr) < 0.1).item()
