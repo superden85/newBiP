@@ -4,7 +4,7 @@ from torch import load
 #given a checkpoint, we want to plot the repartition function of the popup scores 
 #and save the image of the plot in images/plot.png
 
-path = 'trained_models/MNIST_mnist_model_PenBip_L100/prune/latest_exp/checkpoint/model_best.pth.tar'
+path = 'trained_models/MNIST_mnist_model_PenBip1_L100/prune/latest_exp/checkpoint/model_best.pth.tar'
 
 checkpoint = load(path)
 model = checkpoint['state_dict']
