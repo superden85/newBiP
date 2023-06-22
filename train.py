@@ -238,7 +238,7 @@ def main():
         
         if args.trainer == "penalized_bilevel1":
             l0, l1, linf = 0, 0, 0
-            l001, l01, l05 = 0, 0, 0, 0
+            l001, l01, l05 = 0, 0, 0
             for (name, vec) in model.named_modules():
                 if hasattr(vec, "mask"):
                     attr = getattr(vec, "mask")
@@ -252,6 +252,8 @@ def main():
             logger.info(
                 f"Epoch {epoch}, l0 norm : {l0}, l1 norm : {l1}, linf norm: {linf}, \n Below 0.01: {l001}, Below 0.1: {l01}, Below 0.5: {l05}"
             )
+            
+            print(f"Epoch {epoch}, l0 norm : {l0}, l1 norm : {l1}, linf norm: {linf}, \n Below 0.01: {l001}, Below 0.1: {l01}, Below 0.5: {l05}")
                     
 
         logger.info("This epoch duration :{}".format(time.time() - start))
