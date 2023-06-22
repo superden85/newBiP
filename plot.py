@@ -7,20 +7,26 @@ from torch import load
 path = 'trained_models/MNIST_mnist_model_PenBip1_L100/prune/latest_exp/checkpoint/model_best.pth.tar'
 
 checkpoint = load(path)
-model = checkpoint['state_dict']
-
-print(model.keys())
+model_dict = checkpoint['state_dict']
 
 print('Model loaded.')
 
 
 #retrieve the popup scores as a list
 mask_list = []
-for (name, vec) in model.named_modules():
-    if hasattr(vec, "popup_scores"):
-        attr = getattr(vec, "popup_scores")
-        if attr is not None:
-            scores.append(attr.view(-1).detach())
+for (name, module) in model_dict.items():
+    if 'popup_scores' in name:
+        print(type(module))
+        #retrieve the params of the layer
+        attr = getattr(module, 'popup_scores')
+        #add the params to the list
+        mask_list.extend(attr.view(-1).detach().tolist())
+
+
+#print the lenght of the list 
+
+print(f'Number of popup scores: {len(mask_list)}')
+
 
 #plot the repartition function of the popup scores
 mask_list.sort()
