@@ -55,6 +55,14 @@ def parse_args():
         help="Lambda for penalized BiP",
     )
 
+    #alpha argument for penalized BiP
+    parser.add_argument(
+        "--alpha",
+        type=float,
+        default=0.0,
+        help="Alpha for penalized BiP",
+    )
+
     parser.add_argument(
         "--scaled-score-init",
         action="store_true",
