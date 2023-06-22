@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from torch import load
+from numpy import linspace, zeros
 
 #given a checkpoint, we want to plot the repartition function of the popup scores 
 #and save the image of the plot in images/plot.png
@@ -30,8 +31,8 @@ mask_list.sort()
 n_points = 1000
 mask_length = len(mask_list)
 
-x = np.linspace(0, mask_list[-1], n_points)
-probs = np.zeros(n_points)
+x = linspace(0, mask_list[-1], n_points)
+probs = zeros(n_points)
 pointer = 0
 for i in range(n_points):
     while pointer < mask_length and mask_list[pointer] < x[i]:
