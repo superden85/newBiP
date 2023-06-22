@@ -9,6 +9,10 @@ path = 'trained_models/MNIST_mnist_model_PenBip1_L100/prune/latest_exp/checkpoin
 checkpoint = load(path)
 model = checkpoint['state_dict']
 
+print(model.keys())
+
+print('Model loaded.')
+
 
 #retrieve the popup scores as a list
 mask_list = []
@@ -35,6 +39,8 @@ plt.plot(x, probs)
 
 #save the plot
 plt.savefig('images/plot.png')
+
+print('Plot saved.')
 
 
 
