@@ -14,16 +14,13 @@ print('Model loaded.')
 
 #retrieve the popup scores as a list
 mask_list = []
-for (name, module) in model_dict.items():
+for (name, tensor) in model_dict.items():
     if 'popup_scores' in name:
-        print(type(module))
         #retrieve the params of the layer
-        attr = getattr(module, 'popup_scores')
-        #add the params to the list
-        mask_list.extend(attr.view(-1).detach().tolist())
+        mask_list.extend(tensor.view(-1).detach().tolist())
 
 
-#print the lenght of the list 
+#print the length of the list 
 
 print(f'Number of popup scores: {len(mask_list)}')
 
