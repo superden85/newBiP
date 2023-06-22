@@ -229,13 +229,14 @@ def main():
         )
         
 
-        l0, l1 = 0, 0
+        l0, l1, linf = 0, 0, 0
         for (name, vec) in model.named_modules():
             if hasattr(vec, "popup_scores"):
                 attr = getattr(vec, "popup_scores")
                 if attr is not None:
                     l0 += torch.sum(attr != 0).item()
                     l1 += abs(torch.sum(attr).item())
+                    linf = max(linf, abs(torch.max(attr).item()))
                     
         #print the l0 and l1 norms of the mask
         print(f"L0 norm of the mask: {l0}")
