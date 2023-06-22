@@ -1,5 +1,5 @@
-import numpy as np
 import matplotlib.pyplot as plt
+from torch import load
 
 #given a checkpoint, we want to plot the repartition function of the popup scores 
 #and save the image of the plot in images/plot.png
@@ -32,6 +32,8 @@ for i in range(n_points):
     probs[i] = pointer / mask_length
 
 plt.plot(x, probs)
+
+#save the plot
 plt.savefig('images/plot.png')
 
 
