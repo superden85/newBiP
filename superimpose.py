@@ -19,7 +19,7 @@ def main():
 
     checkpoint_label = []
     # Open the text file for reading
-    with open('path', 'r') as file:
+    with open(file_path, 'r') as file:
         # Read the file line by line
         for line in file:
             # Split the line into two words
