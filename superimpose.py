@@ -27,16 +27,16 @@ def main():
         # Read the file line by line
         for line in file:
             # Split the line into two words
-            checkpoint, label = line.strip().split(' ')
+            checkpoint_path, label = line.strip().split(' ')
 
-            checkpoint_label.append((checkpoint, label))
+            checkpoint_label.append((checkpoint_path, label))
 
     
     common_length = None
     
     #plot the repartition functions of each mask on the same plot
-    for (checkpoint, label) in checkpoint_label:
-        checkpoint = load(path)
+    for (checkpoint_path, label) in checkpoint_label:
+        checkpoint = load(checkpoint_path)
         model_dict = checkpoint['state_dict']
 
         mask_list = []
