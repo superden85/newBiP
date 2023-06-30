@@ -1,0 +1,5 @@
+trained_models/MNIST_mnist_model_PenBip1_L10/prune/latest_exp/checkpoint/model_best.pth.tar lambda=10
+trained_models/MNIST_mnist_model_PenBip1_L100/prune/latest_exp/checkpoint/model_best.pth.tar lambda=100
+trained_models/MNIST_mnist_model_PenBip1_L1000/prune/latest_exp/checkpoint/model_best.pth.tar lambda=1000
+trained_models/MNIST_mnist_model_PenBip1_L10000/prune/latest_exp/checkpoint/model_best.pth.tar lambda=10000
+trained_models/MNIST_mnist_model_PenBip1_L100000/prune/latest_exp/checkpoint/model_best.pth.tar lambda=100000

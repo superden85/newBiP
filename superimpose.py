@@ -54,8 +54,9 @@ def main():
                 pointer += 1
             probs[i] = pointer / mask_length
 
-        plt.plot(x, probs)
+        plt.plot(x, probs, label=label)
 
+    plt.legend()
     # Save the plot
     save_directory = 'plots'
     os.makedirs(save_directory, exist_ok=True)  # Create the directory if it doesn't exist
