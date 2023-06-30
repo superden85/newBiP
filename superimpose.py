@@ -33,7 +33,7 @@ def main():
 
     
     common_length = None
-    x = linspace(0, mask_list[-1], n_points)
+    
     #plot the repartition functions of each mask on the same plot
     for (checkpoint, label) in checkpoint_label:
         checkpoint = load(path)
@@ -50,14 +50,14 @@ def main():
             raise ValueError(f'Length of mask for {checkpoint} is {mask_length} while it should be {common_length}.')
         mask_list.sort()
         
-
+        x = linspace(0, mask_list[-1], n_points)
         probs = zeros(n_points)
         pointer = 0
         for i in range(n_points):
             while pointer < mask_length and mask_list[pointer] < x[i]:
                 pointer += 1
             probs[i] = pointer / mask_length
-
+        
         plt.plot(x, probs, label=label)
 
     plt.legend()
