@@ -5,7 +5,7 @@ def main():
     parser = argparse.ArgumentParser(description='Superimpose the repartition functions of the popup scores')
 
     # Add command line arguments
-    parser.add_argument('--path', type=str, help='Text file with all the paths to the checkpoints')
+    parser.add_argument('--file', type=str, help='Text file with all the paths to the checkpoints')
     parser.add_argument('--n', type=int, help='Number of points to plot', default=1000)
     #parser.add_argument('--save-path', type=str, help='Path to the image of the plot')
 
@@ -14,8 +14,8 @@ def main():
     args = parser.parse_args()
 
     # Access the argument values
-    file_path = args.arg1
-    n_points = args.arg2
+    file_path = args.file
+    n_points = args.n
 
     checkpoint_label = []
     # Open the text file for reading
