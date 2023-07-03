@@ -177,7 +177,7 @@ def main():
         lr_policy(epoch)
         mask_lr_policy(epoch)
 
-        if args.trainer == "bilevel" or args.trainer == "penalized_bilevel1":
+        if args.trainer == "bilevel" or 'penalized_bilevel' in args.trainer:
             optimizer = (optimizer, mask_optimizer)
 
         # train
