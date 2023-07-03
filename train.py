@@ -200,7 +200,7 @@ def main():
         prec1, _ = val(model, device, test_loader, criterion, args, epoch)
 
         # remember best prec@1 and save checkpoint
-        if args.trainer == "bilevel" or args.trainer == "penalized_bilevel1":
+        if args.trainer == "bilevel" or 'penalized_bilevel' in args.trainer:
             optimizer = optimizer[0]
         is_best = prec1 > best_prec1
         best_prec1 = max(prec1, best_prec1)
@@ -223,7 +223,7 @@ def main():
         )
 
         #detailed log of the sparsity of the mask:        
-        if args.trainer == "penalized_bilevel1":
+        if 'penalized_bilevel' in args.trainer:
             l0, l1, linf = 0, 0, 0
             l001, l01, l05 = 0, 0, 0
             for (name, vec) in model.named_modules():
