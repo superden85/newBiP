@@ -64,6 +64,10 @@ def main():
     #plot the accuracy of the BiP model with a dashed line
     plt.axhline(y=0.9926, color='r', linestyle='--', label='BiP with k = 0.1')
 
+    # Add labels to the axes
+    plt.xlabel('log10 of the hyperparameter')
+    plt.ylabel('Validation accuracy')
+
     # Add a title
     plt.title('Validation accuracy of the models')
     plt.legend()
