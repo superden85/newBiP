@@ -55,14 +55,15 @@ def main():
             params.append(log(float(param)))
             accuracies.append(max_accuracy/100)
         
-    #plot the accuracies
-    plt.plot(params, accuracies)
+    #plot the accuracies without line joining the points
+    plt.plot(params, accuracies, 'o')
 
     #plot the accuracy of the dense model with a dashed line
     plt.axhline(y=0.992, color='b', linestyle='--', label='Dense model')
 
     # Add a title
     plt.title('Validation accuracy of the models')
+    plt.legend()
 
     # Save the plot
     save_directory = 'plots'
