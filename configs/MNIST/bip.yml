@@ -9,7 +9,7 @@ scaled_score_init: True
 k: 0.1 
 
 # ->->->->-> Train <-<-<-<-<-
-trainer: "bip"
+trainer: "bilevel"
 layer_type: "unstructured"
 epochs: 100
 optimizer: "sgd"
