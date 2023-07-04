@@ -20,7 +20,7 @@ def main():
     # Access the argument values
     file_path = args.file
 
-    checkpoint_label = []
+    log_path_param = []
     # Open the text file for reading
     with open(file_path, 'r') as file:
         # Read the file line by line
