@@ -1,7 +1,7 @@
 import argparse
 import matplotlib.pyplot as plt
 from torch import load
-from numpy import linspace, zeros, log
+from numpy import linspace, zeros, log10
 import os
 import re
 
@@ -52,14 +52,17 @@ def main():
             max_accuracy = max([float(match) for match in matches])
 
             #add the accuracy to the list
-            params.append(log(float(param)))
+            params.append(float(param))
             accuracies.append(max_accuracy/100)
         
     #plot the accuracies without line joining the points
-    plt.plot(params, accuracies, 'o')
+    plt.plot(log10(params), accuracies, 'o')
 
     #plot the accuracy of the dense model with a dashed line
-    plt.axhline(y=0.992, color='b', linestyle='--', label='Dense model')
+    plt.axhline(y=0.9924, color='b', linestyle='--', label='Dense model')
+
+    #plot the accuracy of the BiP model with a dashed line
+    plt.axhline(y=0.9926, color='r', linestyle='--', label='BiP with k = 0.1')
 
     # Add a title
     plt.title('Validation accuracy of the models')
