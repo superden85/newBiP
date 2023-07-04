@@ -3,4 +3,3 @@ trained_models/MNIST_mnist_model_PenBip2_L10/prune/latest_exp/setup.log 10
 trained_models/MNIST_mnist_model_PenBip2_L100/prune/latest_exp/setup.log 100
 trained_models/MNIST_mnist_model_PenBip2_L1000/prune/latest_exp/setup.log 1000
 trained_models/MNIST_mnist_model_PenBip2_L10000/prune/latest_exp/setup.log 10000
-
