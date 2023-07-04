@@ -50,7 +50,7 @@ def main():
             raise ValueError(f'Length of mask for {checkpoint} is {mask_length} while it should be {common_length}.')
         mask_list.sort()
         
-        x = linspace(0, mask_list[-1], n_points)
+        """ x = linspace(0, mask_list[-1], n_points)
         probs = zeros(n_points)
         pointer = 0
         for i in range(n_points):
@@ -58,8 +58,18 @@ def main():
                 pointer += 1
             probs[i] = pointer / mask_length
         
-        plt.plot(x, probs, label=label)
-
+        plt.plot(x, probs, label=label) """
+        exps = [-9, -8, -7, -6, -5, -4, -3, -2, -1]
+        percs = []
+        for exp in exps:
+            #compute how many points are below 10^exp
+            pointer = 0
+            while pointer < mask_length and mask_list[pointer] < 10**exp:
+                pointer += 1
+            percs.append(pointer / mask_length)
+            
+        plt.plot(exps, percs, label=label)
+    
     plt.legend()
     # Save the plot
     save_directory = 'plots'

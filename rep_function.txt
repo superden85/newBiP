@@ -1,8 +1,1 @@
-trained_models/MNIST_mnist_model_PenBip1_L0001A1/prune/latest_exp/checkpoint/model_best.pth.tar lambda=0.001
-trained_models/MNIST_mnist_model_PenBip1_L001A1/prune/latest_exp/checkpoint/model_best.pth.tar lambda=0.01
-trained_models/MNIST_mnist_model_PenBip1_L01A1/prune/latest_exp/checkpoint/model_best.pth.tar lambda=0.1
 trained_models/MNIST_mnist_model_PenBip1_L1A1/prune/latest_exp/checkpoint/model_best.pth.tar lambda=1
-trained_models/MNIST_mnist_model_PenBip1_L10A1/prune/latest_exp/checkpoint/model_best.pth.tar lambda=10
-trained_models/MNIST_mnist_model_PenBip1_L100A1/prune/latest_exp/checkpoint/model_best.pth.tar lambda=100
-trained_models/MNIST_mnist_model_PenBip1_L1000A1/prune/latest_exp/checkpoint/model_best.pth.tar lambda=1000
-trained_models/MNIST_mnist_model_PenBip1_L10000A1/prune/latest_exp/checkpoint/model_best.pth.tar lambda=10000
