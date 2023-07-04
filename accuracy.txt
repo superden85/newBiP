@@ -1,5 +1,8 @@
-trained_models/MNIST_mnist_model_PenBip2_L1/prune/latest_exp/setup.log 1
-trained_models/MNIST_mnist_model_PenBip2_L10/prune/latest_exp/setup.log 10
-trained_models/MNIST_mnist_model_PenBip2_L100/prune/latest_exp/setup.log 100
-trained_models/MNIST_mnist_model_PenBip2_L1000/prune/latest_exp/setup.log 1000
-trained_models/MNIST_mnist_model_PenBip2_L10000/prune/latest_exp/setup.log 10000
+trained_models/MNIST_mnist_model_PenBip1_L0001A1/prune/latest_exp/setup.log 0.001
+trained_models/MNIST_mnist_model_PenBip1_L001A1/prune/latest_exp/setup.log 0.01
+trained_models/MNIST_mnist_model_PenBip1_L01A1/prune/latest_exp/setup.log 0.1
+trained_models/MNIST_mnist_model_PenBip1_L1A1/prune/latest_exp/setup.log 1
+trained_models/MNIST_mnist_model_PenBip1_L10A1/prune/latest_exp/setup.log 10
+trained_models/MNIST_mnist_model_PenBip1_L100A1/prune/latest_exp/setup.log 100
+trained_models/MNIST_mnist_model_PenBip1_L1000A1/prune/latest_exp/setup.log 1000
+trained_models/MNIST_mnist_model_PenBip1_L10000A1/prune/latest_exp/setup.log 10000
