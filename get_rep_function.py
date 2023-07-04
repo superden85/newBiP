@@ -65,7 +65,7 @@ def main():
     save_directory = 'plots'
     os.makedirs(save_directory, exist_ok=True)  # Create the directory if it doesn't exist
 
-    save_path = os.path.join(save_directory, 'plot.png')
+    save_path = os.path.join(save_directory, 'rep_function.png')
     plt.savefig(save_path)
 
     print('Plot saved.')

@@ -76,11 +76,11 @@ def train(
             output = model(val_images)
             loss = criterion(output, val_targets)
 
-            #add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
+            """ #add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
             #we have to loop over all the modules and their popup_scores attribute
             for (name, vec) in model.named_modules():
                 if hasattr(vec, 'popup_scores'):
-                    loss += args.lambd * (1 - torch.exp(-args.alpha * vec.popup_scores)).sum() 
+                    loss += args.lambd * (1 - torch.exp(-args.alpha * vec.popup_scores)).sum()  """
             
             optimizer.zero_grad()
             loss.backward()

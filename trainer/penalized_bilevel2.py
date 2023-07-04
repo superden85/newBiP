@@ -76,11 +76,11 @@ def train(
             output = model(val_images)
             loss = criterion(output, val_targets)
 
-            #add a regularization term, defined as the (m * (1 - m)) T vector full of ones
+            """ #add a regularization term, defined as the (m * (1 - m)) T vector full of ones
             #we have to loop over all the modules and their popup_scores attribute
             for (name, vec) in model.named_modules():
                 if hasattr(vec, 'popup_scores'):
-                    loss += args.lambd * (vec.popup_scores * (1 - vec.popup_scores)).sum()
+                    loss += args.lambd * (vec.popup_scores * (1 - vec.popup_scores)).sum() """
             
             optimizer.zero_grad()
             loss.backward()
