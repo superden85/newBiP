@@ -30,8 +30,8 @@ def main():
 
             log_path_param.append((log_path, param))
 
-    
-    common_length = None
+    params = []
+    accuracies = []
 
     #sort the log_path_param list by param
     log_path_param.sort(key=lambda x: x[1])
