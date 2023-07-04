@@ -56,7 +56,7 @@ def main():
             accuracies.append(max_accuracy)
         
     #plot the accuracies
-    plt.plot(log(params), accuracies)
+    plt.plot(params, accuracies)
 
     #plot the accuracy of the dense model with a dashed line
     plt.axhline(y=0.992, color='b', linestyle='--', label='Dense model')
