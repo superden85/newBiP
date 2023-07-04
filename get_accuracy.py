@@ -53,7 +53,7 @@ def main():
 
             #add the accuracy to the list
             params.append(log(float(param)))
-            accuracies.append(max_accuracy)
+            accuracies.append(max_accuracy/100)
         
     #plot the accuracies
     plt.plot(params, accuracies)
