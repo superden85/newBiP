@@ -137,7 +137,8 @@ class SubnetConvChannel(nn.Conv2d):
             bias,
         )
         self.popup_scores = Parameter(torch.Tensor(self.weight.shape))
-        nn.init.kaiming_uniform_(self.popup_scores, a=math.sqrt(5))
+        #nn.init.kaiming_uniform_(self.popup_scores, a=math.sqrt(5))
+        nn.init.constant_(self.popup_scores, 1.0)
 
         self.weight.requires_grad = False
         if self.bias is not None:
@@ -182,7 +183,8 @@ class SubnetConvUnstructured(nn.Conv2d):
             bias,
         )
         self.popup_scores = Parameter(torch.Tensor(self.weight.shape))
-        nn.init.kaiming_uniform_(self.popup_scores, a=math.sqrt(5))
+        #nn.init.kaiming_uniform_(self.popup_scores, a=math.sqrt(5))
+        nn.init.constant_(self.popup_scores, 1.0)
 
         self.weight.requires_grad = False
         if self.bias is not None:
@@ -203,7 +205,8 @@ class SubnetLinear(nn.Linear):
     def __init__(self, in_features, out_features, bias=True):
         super(SubnetLinear, self).__init__(in_features, out_features, bias=True)
         self.popup_scores = Parameter(torch.Tensor(self.weight.shape))
-        nn.init.kaiming_uniform_(self.popup_scores, a=math.sqrt(5))
+        #nn.init.kaiming_uniform_(self.popup_scores, a=math.sqrt(5))
+        nn.init.constant_(self.popup_scores, 1.0)
         self.weight.requires_grad = False
         self.bias.requires_grad = False
         self.w = 0
