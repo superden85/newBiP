@@ -138,7 +138,7 @@ def train(
             for param in model.parameters():
                 num_param = param.numel()
 
-                param.copy_((1 - step_size) * param + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
+                param.data = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
                 pointer += num_param
 
