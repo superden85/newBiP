@@ -125,7 +125,11 @@ def train(
                     print(name)
                     #if the module has popup_scores then print them
                     if hasattr(module, 'popup_scores'):
-                        print(module.popup_scores.shape)
+                        print("mask shape :", module.popup_scores.shape)
+                    #print the number of parameters in the module
+                    print("number of parameters that require grad:", sum(p.numel() for p in module.parameters() if p.requires_grad))
+                    #print the number of parameters in the module that do not require grad
+                    print("number of parameters that do not require grad :", sum(p.numel() for p in module.parameters() if not p.requires_grad))
 
 
             #the linear minimization problem is very simple we don't need to use a solver
