@@ -172,7 +172,14 @@ def main():
 
 
     # Start training
-    for epoch in range(start_epoch, args.epochs + args.warmup_epochs):
+
+    #debugging : just print args.lambd and args.alpha to see if the code is correct
+
+    print(f"lambda: {args.lambd}")
+    print(f"alpha: {args.alpha}")
+
+
+    """ for epoch in range(start_epoch, args.epochs + args.warmup_epochs):
         start = time.time()
         lr_policy(epoch)
         mask_lr_policy(epoch)
@@ -270,7 +277,7 @@ def main():
 
     current_model_pruned_fraction(
         model, os.path.join(result_sub_dir, "checkpoint"), verbose=True
-    )
+    ) """
 
 
 if __name__ == "__main__":
