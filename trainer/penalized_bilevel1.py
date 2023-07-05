@@ -123,11 +123,9 @@ def train(
             if i == 0:
                 for name, module in model.named_modules():
                     print(name)
-                    #print all the attributes that are parameters
-                    for attr in dir(module):
-                        if attr in module.__dict__:
-                            if isinstance(module.__dict__[attr], torch.nn.parameter.Parameter):
-                                print(attr, module.__dict__[attr].shape)
+                    #if the module has popup_scores then print them
+                    if hasattr(module, 'popup_scores'):
+                        print(module.popup_scores.shape)
 
 
             #the linear minimization problem is very simple we don't need to use a solver
