@@ -231,7 +231,7 @@ def main():
 
         #detailed log of the sparsity of the mask:        
         if 'penalized_bilevel' in args.trainer:
-            l0, l1, linf = 0, 0, 0
+            l0, l1, mini, linf = 0, 0, 1000, 0
             l001, l01, l05 = 0, 0, 0
             for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
@@ -239,6 +239,7 @@ def main():
                     if attr is not None:
                         l0 += torch.sum(attr != 0).item()
                         l1 += (torch.sum(torch.abs(attr)).item())
+                        mini = min(mini, torch.min(attr).item())
                         linf = max(linf, abs(torch.max(attr).item()))
                         l001 += torch.sum(abs(attr) < 0.01).item()
                         l01 += torch.sum(abs(attr) < 0.1).item()

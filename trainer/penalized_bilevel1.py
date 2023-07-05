@@ -126,7 +126,7 @@ def train(
                 print("number of zeros in m_star: ", (m_star == 0).sum().item())
 
             #we want to have a diminishing step size
-            step_size = 2/(epoch+1)
+            step_size = 2/(epoch+2)
 
             #then we update the parameters
 
