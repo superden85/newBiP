@@ -113,6 +113,8 @@ def train(
             append_grad_to_vec(implicit_gradient, model.parameters())
             mask_optimizer.step()
 
+
+
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
             losses.update(loss.item(), train_images.size(0))

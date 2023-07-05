@@ -69,91 +69,8 @@ def train(
             top5.update(acc5[0], val_images.size(0))
 
         else:
-
-
-            """ #lower level : model retraining
-            switch_to_finetune(model)
-            output = model(val_images)
-            loss = criterion(output, val_targets)
-
-            #add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
-            #we have to loop over all the modules and their popup_scores attribute
-            for (name, vec) in model.named_modules():
-                if hasattr(vec, 'popup_scores'):
-                    loss += args.lambd * (1 - torch.exp(-args.alpha * vec.popup_scores)).sum()  
             
             
-            optimizer.zero_grad()
-            loss.backward()
-            optimizer.step()
-            acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
-            losses.update(loss.item(), val_images.size(0))
-            top1.update(acc1[0], val_images.size(0))
-            top5.update(acc5[0], val_images.size(0))
-
-            #upper level : model pruning
-            switch_to_bilevel(model)
-            optimizer.zero_grad()
-            output = model(train_images)
-            loss = criterion(output, train_targets)
-
-            #add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
-            #we have to loop over all the modules and their popup_scores attribute
-            for (name, vec) in model.named_modules():
-                if hasattr(vec, 'popup_scores'):
-                    loss += args.lambd * (1 - torch.exp(-args.alpha * vec.popup_scores)).sum()
-            loss.backward()
-
-            def grad2vec(parameters):
-                grad_vec = []
-                for param in parameters:
-                    grad_vec.append(param.grad.view(-1).detach())
-                return torch.cat(grad_vec)
-
-            param_grad_vec = grad2vec(model.parameters())
-
-            switch_to_prune(model)
-            mask_optimizer.zero_grad()
-            loss_mask = criterion(model(train_images), train_targets)
-
-            #add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
-            #we have to loop over all the modules and their popup_scores attribute
-            for (name, vec) in model.named_modules():
-                if hasattr(vec, 'popup_scores'):
-                    loss += args.lambd * (1 - torch.exp(-args.alpha * vec.popup_scores)).sum()
-
-            loss_mask.backward()
-
-            mask_grad_vec = grad2vec(model.parameters())
-            implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec
-      
-
-            def append_grad_to_vec(vec, parameters):
-
-                if not isinstance(vec, torch.Tensor):
-                    raise TypeError('expected torch.Tensor, but got: {}'
-                                    .format(torch.typename(vec)))
-
-                pointer = 0
-                for param in parameters:
-                    num_param = param.numel()
-
-                    param.grad.copy_(param.grad + vec[pointer:pointer + num_param].view_as(param).data)
-
-                    pointer += num_param
-
-            append_grad_to_vec(implicit_gradient, model.parameters())
-            mask_optimizer.step()
-
-            output = model(train_images)
-            acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
-            losses.update(loss.item(), train_images.size(0))
-            top1.update(acc1[0], train_images.size(0))
-            top5.update(acc5[0], train_images.size(0))  """
-            
-            
-
-
             #Lower level step
             #We do 1 step of SGD on the parameters of the model
 
@@ -170,31 +87,35 @@ def train(
             top5.update(acc5[0], val_images.size(0))
 
             
-            #Upper level step
-            #We want to do Frank-Wolfe on the upper level problem
-            #We add also an smooth equivalent of the 0 norm of the mask
-
-            switch_to_prune(model)
-            mask_optimizer.zero_grad()
+            #upper level step
+            #we have to calculate first the implicit gradient
+            
+            switch_to_bilevel(model)
+            optimizer.zero_grad()
             output = model(train_images)
             loss = criterion(output, train_targets)
-
-            #add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
-            #we have to loop over all the modules and their popup_scores attribute
-            for (name, vec) in model.named_modules():
-                if hasattr(vec, 'popup_scores'):
-                    loss += args.lambd * (1 - torch.exp(-args.alpha * vec.popup_scores)).sum()
             loss.backward()
-
-            #define g = grad(loss) w.r.t. to the mask only 
 
             def grad2vec(parameters):
                 grad_vec = []
                 for param in parameters:
                     grad_vec.append(param.grad.view(-1).detach())
                 return torch.cat(grad_vec)
-            
+
+            param_grad_vec = grad2vec(model.parameters())
+
+            switch_to_prune(model)
+            mask_optimizer.zero_grad()
+            loss_mask = criterion(model(train_images), train_targets)
+
+            loss_mask.backward()
+
             mask_grad_vec = grad2vec(model.parameters())
+            implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec
+
+            #print the size of the implicit gradient, or shape
+            if i == 0:
+                print("size of the implicit gradient : ", implicit_gradient.shape)
 
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
@@ -209,13 +130,8 @@ def train(
             #print the l1 norm of the mask_grad_vec
             if i == 0:
                 print("l1 norm of the mask_grad_vec : ", mask_grad_vec.abs().sum())
-
-            #compute the step size
-            #step_size = 2 / (i + 2)
-
-            #update the mask with the step size
-
-            def set_grad_to_vec(vec, parameters):
+            
+            def append_grad_to_vec(vec, parameters):
 
                 if not isinstance(vec, torch.Tensor):
                     raise TypeError('expected torch.Tensor, but got: {}'
@@ -225,13 +141,12 @@ def train(
                 for param in parameters:
                     num_param = param.numel()
 
-                    param.grad.copy_(vec[pointer:pointer + num_param].view_as(param).data)
+                    param.grad.copy_(param.grad + vec[pointer:pointer + num_param].view_as(param).data)
 
                     pointer += num_param
 
+            append_grad_to_vec(implicit_gradient, model.parameters())
 
-            set_grad_to_vec(m_star, model.parameters())
-            mask_optimizer.step()
 
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
