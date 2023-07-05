@@ -122,7 +122,7 @@ def train(
             #print the number weights and biases in the model
             if i == 0:
                 for name, module in model.named_modules():
-                    if isinstance(module, nn.Module):
+                    if isinstance(module, torch.nn.Module):
                         num_params = sum(p.numel() for p in module.parameters())
                         print(f"{name}: {num_params} parameters")
 
