@@ -119,7 +119,7 @@ def train(
             #mstar is equal to 1 if c is negative, 0 otherwise
 
             m_star = torch.zeros_like(outer_gradient)
-            m_star[mask_grad_vec < 0] = 1
+            m_star[outer_gradient < 0] = 1
 
             #print the number of zeros of m_star
             if i == 0:
