@@ -241,7 +241,7 @@ def main():
                         l0 += torch.sum(attr != 0).item()
                         l1 += (torch.sum(torch.abs(attr)).item())
                         mini = min(mini, torch.min(attr).item())
-                        maxi = max(linf, abs(torch.max(attr).item()))
+                        maxi = max(maxi, abs(torch.max(attr).item()))
                         l001 += torch.sum(abs(attr) < 0.01).item()
                         l01 += torch.sum(abs(attr) < 0.1).item()
                         l05 += torch.sum(abs(attr) < 0.5).item()
