@@ -119,7 +119,13 @@ def train(
                 #print half of the size
                 print("half of the size of the implicit gradient : ", implicit_gradient.shape[0]//2)
 
-            #print the number weights and biases in the model 
+            #print the number weights and biases in the model
+            if i == 0:
+                for param in model.parameters():
+                    c += param.numel()
+                print("number of weights and biases in the model : ", c)
+                #print the dictionnary 
+                print(model.parameters())
 
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
