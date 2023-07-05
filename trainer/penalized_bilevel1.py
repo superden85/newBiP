@@ -70,7 +70,6 @@ def train(
 
         else:
             
-            
             #Lower level step
             #We do 1 step of SGD on the parameters of the model
 
@@ -111,57 +110,37 @@ def train(
             loss_mask.backward()
 
             mask_grad_vec = grad2vec(model.parameters())
-            implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec
-
-            #print the size of the implicit gradient, or shape
-            if i == 0:
-                print("size of the implicit gradient : ", implicit_gradient.shape)
-                #print half of the size
-                print("half of the size of the implicit gradient : ", implicit_gradient.shape[0]//2)
-
-            #print the number weights and biases in the model
-            if i == 0:
-                for name, module in model.named_modules():
-                    print(name)
-                    #if the module has popup_scores then print them
-                    if hasattr(module, 'popup_scores'):
-                        print("mask shape :", module.popup_scores.shape)
-                    #print the number of parameters in the module
-                    print("number of parameters that require grad:", sum(p.numel() for p in module.parameters() if p.requires_grad))
-                    #print the number of parameters in the module that do not require grad
-                    print("number of parameters that do not require grad :", sum(p.numel() for p in module.parameters() if not p.requires_grad))
-
+            implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec            
+            
+            #then the outer gradient is simply:
+            outer_gradient = mask_grad_vec + implicit_gradient
 
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
 
-            m_star = torch.zeros_like(mask_grad_vec)
+            m_star = torch.zeros_like(outer_gradient)
             m_star[mask_grad_vec < 0] = 1
 
-            #print the number of ones in the mask
+            #print the number of zeros of m_star
             if i == 0:
-                print("number of ones in the mask : ", m_star.sum())
+                print("number of zeros in m_star: ", (m_star == 0).sum().item())
             
-            #print the l1 norm of the mask_grad_vec
-            if i == 0:
-                print("l1 norm of the mask_grad_vec : ", mask_grad_vec.abs().sum())
-            
-            def append_grad_to_vec(vec, parameters):
+            #we want to have a diminishing step size
+            step_size = 2/(epoch+1)
 
-                if not isinstance(vec, torch.Tensor):
-                    raise TypeError('expected torch.Tensor, but got: {}'
-                                    .format(torch.typename(vec)))
+            #then we update the parameters
 
-                pointer = 0
-                for param in parameters:
-                    num_param = param.numel()
+            if not isinstance(m_star, torch.Tensor):
+                raise TypeError('expected torch.Tensor, but got: {}'
+                                .format(torch.typename(vec)))
 
-                    param.grad.copy_(param.grad + vec[pointer:pointer + num_param].view_as(param).data)
+            pointer = 0
+            for param in parameters:
+                num_param = param.numel()
 
-                    pointer += num_param
+                param.copy_((1 - step_size) * param + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
-            append_grad_to_vec(implicit_gradient, model.parameters())
-
+                pointer += num_param
 
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
