@@ -71,16 +71,17 @@ def train(
         else:
 
 
-            #lower level : model retraining
+            """ #lower level : model retraining
             switch_to_finetune(model)
             output = model(val_images)
             loss = criterion(output, val_targets)
 
-            """ #add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
+            #add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
             #we have to loop over all the modules and their popup_scores attribute
             for (name, vec) in model.named_modules():
                 if hasattr(vec, 'popup_scores'):
-                    loss += args.lambd * (1 - torch.exp(-args.alpha * vec.popup_scores)).sum()  """
+                    loss += args.lambd * (1 - torch.exp(-args.alpha * vec.popup_scores)).sum()  
+            
             
             optimizer.zero_grad()
             loss.backward()
@@ -148,9 +149,9 @@ def train(
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
             losses.update(loss.item(), train_images.size(0))
             top1.update(acc1[0], train_images.size(0))
-            top5.update(acc5[0], train_images.size(0)) 
+            top5.update(acc5[0], train_images.size(0))  """
             
-            """
+            
 
 
             #Lower level step
@@ -228,7 +229,7 @@ def train(
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
             losses.update(loss.item(), train_images.size(0))
             top1.update(acc1[0], train_images.size(0))
-            top5.update(acc5[0], train_images.size(0))   """         
+            top5.update(acc5[0], train_images.size(0))           
 
 
         batch_time.update(time.time() - end)
