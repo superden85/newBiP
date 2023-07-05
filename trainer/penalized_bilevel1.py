@@ -124,9 +124,7 @@ def train(
                 c = 0
                 for param in model.parameters():
                     c += param.numel()
-                print("number of weights and biases in the model : ", c)
-                #print the dictionnary 
-                print(model.parameters())
+                    print(param, param.numel())
 
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
