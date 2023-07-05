@@ -205,6 +205,10 @@ def train(
             #print the number of ones in the mask
             if i == 0:
                 print("number of ones in the mask : ", m_star.sum())
+            
+            #print the l1 norm of the mask_grad_vec
+            if i == 0:
+                print("l1 norm of the mask_grad_vec : ", mask_grad_vec.abs().sum())
 
             #compute the step size
             #step_size = 2 / (i + 2)
