@@ -121,6 +121,7 @@ def train(
 
             #print the number weights and biases in the model
             if i == 0:
+                c = 0
                 for param in model.parameters():
                     c += param.numel()
                 print("number of weights and biases in the model : ", c)
