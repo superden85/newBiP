@@ -121,10 +121,10 @@ def train(
 
             #print the number weights and biases in the model
             if i == 0:
-                c = 0
-                for param in model.parameters():
-                    c += param.numel()
-                    print(param, param.numel())
+                for name, module in model.named_modules():
+                    if isinstance(module, nn.Module):
+                        num_params = sum(p.numel() for p in module.parameters())
+                        print(f"{name}: {num_params} parameters")
 
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
