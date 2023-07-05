@@ -202,6 +202,9 @@ def train(
             m_star = torch.zeros_like(mask_grad_vec)
             m_star[mask_grad_vec < 0] = 1
 
+            #print the number of ones in the mask
+            print("number of ones in the mask : ", m_star.sum())
+
             #compute the step size
             #step_size = 2 / (i + 2)
 
