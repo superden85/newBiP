@@ -132,11 +132,11 @@ def train(
             m_star[outer_gradient < 0] = 1
 
             #print the number of zeros of m_star
-            if i == 0:
+            if i <= 10:
                 print("number of zeros in m_star: ", (m_star == 0).sum().item())
 
             #we want to have a diminishing step size
-            step_size = 2/(epoch+2)
+            step_size = 2/(epoch * len(train_loader) +2)
 
             #then we update the parameters
 
