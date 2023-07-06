@@ -115,6 +115,16 @@ def train(
             #then the outer gradient is simply:
             outer_gradient = mask_grad_vec + implicit_gradient
 
+            #print the l1 norm of the outer gradient
+            #print the l1 norm of implicit gradient
+            #print their mini, maxi
+            if i <= 10:
+                print("l1 norm of the outer gradient: ", torch.norm(outer_gradient, 1).item())
+                print("l1 norm of the implicit gradient: ", torch.norm(implicit_gradient, 1).item())
+                print("mini of the outer gradient: ", torch.min(outer_gradient).item())
+                print("maxi of the outer gradient: ", torch.max(outer_gradient).item())
+
+
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
 
