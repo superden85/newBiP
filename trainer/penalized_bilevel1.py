@@ -111,26 +111,8 @@ def train(
             mask_grad_vec = grad2vec(model.parameters())
             implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec            
             
-            """ #then the outer gradient is simply:
-            outer_gradient = mask_grad_vec + implicit_gradient """
-
-            def append_grad_to_vec(vec, parameters):
-
-                if not isinstance(vec, torch.Tensor):
-                    raise TypeError('expected torch.Tensor, but got: {}'
-                                    .format(torch.typename(vec)))
-
-                pointer = 0
-                for param in parameters:
-                    num_param = param.numel()
-
-                    param.grad.copy_(param.grad + vec[pointer:pointer + num_param].view_as(param).data)
-
-                    pointer += num_param
-
-            append_grad_to_vec(implicit_gradient, model.parameters())
-
-            outer_gradient = grad2vec(model.parameters())
+            #then the outer gradient is simply:
+            outer_gradient = mask_grad_vec + implicit_gradient
 
             #print the l1 norm of the outer gradient
             #print the l1 norm of implicit gradient
@@ -164,6 +146,9 @@ def train(
             pointer = 0
             for param in model.parameters():
                 num_param = param.numel()
+                
+                if i == 0:
+                    print(param.name)
 
                 param.data = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
