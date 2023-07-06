@@ -146,11 +146,12 @@ def train(
             pointer = 0
             for param in model.parameters():
                 num_param = param.numel()
-                
-                if i == 0:
-                    print(param.name)
 
-                param.data = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
+                #update only if it is a popup score
+                #i.e. if param.requires_grad = True
+
+                if param.requires_grad:
+                    param.data = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
                 pointer += num_param
 
