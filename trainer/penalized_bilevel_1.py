@@ -42,6 +42,9 @@ def train(
             switch_to_prune(model)
             output = model(train_images)
             loss = criterion(output, train_targets)
+            
+            # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
+            loss += args.lambd * (1 - torch.exp(-args.alpha * model.mask)).sum()
 
             mask_optimizer.zero_grad()
             loss.backward()
@@ -89,6 +92,13 @@ def train(
             optimizer.zero_grad()
             output = model(train_images)
             loss = criterion(output, train_targets)
+
+            # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
+            for (name, vec) in model.named_modules():
+                if hasattr(vec, "popup_scores"):
+                    attr = getattr(vec, "popup_scores")
+                    if attr is not None:
+                        loss += args.lambd * (1 - torch.exp(-args.alpha * attr)).sum()
             loss.backward()
 
             def grad2vec(parameters):
@@ -103,6 +113,14 @@ def train(
             mask_optimizer.zero_grad()
             loss_mask = criterion(model(train_images), train_targets)
 
+            # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
+            for (name, vec) in model.named_modules():
+                if hasattr(vec, "popup_scores"):
+                    attr = getattr(vec, "popup_scores")
+                    if attr is not None:
+                        loss += args.lambd * (1 - torch.exp(-args.alpha * attr)).sum()
+            
+            loss.backward()
             loss_mask.backward()
 
             mask_grad_vec = grad2vec(model.parameters())
