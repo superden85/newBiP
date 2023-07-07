@@ -52,11 +52,10 @@ class GetSubnetUnstructured(autograd.Function):
     @staticmethod
     def forward(ctx, scores, k):
         out = scores.clone()
-        _, idx = scores.flatten().sort()
 
         #we only threshold in the case we are given a k ratio
         if k is not None:
-
+            _, idx = scores.flatten().sort()
             j = int((1 - k) * scores.numel())
 
             flat_out = out.flatten()
