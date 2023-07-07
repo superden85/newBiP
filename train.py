@@ -165,16 +165,6 @@ def main():
         if args.evaluate:
             return
 
-    """ calculate the number of popup scores of the model
-    mask_dim = 0
-    for (name, vec) in model.named_modules():
-                if hasattr(vec, "popup_scores"):
-                    attr = getattr(vec, "popup_scores")
-                    if attr is not None:
-                        mask_dim += attr.numel()
-    print(f"Number of popup scores: {mask_dim}") """
-
-
     # Start training
 
     # we want to save all the intermediate mask for statistics
@@ -193,7 +183,7 @@ def main():
         lr_policy(epoch)
         mask_lr_policy(epoch)
 
-        if args.trainer == "bilevel" or 'penalized_bilevel' in args.trainer:
+        if 'bilevel' in args.trainer:
             optimizer = (optimizer, mask_optimizer)
 
         # train
@@ -218,7 +208,7 @@ def main():
         prec1, _ = val(model, device, test_loader, criterion, args, epoch)
 
         # remember best prec@1 and save checkpoint
-        if args.trainer == "bilevel" or 'penalized_bilevel' in args.trainer:
+        if 'bilevel' in args.trainer:
             optimizer = optimizer[0]
         is_best = prec1 > best_prec1
         best_prec1 = max(prec1, best_prec1)
@@ -240,7 +230,7 @@ def main():
             result_sub_dir, os.path.join(result_main_dir, "latest_exp")
         )
 
-        #detailed log of the sparsity of the mask:        
+        #detailed log of the sparsity of the mask:  
         if 'penalized_bilevel' in args.trainer:
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
