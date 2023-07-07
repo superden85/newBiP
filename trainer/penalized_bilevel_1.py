@@ -126,9 +126,8 @@ def train(
                 if hasattr(vec, "popup_scores"):
                     attr = getattr(vec, "popup_scores")
                     if attr is not None:
-                        loss += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum()
+                        loss_mask += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum()
             
-            loss.backward()
             loss_mask.backward()
 
             mask_grad_vec = grad2vec(model.parameters())
