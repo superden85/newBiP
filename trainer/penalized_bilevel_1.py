@@ -35,6 +35,24 @@ def train(
     model.train()
     end = time.time()
 
+
+    #print stats
+    l0, l1 = 0, 0
+    mini, maxi = 1000, -1000
+    for (name, vec) in model.named_modules():
+        if hasattr(vec, "popup_scores"):
+            attr = getattr(vec, "popup_scores")
+            if attr is not None:
+                l0 += torch.sum(attr != 0).item()
+                l1 += (torch.sum(torch.abs(attr)).item())
+                mini = min(mini, torch.min(attr).item())
+                maxi = max(maxi, abs(torch.max(attr).item()))
+    
+    print("l0 norm of mask: ", l0)
+    print("l1 norm of mask: ", l1)
+    print("min of mask: ", mini)
+    print("max of mask: ", maxi)
+
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
         val_images, val_targets = val_data_batch[0].to(device), val_data_batch[1].to(device)
@@ -175,6 +193,24 @@ def train(
 
         if i % args.print_freq == 0:
             progress.display(i)
+        
+        if i <= 10:
+            #print stats
+            l0, l1 = 0, 0
+            mini, maxi = 1000, -1000
+            for (name, vec) in model.named_modules():
+                if hasattr(vec, "popup_scores"):
+                    attr = getattr(vec, "popup_scores")
+                    if attr is not None:
+                        l0 += torch.sum(attr != 0).item()
+                        l1 += (torch.sum(torch.abs(attr)).item())
+                        mini = min(mini, torch.min(attr).item())
+                        maxi = max(maxi, abs(torch.max(attr).item()))
+            
+            print("l0 norm of mask: ", l0)
+            print("l1 norm of mask: ", l1)
+            print("min of mask: ", mini)
+            print("max of mask: ", maxi)
         
     #return the intermediate mask
     if args.exp_mode == 'prune' and args.save_masks:
