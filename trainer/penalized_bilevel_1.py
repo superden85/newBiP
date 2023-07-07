@@ -75,6 +75,9 @@ def train(
             switch_to_finetune(model)
             output = model(val_images)
             loss = criterion(output, val_targets)
+
+            loss*=args.lambd
+
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -93,12 +96,14 @@ def train(
             output = model(train_images)
             loss = criterion(output, train_targets)
 
+            loss*=args.lambd
+
             # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
             for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
                     attr = getattr(vec, "popup_scores")
                     if attr is not None:
-                        loss += args.lambd * (1 - torch.exp(-args.alpha * attr)).sum()
+                        loss += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum()
             loss.backward()
 
             def grad2vec(parameters):
@@ -113,12 +118,14 @@ def train(
             mask_optimizer.zero_grad()
             loss_mask = criterion(model(train_images), train_targets)
 
+            loss_mask *= args.lambd
+
             # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
             for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
                     attr = getattr(vec, "popup_scores")
                     if attr is not None:
-                        loss += args.lambd * (1 - torch.exp(-args.alpha * attr)).sum()
+                        loss += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum()
             
             loss.backward()
             loss_mask.backward()
