@@ -143,7 +143,7 @@ def train(
             m_star[outer_gradient < 0] = 1
 
             #we want to have a diminishing step size
-            step_size = 2/(epoch * len(train_loader) +2)
+            step_size = 2/(epoch * len(train_loader) + i + 2)
 
             #then we update the parameters
 
