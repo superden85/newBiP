@@ -81,7 +81,6 @@ def train(
             top1.update(acc1[0], val_images.size(0))
             top5.update(acc5[0], val_images.size(0))
 
-            
             #upper level step
             #we have to calculate first the implicit gradient
             

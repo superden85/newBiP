@@ -104,6 +104,7 @@ def train(
                     attr = getattr(vec, "popup_scores")
                     if attr is not None:
                         loss += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum()
+            
             loss.backward()
 
             def grad2vec(parameters):

@@ -164,6 +164,9 @@ def initialize_scores(model, init_type):
                 nn.init.xavier_normal_(
                     m.popup_scores, gain=nn.init.calculate_gain("relu")
                 )
+            
+            elif init_type == "uniform":
+
 
 
 def initialize_scaled_score(model):
@@ -182,6 +185,15 @@ def scale_rand_init(model, k):
     for m in model.modules():
         if isinstance(m, (nn.Conv2d, nn.Linear)):
             m.weight.data = 1 / math.sqrt(k) * m.weight.data
+
+
+def initialize_constant(model, value):
+    print(
+        f"Initializating relevance score with constant value {value} (OVERWRITING SOURCE NET SCORES)"
+    )
+    for m in model.modules():
+        if hasattr(m, 'popup_scores'):
+            nn.init.constant_(m.popup_scores, value)
 
 
 def switch_to_prune(model):

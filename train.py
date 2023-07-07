@@ -29,6 +29,7 @@ from utils.model import (
     initialize_scaled_score,
     scale_rand_init,
     current_model_pruned_fraction,
+    initialize_constant,
 )
 from utils.schedules import get_lr_policy, get_optimizer
 
@@ -124,14 +125,16 @@ def main():
 
     # Init scores once source net is loaded.
     if args.exp_mode == "prune":
-        if args.scaled_score_init:
+        """ if args.scaled_score_init:
             # NOTE: scaled_init_scores will overwrite the scores in the pre-trained net.
             initialize_scaled_score(model)
         else:
             # Scaled random initialization. Useful when training a high sparse net from scratch.
             # If not used, a sparse net (without batch-norm) from scratch will not converge.
             # With batch-norm its not really necessary.
-            scale_rand_init(model, args.k)
+            scale_rand_init(model, args.k) """
+        #scaled scores to 1
+        initialize_constant(model, 1.0)
 
     best_prec1 = 0
     start_epoch = 0
