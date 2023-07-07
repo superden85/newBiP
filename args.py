@@ -43,7 +43,7 @@ def parse_args():
     parser.add_argument(
         "--k",
         type=float,
-        default=1.0,
+        default=None,
         help="Fraction of weight variables kept in subnet",
     )
 
@@ -59,7 +59,7 @@ def parse_args():
     parser.add_argument(
         "--alpha",
         type=float,
-        default=0.0,
+        default=1.0,
         help="Alpha for penalized BiP",
     )
 
