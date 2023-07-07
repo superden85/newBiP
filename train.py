@@ -56,7 +56,7 @@ def main():
         result_main_dir,
         "{}--k-{:.4f}_trainer-{}_epochs-{}_arch-{}".format(
             n,
-            args.k,
+            args.k if args.k is not None else 0.0,
             args.trainer,
             args.epochs,
             args.arch,
