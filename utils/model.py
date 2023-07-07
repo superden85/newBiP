@@ -164,9 +164,6 @@ def initialize_scores(model, init_type):
                 nn.init.xavier_normal_(
                     m.popup_scores, gain=nn.init.calculate_gain("relu")
                 )
-            
-            elif init_type == "uniform":
-
 
 
 def initialize_scaled_score(model):
