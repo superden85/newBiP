@@ -4,11 +4,14 @@ from __future__ import print_function
 import importlib
 import logging
 import os
+import gzip, shutil
 import time
 from pathlib import Path
 
 import torch
 import torch.nn as nn
+
+import numpy as np
 
 import datasets
 import models
@@ -28,6 +31,7 @@ from utils.model import (
     current_model_pruned_fraction,
 )
 from utils.schedules import get_lr_policy, get_optimizer
+
 
 
 def main():
@@ -173,11 +177,16 @@ def main():
 
     # Start training
 
-    """ #debugging : just print args.lambd and args.alpha to see if the code is correct
-
-    print(f"lambda: {args.lambd}")
-    print(f"alpha: {args.alpha}") """
-
+    # we want to save all the intermediate mask for statistics
+    #just retrieve the shape of the mask
+    shape = 0
+    if args.exp_mode == 'prune' and args.save_masks:
+        for (name, vec) in model.named_modules():
+                    if hasattr(vec, "popup_scores"):
+                        attr = getattr(vec, "popup_scores")
+                        if attr is not None:
+                            shape += attr.numel()
+    all_masks = torch.zeros((args.epochs, shape))
 
     for epoch in range(start_epoch, args.epochs + args.warmup_epochs):
         start = time.time()
@@ -188,7 +197,7 @@ def main():
             optimizer = (optimizer, mask_optimizer)
 
         # train
-        trainer(
+        intermediate_mask = trainer(
             model,
             device,
             (train_loader, val_loader),
@@ -197,7 +206,9 @@ def main():
             epoch,
             args,
         )
-
+        
+        all_masks[epoch] = intermediate_mask
+        
         # evaluate on test set
         if args.val_method == "smooth":
             prec1, radii = val(
@@ -232,7 +243,6 @@ def main():
         #detailed log of the sparsity of the mask:        
         if 'penalized_bilevel' in args.trainer:
             l0, l1 = 0, 0
-            l001, l01, l05 = 0, 0, 0
             mini, maxi = 1000, -1000
             for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
@@ -242,11 +252,8 @@ def main():
                         l1 += (torch.sum(torch.abs(attr)).item())
                         mini = min(mini, torch.min(attr).item())
                         maxi = max(maxi, abs(torch.max(attr).item()))
-                        l001 += torch.sum(abs(attr) < 0.01).item()
-                        l01 += torch.sum(abs(attr) < 0.1).item()
-                        l05 += torch.sum(abs(attr) < 0.5).item()
             logger.info(
-                f"Epoch {epoch}, l0 norm : {l0}, l1 norm : {l1}, \n Below 0.01: {l001}, Below 0.1: {l01}, Below 0.5: {l05}"
+                f"Epoch {epoch}, l0 norm : {l0}, l1 norm : {l1}"
             )
             logger.info(f"Epoch {epoch}, min : {mini}, max : {maxi}")
             #print(f"Epoch {epoch}, l0 norm : {l0}, l1 norm : {l1}, linf norm: {linf}, \n Below 0.01: {l001}, Below 0.1: {l01}, Below 0.5: {l05}")
@@ -281,6 +288,11 @@ def main():
     current_model_pruned_fraction(
         model, os.path.join(result_sub_dir, "checkpoint"), verbose=True
     )
+
+    #save the masks in some .npy file
+    if args.exp_mode == 'prune' and args.save_masks:
+        np.save(os.path.join(result_sub_dir, "masks.npy"), all_masks.numpy())
+        logger.info(f"Saved masks in {os.path.join(result_sub_dir, 'masks.npy')}")
 
 
 if __name__ == "__main__":

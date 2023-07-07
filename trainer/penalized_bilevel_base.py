@@ -114,25 +114,11 @@ def train(
             #then the outer gradient is simply:
             outer_gradient = mask_grad_vec + implicit_gradient
 
-            #print the l1 norm of the outer gradient
-            #print the l1 norm of implicit gradient
-            #print their mini, maxi
-            if i <= 10:
-                print("l1 norm of the outer gradient: ", torch.norm(outer_gradient, 1).item())
-                print("l1 norm of the implicit gradient: ", torch.norm(implicit_gradient, 1).item())
-                print("mini of the outer gradient: ", torch.min(outer_gradient).item())
-                print("maxi of the outer gradient: ", torch.max(outer_gradient).item())
-
-
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
 
             m_star = torch.zeros_like(outer_gradient)
             m_star[outer_gradient < 0] = 1
-
-            #print the number of zeros of m_star
-            if i <= 10:
-                print("number of zeros in m_star: ", (m_star == 0).sum().item())
 
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) +2)
@@ -167,3 +153,13 @@ def train(
 
         if i % args.print_freq == 0:
             progress.display(i)
+        
+    #return the intermediate mask
+    if args.exp_mode == 'prune' and args.save_masks:
+        intermediate_mask = []
+        for (name, vec) in model.named_modules():
+            if hasattr(vec, "popup_scores"):
+                attr = getattr(vec, "popup_scores")
+                if attr is not None:
+                    intermediate_mask.append(attr.view(-1).detach())
+        return torch.cat(intermediate_mask)
