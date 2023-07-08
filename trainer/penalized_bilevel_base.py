@@ -8,6 +8,7 @@ from utils.model import (
     switch_to_bilevel,
     switch_to_prune,
     switch_to_finetune,
+    get_epoch_data
 )
 
 import numpy as np
@@ -134,7 +135,7 @@ def train(
             m_star[outer_gradient < 0] = 1
 
             #we want to have a diminishing step size
-            step_size = 2/(epoch * len(train_loader) + i + 2)
+            step_size = 2/(epoch * len(train_loader) + i +2)
 
             #then we update the parameters
 
@@ -185,12 +186,7 @@ def train(
         if i % args.print_freq == 0:
             progress.display(i)
         
-    #return the intermediate mask
-    if args.exp_mode == 'prune' and args.save_masks:
-        intermediate_mask = []
-        for (name, vec) in model.named_modules():
-            if hasattr(vec, "popup_scores"):
-                attr = getattr(vec, "popup_scores")
-                if attr is not None:
-                    intermediate_mask.append(attr.view(-1).detach())
-        return torch.cat(intermediate_mask)
+    #return data related to the mask of this epoch
+    epoch_data = get_epoch_data(model)
+
+    return epoch_data

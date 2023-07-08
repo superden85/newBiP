@@ -4,7 +4,6 @@ from __future__ import print_function
 import importlib
 import logging
 import os
-import gzip, shutil
 import time
 from pathlib import Path
 
@@ -174,19 +173,11 @@ def main():
     for param in model.parameters():
         num_params += param.numel()
     print(f"Number of parameters: {num_params}")
+
+
     # Start training
 
-    # we want to save all the intermediate mask for statistics
-    #just retrieve the shape of the mask
-    shape = 0
-    if args.exp_mode == 'prune' and args.save_masks:
-        for (name, vec) in model.named_modules():
-                    if hasattr(vec, "popup_scores"):
-                        attr = getattr(vec, "popup_scores")
-                        if attr is not None:
-                            shape += attr.numel()
-    all_masks = torch.zeros((args.epochs, shape))
-
+    epochs_data = []
     for epoch in range(start_epoch, args.epochs + args.warmup_epochs):
         start = time.time()
         lr_policy(epoch)
@@ -196,7 +187,7 @@ def main():
             optimizer = (optimizer, mask_optimizer)
 
         # train
-        intermediate_mask = trainer(
+        epoch_data = trainer(
             model,
             device,
             (train_loader, val_loader),
@@ -206,7 +197,7 @@ def main():
             args,
         )
         
-        all_masks[epoch] = intermediate_mask
+        epochs_data.append(epoch_data)
         
         # evaluate on test set
         if args.val_method == "smooth":
@@ -239,7 +230,7 @@ def main():
             result_sub_dir, os.path.join(result_main_dir, "latest_exp")
         )
 
-        #detailed log of the sparsity of the mask:  
+        #stats on the mask: 
         if 'penalized_bilevel' in args.trainer:
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
@@ -288,10 +279,10 @@ def main():
         model, os.path.join(result_sub_dir, "checkpoint"), verbose=True
     )
 
-    #save the masks in some .npy file
-    if args.exp_mode == 'prune' and args.save_masks:
-        np.save(os.path.join(result_sub_dir, "masks.npy"), all_masks.numpy())
-        logger.info(f"Saved masks in {os.path.join(result_sub_dir, 'masks.npy')}")
+    # save epochs data as a .npy file
+    np.save(os.path.join(result_sub_dir, "epochs_data.npy"), epochs_data)
+    np.save(os.path.join(result_main_dir, "latest_exp/epochs_data.npy"), epochs_data)
+
 
 
 if __name__ == "__main__":

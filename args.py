@@ -63,14 +63,6 @@ def parse_args():
         help="Alpha for penalized BiP",
     )
 
-    #boolean for saving intermediate masks or not:
-    parser.add_argument(
-        "--save-masks",
-        action="store_true",
-        default=False,
-        help="Save intermediate mask or not",
-    )
-
     parser.add_argument(
         "--scaled-score-init",
         action="store_true",
