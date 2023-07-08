@@ -168,6 +168,12 @@ def main():
         if args.evaluate:
             return
 
+
+    #print the number of parameters
+    num_params = 0
+    for param in model.parameters():
+        num_params += param.numel()
+    print(f"Number of parameters: {num_params}")
     # Start training
 
     # we want to save all the intermediate mask for statistics
