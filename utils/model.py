@@ -397,6 +397,6 @@ def get_epoch_data(model):
                 for i in range(0, 21):
                     percentage_below_treshold[i] += torch.sum(attr < treshold_exp_list[i]).item() / total
     
-    epoch_data.append((treshold_exp_list, below_treshold))
+    epoch_data.append((treshold_exp_list, percentage_below_treshold))
 
     return epoch_data
