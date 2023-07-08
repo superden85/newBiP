@@ -395,7 +395,7 @@ def get_epoch_data(model):
             attr = getattr(vec, "popup_scores")
             if attr is not None:
                 for i in range(0, 21):
-                    percentage_below_treshold[i] += torch.sum(attr < treshold_exp_list[i]).item() / total
+                    percentage_below_treshold[i] += torch.sum(attr < 10**treshold_exp_list[i]).item() / total
     
     epoch_data.append((treshold_exp_list, percentage_below_treshold))
 
