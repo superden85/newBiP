@@ -151,17 +151,16 @@ def train(
             idx = torch.argsort(flat_outer_gradient)
             j = int(args.k * m_star.numel())
             
-
             #set to 1 only if it the gradient is negative and we are in the top k%
             flat_m_star[idx[j:]] = 0
             flat_m_star[flat_outer_gradient >= 0] = 0
 
-            #print l0 and l1 norm of m_star
-            print("l0 of m_star: ", torch.sum(m_star))
-            print("l1 norm of m_star: ", torch.sum(torch.abs(m_star)))
-
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
+            
+            #print 
+            print("step size: ", step_size)
+
             #then we update the parameters
 
             if not isinstance(m_star, torch.Tensor):
@@ -177,7 +176,7 @@ def train(
 
                 if param.requires_grad:
                     param.data = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
-
+                    print('sum: ', ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data).sum())
                 pointer += num_param
 
             #print stats
@@ -192,10 +191,10 @@ def train(
                         mini = min(mini, torch.min(attr))
                         maxi = max(maxi, torch.max(attr))
 
-            print("l0 norm of m_star: ", l0)
-            print("l1 norm of m_star: ", l1)
-            print("min of m_star: ", mini)
-            print("max of m_star: ", maxi)
+            print("l0 norm of mask: ", l0)
+            print("l1 norm of mask: ", l1)
+            print("min of mask: ", mini)
+            print("max of mask: ", maxi)
 
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
