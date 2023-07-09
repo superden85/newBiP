@@ -159,7 +159,7 @@ def train(
             #print l0 and l1 norm of m_star
             print("l0 of m_star: ", torch.sum(flat_m_star))
             print("l1 norm of m_star: ", torch.sum(torch.abs(flat_m_star)))
-            
+
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
             #then we update the parameters
@@ -179,6 +179,18 @@ def train(
                     param.data = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
                 pointer += num_param
+
+            #print stats
+            l0, l1 = 0, 0
+            mini, maxi = 1000, -1000
+            for (name, vec) in model.named_modules():
+                if hasattr(vec, "popup_scores"):
+                    attr = getattr(vec, "popup_scores")
+                    if attr is not None:
+                        l0 += torch.sum(attr)
+                        l1 += torch.sum(torch.abs(attr))
+                        mini = min(mini, torch.min(attr))
+                        maxi = max(maxi, torch.max(attr))
 
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
