@@ -132,8 +132,12 @@ def main():
             # If not used, a sparse net (without batch-norm) from scratch will not converge.
             # With batch-norm its not really necessary.
             scale_rand_init(model, args.k) """
-        #scaled scores to 1
-        initialize_constant(model, 1.0)
+
+        if '3' in args.trainer:
+            initialize_constant(model, 0.0)
+        else:
+            initialize_constant(model, 1.0)
+
 
     best_prec1 = 0
     start_epoch = 0
