@@ -141,18 +141,20 @@ def train(
             #the linear minimization problem is very simple we don't need to use a solver
             #here we have that 1 T m <= k * total
 
-            m_star = torch.zeros_like(outer_gradient)
-            flat_outer_gradient = outer_gradient.flatten()
-            idx = torch.argsort(flat_outer_gradient)
-            rank = torch.zeros_like(flat_outer_gradient)
-            rank[idx] = torch.arange(1, len(flat_outer_gradient)+1, dtype=rank.dtype, device=rank.device)
-            j = int(args.k * m_star.numel())
-            
+            m_star = torch.ones_like(outer_gradient)
+
             #flat_m_star and m_star access the same memory
             flat_m_star = m_star.flatten()
 
+            #get the lowest elements of the gradient
+            flat_outer_gradient = outer_gradient.flatten()
+            idx = torch.argsort(flat_outer_gradient)
+            j = int(args.k * m_star.numel())
+            
+
             #set to 1 only if it the gradient is negative and we are in the top k%
-            flat_m_star[rank <= j and flat_outer_gradient < 0] = 1
+            flat_m_star[idx[j:]] = 0
+            flat_m_star[flat_outer_gradient >= 0] = 0
 
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
