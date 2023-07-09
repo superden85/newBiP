@@ -177,7 +177,6 @@ def train(
                 if param.requires_grad:
                     param.data = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
                     l1_check += torch.sum(torch.abs(param.data)).item()
-                    print(l1_check)
                 pointer += num_param
 
             print('final l1 check :', l1_check)
