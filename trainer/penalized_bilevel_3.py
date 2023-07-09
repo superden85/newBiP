@@ -142,25 +142,14 @@ def train(
             #here we have that 1 T m <= k * total
 
             #m_star and outer_gradient access the same memory
-            print('hi')
             m_star = torch.zeros_like(outer_gradient)
-            flat_m_star = m_star.flatten()
-
-            flat = outer_gradient.flatten()
-            idx = torch.argsort(flat).tolist()
+            idx = torch.argsort(m_star)
             j = int((1 - args.k) * m_star.numel())
             
-            print('hi')
-            for index, val in enumerate(idx):
-                if index % 1000 == 0:
-                    print(index)
-                #we only set to 1 if the gradient is negative
-                if index >= j and flat[val] < 0:
-                    flat_m_star[val] = 1
-            
+            m_star[outer_gradient < 0 and idx >= j] = 1
+
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
-            print('hi')
             #then we update the parameters
 
             if not isinstance(m_star, torch.Tensor):
