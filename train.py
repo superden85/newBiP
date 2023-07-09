@@ -143,7 +143,8 @@ def main():
             scale_rand_init(model, args.k) """
 
         if '3' in args.trainer:
-            initialize_sparse(model, args.k)
+            k = initialize_sparse(model, args.k)
+            args.k = k
         else:
             initialize_constant(model, 1.0)
 

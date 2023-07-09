@@ -196,9 +196,18 @@ def initialize_sparse(model, k):
     print(
         f"Initializing mask with ones, with ratio: {k} (OVERWRITING SOURCE NET SCORES)"
     )
+
+    #we need to recalculate the ratio
+    total = 0
+    nonzero = 0
     for m in model.modules():
         if hasattr(m, 'popup_scores'):
             m.popup_scores.data = torch.bernoulli(torch.ones_like(m.popup_scores) * k)
+            total += m.popup_scores.numel()
+            nonzero += m.popup_scores.nonzero().size(0)
+
+    print(f"Effective Sparsity ratio: {nonzero/total}")
+    return nonzero/total
 
 def switch_to_prune(model):
     # print(f"#################### Pruning network ####################")
