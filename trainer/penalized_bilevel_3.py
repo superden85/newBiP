@@ -175,8 +175,9 @@ def train(
                 #i.e. if param.requires_grad = True
 
                 if param.requires_grad:
+                    print('sum given: ', ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data).sum())
                     param.data = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
-                    print('sum: ', ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data).sum())
+                    print('data sum after update: ', param.data.sum())
                 pointer += num_param
 
             #print stats
