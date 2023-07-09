@@ -149,10 +149,10 @@ def train(
             idx = torch.argsort(flat).tolist()
             j = int((1 - args.k) * m_star.numel())
             
-            for i, index in enumerate(idx):
+            for index, val in enumerate(idx):
                 #we only set to 1 if the gradient is negative
-                if i >= j and flat[index] < 0:
-                    flat_m_star[index] = 1
+                if index >= j and flat[val] < 0:
+                    flat_m_star[val] = 1
             
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
