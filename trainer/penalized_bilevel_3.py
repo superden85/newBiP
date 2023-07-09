@@ -156,6 +156,10 @@ def train(
             flat_m_star[idx[j:]] = 0
             flat_m_star[flat_outer_gradient >= 0] = 0
 
+            #print l0 and l1 norm of m_star
+            print("l0 of m_star: ", torch.sum(flat_m_star))
+            print("l1 norm of m_star: ", torch.sum(torch.abs(flat_m_star)))
+            
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
             #then we update the parameters
