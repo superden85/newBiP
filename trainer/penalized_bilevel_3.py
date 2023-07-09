@@ -152,6 +152,8 @@ def train(
             
             print('hi')
             for index, val in enumerate(idx):
+                if index % 1000 == 0:
+                    print(index)
                 #we only set to 1 if the gradient is negative
                 if index >= j and flat[val] < 0:
                     flat_m_star[val] = 1
