@@ -8,7 +8,8 @@ from utils.model import (
     switch_to_bilevel,
     switch_to_prune,
     switch_to_finetune,
-    get_epoch_data
+    get_epoch_data,
+    get_epoch_data_2
 )
 
 import numpy as np

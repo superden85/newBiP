@@ -8,7 +8,8 @@ from utils.model import (
     switch_to_bilevel,
     switch_to_prune,
     switch_to_finetune,
-    get_epoch_data
+    get_epoch_data,
+    get_epoch_data_2
 )
 
 import numpy as np
@@ -139,15 +140,20 @@ def train(
 
             #the linear minimization problem is very simple we don't need to use a solver
             #here we have that 1 T m <= k * total
-            #so we simply take the k lowest values of the gradient and set them to 1
 
+            #m_star and outer_gradient access the same memory
             m_star = torch.zeros_like(outer_gradient)
-            flat = outer_gradient.flatten()
-            idx = torch.argsort(flat)
-            j = int((1 - args.k) * m_star.numel())
-            m_star[idx[:j]] = 0
-            m_star[idx[j:]] = 1
+            flat_m_star = m_star.flatten()
 
+            flat = outer_gradient.flatten()
+            idx = torch.argsort(flat).tolist()
+            j = int((1 - args.k) * m_star.numel())
+            
+            for i, index in enumerate(idx):
+                #we only set to 1 if the gradient is negative
+                if i >= j and flat[index] < 0:
+                    flat_m_star[index] = 1
+            
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
 
