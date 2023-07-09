@@ -192,6 +192,11 @@ def train(
                         mini = min(mini, torch.min(attr))
                         maxi = max(maxi, torch.max(attr))
 
+            print("l0 norm of m_star: ", l0)
+            print("l1 norm of m_star: ", l1)
+            print("min of m_star: ", mini)
+            print("max of m_star: ", maxi)
+            
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
             losses.update(loss.item(), train_images.size(0))
