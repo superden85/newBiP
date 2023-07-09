@@ -175,9 +175,7 @@ def train(
                 #i.e. if param.requires_grad = True
 
                 if param.requires_grad:
-                    print('sum given: ', ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data).sum())
                     param.data = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
-                    print('data sum after update: ', param.data.sum())
                 pointer += num_param
 
             #print stats
@@ -192,10 +190,7 @@ def train(
                         mini = min(mini, torch.min(attr))
                         maxi = max(maxi, torch.max(attr))
 
-            print("l0 norm of mask: ", l0)
-            print("l1 norm of mask: ", l1)
-            print("min of mask: ", mini)
-            print("max of mask: ", maxi)
+            print('l0, l1, mini, maxi', l0, l1, mini, maxi)
 
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
