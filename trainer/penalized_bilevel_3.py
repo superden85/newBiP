@@ -157,8 +157,8 @@ def train(
             flat_m_star[flat_outer_gradient >= 0] = 0
 
             #print l0 and l1 norm of m_star
-            print("l0 of m_star: ", torch.sum(flat_m_star))
-            print("l1 norm of m_star: ", torch.sum(torch.abs(flat_m_star)))
+            print("l0 of m_star: ", torch.sum(m_star))
+            print("l1 norm of m_star: ", torch.sum(torch.abs(m_star)))
 
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
@@ -196,7 +196,7 @@ def train(
             print("l1 norm of m_star: ", l1)
             print("min of m_star: ", mini)
             print("max of m_star: ", maxi)
-            
+
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
             losses.update(loss.item(), train_images.size(0))
