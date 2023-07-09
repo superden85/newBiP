@@ -150,6 +150,7 @@ def train(
             idx = torch.argsort(flat).tolist()
             j = int((1 - args.k) * m_star.numel())
             
+            print('hi')
             for index, val in enumerate(idx):
                 #we only set to 1 if the gradient is negative
                 if index >= j and flat[val] < 0:
