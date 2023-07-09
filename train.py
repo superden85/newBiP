@@ -29,6 +29,7 @@ from utils.model import (
     scale_rand_init,
     current_model_pruned_fraction,
     initialize_constant,
+    initialize_sparse
 )
 from utils.schedules import get_lr_policy, get_optimizer
 
@@ -122,6 +123,14 @@ def main():
         else:
             raise ValueError("=> no checkpoint found at '{}'".format(args.source_net))
 
+
+    #print the number of parameters
+    num_params = 0
+    for param in model.parameters():
+        num_params += param.numel()
+    print(f"Number of parameters: {num_params}")
+
+
     # Init scores once source net is loaded.
     if args.exp_mode == "prune":
         """ if args.scaled_score_init:
@@ -134,7 +143,7 @@ def main():
             scale_rand_init(model, args.k) """
 
         if '3' in args.trainer:
-            initialize_constant(model, 0.0)
+            initialize_sparse(model, args.k)
         else:
             initialize_constant(model, 1.0)
 
@@ -170,13 +179,6 @@ def main():
         logger.info(f"Validation accuracy {args.val_method} for source-net: {p1}")
         if args.evaluate:
             return
-
-
-    #print the number of parameters
-    num_params = 0
-    for param in model.parameters():
-        num_params += param.numel()
-    print(f"Number of parameters: {num_params}")
 
 
     # Start training

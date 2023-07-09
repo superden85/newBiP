@@ -192,6 +192,13 @@ def initialize_constant(model, value):
         if hasattr(m, 'popup_scores'):
             nn.init.constant_(m.popup_scores, value)
 
+def initialize_sparse(model, k):
+    print(
+        f"Initializing mask with ones, with ratio: {k} (OVERWRITING SOURCE NET SCORES)"
+    )
+    for m in model.modules():
+        if hasattr(m, 'popup_scores'):
+            m.popup_scores.data = torch.bernoulli(torch.ones_like(m.popup_scores) * k)
 
 def switch_to_prune(model):
     # print(f"#################### Pruning network ####################")

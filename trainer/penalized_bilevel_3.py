@@ -158,8 +158,6 @@ def train(
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
             
-            #print l1 norm of m_star
-            print("l1 norm of m_star: ", torch.norm(m_star, p=1).item())
             #then we update the parameters
 
             if not isinstance(m_star, torch.Tensor):
@@ -167,7 +165,6 @@ def train(
                                 .format(torch.typename(vec)))
 
             pointer = 0
-            l1_check = 0
             for param in model.parameters():
                 num_param = param.numel()
 
@@ -176,10 +173,7 @@ def train(
 
                 if param.requires_grad:
                     param.data = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
-                    l1_check += torch.sum(torch.abs(param.data)).item()
                 pointer += num_param
-
-            print('final l1 check :', l1_check)
 
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
@@ -194,7 +188,7 @@ def train(
         if i % args.print_freq == 0:
             progress.display(i)
         
-        if i <= 10:
+        if i == 0:
             #print stats
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
