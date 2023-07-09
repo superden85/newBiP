@@ -6,7 +6,7 @@ exp_mode: "prune"
 normalize: True
 scaled_score_init: True
 
-k: 1
+k: 1.0
 
 # ->->->->-> Train <-<-<-<-<-
 trainer: "penalized_bilevel_3"
@@ -22,7 +22,7 @@ warmup_epochs: 0
 warmup_lr: 0.1
 
 #hyperparameters of penalty term
-lambd : 1
+lambd : 1.0
 
 # ->->->->-> Eval <-<-<-<-<-
 val_method: base

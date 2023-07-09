@@ -142,6 +142,7 @@ def train(
             #here we have that 1 T m <= k * total
 
             #m_star and outer_gradient access the same memory
+            print('hi')
             m_star = torch.zeros_like(outer_gradient)
             flat_m_star = m_star.flatten()
 
@@ -156,7 +157,7 @@ def train(
             
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
-
+            print('hi')
             #then we update the parameters
 
             if not isinstance(m_star, torch.Tensor):
