@@ -145,7 +145,7 @@ def train(
             flat_outer_gradient = outer_gradient.flatten()
             idx = torch.argsort(flat_outer_gradient)
             rank = torch.zeros_like(flat_outer_gradient)
-            rank[idx] = torch.arange(1, len(flat_outer_gradient)+1)
+            rank[idx] = torch.arange(1, len(flat_outer_gradient)+1, dtype=rank.dtype)
             j = int(args.k * m_star.numel())
             
             #flat_m_star and m_star access the same memory
