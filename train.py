@@ -130,6 +130,10 @@ def main():
         num_params += param.numel()
     print(f"Number of parameters: {num_params}")
 
+    #print if CUDA is available
+    print(f"Using CUDA: {torch.cuda.is_available()}")
+    print(f"Using device: {device}")
+    
 
     # Init scores once source net is loaded.
     if args.exp_mode == "prune":
