@@ -1,7 +1,6 @@
 import argparse
 import matplotlib.pyplot as plt
-from torch import load
-from numpy import linspace, zeros
+from numpy import linspace, zeros, load
 import os
 
 def main():
