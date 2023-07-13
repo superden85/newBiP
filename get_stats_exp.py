@@ -21,8 +21,11 @@ def main():
     folder = args.exp_name
     #n_points = args.n
 
-    #go to the folder 'latest_exp' inside folder
-    folder = os.path.join(folder, 'latest_exp')
+    #the folder is inside 'trained_models/'
+    folder = os.path.join('trained_models', folder)
+
+    #we have to go inside the folder 'prune/latest_exp/'
+    folder = os.path.join(folder, 'prune/latest_exp')
 
     #open the file 'epochs_data.npy' inside folder
     file_path = os.path.join(folder, 'epochs_data.npy')
