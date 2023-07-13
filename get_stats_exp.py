@@ -30,6 +30,8 @@ def main():
     #open the file 'epochs_data.npy' inside folder
     file_path = os.path.join(folder, 'epochs_data.npy')
 
+    print('searching in : ', file_path)
+
     l = load(file_path, allow_pickle=True)
 
     print(l)
