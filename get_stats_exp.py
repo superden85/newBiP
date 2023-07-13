@@ -35,3 +35,6 @@ def main():
     l = load(file_path, allow_pickle=True)
 
     print(l)
+
+if __name__ == '__main__':
+    main()
