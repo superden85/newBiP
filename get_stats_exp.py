@@ -52,12 +52,8 @@ def main():
         treshold_list = s
         below_treshold_list.append(t)
     
-    #plot the l0, l1, mini and maxi
-    plt.plot(l0_list, label='l0')
-    plt.plot(l1_list, label='l1')
-    plt.plot(mini_list, label='mini')
+    #plot the maxi
     plt.plot(maxi_list, label='maxi')
-
     plt.legend()
     
     #give a title and labels
