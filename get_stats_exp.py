@@ -34,7 +34,8 @@ def main():
 
     l = load(file_path, allow_pickle=True)
 
-    print(l)
+    print(len(l))
+    print(l[0])
 
 if __name__ == '__main__':
     main()
