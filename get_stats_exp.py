@@ -34,8 +34,45 @@ def main():
 
     l = load(file_path, allow_pickle=True)
 
-    print(len(l))
-    print(l[0])
+    l0_list = []
+    l1_list = []
+    mini_list = []
+    maxi_list = []
+
+    treshold_list = []
+    below_treshold_list = []
+
+    for (l0, l1, mini, maxi, c) in l:
+        l0_list.append(l0)
+        l1_list.append(l1)
+        mini_list.append(mini)
+        maxi_list.append(maxi)
+        
+        s, t = c
+        treshold_list = s
+        below_treshold_list.append(t)
+    
+    #plot the l0, l1, mini and maxi
+    plt.plot(l0_list, label='l0')
+    plt.plot(l1_list, label='l1')
+    plt.plot(mini_list, label='mini')
+    plt.plot(maxi_list, label='maxi')
+
+    plt.legend()
+    
+    #give a title and labels
+    plt.title('Evolution of the metrics through pruning')
+    plt.xlabel('Epochs')
+    plt.ylabel('Metrics')
+
+    # Save the plot
+    save_directory = 'plots'
+    os.makedirs(save_directory, exist_ok=True)  # Create the directory if it doesn't exist
+
+    save_path = os.path.join(save_directory, 'plot.png')
+    plt.savefig(save_path)
+
+    print('Plot saved.')
 
 if __name__ == '__main__':
     main()
