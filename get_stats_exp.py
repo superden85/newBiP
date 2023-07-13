@@ -9,7 +9,7 @@ def main():
     parser = argparse.ArgumentParser(description='Do plots on the evolution of some metrics through pruning.')
 
     # Add command line arguments
-    parser.add_argument('--exp-name', type=str, help='Name of the folder (and experiment) to look into.')
+    parser.add_argument('--folder', type=str, help='Name of the folder to look into.')
     #parser.add_argument('--n', type=int, help='Number of points to plot', default=1000)
     #parser.add_argument('--save-path', type=str, help='Path to the image of the plot')
 
@@ -18,7 +18,7 @@ def main():
     args = parser.parse_args()
 
     # Access the argument values
-    folder = args.exp_name
+    folder = args.folder
     #n_points = args.n
 
     #the folder is inside 'trained_models/'
