@@ -2,6 +2,7 @@ import argparse
 import matplotlib.pyplot as plt
 from torch import load
 from numpy import linspace, zeros, load
+import re
 import os
 
 
@@ -67,7 +68,6 @@ def main():
             plt.xlabel('Epochs')
             plt.ylabel('l0 / n')
             plt.title('Evolution of l0 / n during training of ' + folder)
-            plt.legend()
 
             # Save the plot
             save_directory = 'plots'
@@ -84,7 +84,6 @@ def main():
             plt.xlabel('Epochs')
             plt.ylabel('l1 / n')
             plt.title('Evolution of l1 / n during training of ' + folder)
-            plt.legend()
 
             # Save the plot
             save_directory = 'plots'
@@ -101,7 +100,6 @@ def main():
             plt.xlabel('Epochs')
             plt.ylabel('Maximum element')
             plt.title('Evolution of the maximum element during training of ' + folder)
-            plt.legend()
 
             # Save the plot
             save_directory = 'plots'
@@ -157,7 +155,6 @@ def main():
             plt.xlabel('Epochs')
             plt.ylabel('Accuracy')
             plt.title('Evolution of the accuracy during training of : ' + folder)
-            plt.legend()
 
             # Save the plot
             save_directory = 'plots'
@@ -193,7 +190,6 @@ def main():
             plt.xlabel('Epochs')
             plt.ylabel('l0 / n')
             plt.title('Evolution of l0 / n during training of ' + folder)
-            plt.legend()
 
             # Save the plot
             save_directory = 'plots'
@@ -210,7 +206,6 @@ def main():
             plt.xlabel('Epochs')
             plt.ylabel('l1 / n')
             plt.title('Evolution of l1 / n during training of ' + folder)
-            plt.legend()
 
             # Save the plot
             save_directory = 'plots'
@@ -227,7 +222,6 @@ def main():
             plt.xlabel('Epochs')
             plt.ylabel('Maximum element')
             plt.title('Evolution of the maximum element during training of ' + folder)
-            plt.legend()
 
             # Save the plot
             save_directory = 'plots'
@@ -300,8 +294,7 @@ def main():
             plt.plot(epochs, accuracies)
             plt.xlabel('Epochs')
             plt.ylabel('Accuracy')
-            plt.title('Evolution of the accuracy during training of : ' + folder)
-            plt.legend()
+            plt.title('Evolution of the accuracy during training of : ' + folder))
 
             # Save the plot
             save_directory = 'plots'
