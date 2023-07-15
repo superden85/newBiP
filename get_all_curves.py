@@ -294,7 +294,7 @@ def main():
             plt.plot(epochs, accuracies)
             plt.xlabel('Epochs')
             plt.ylabel('Accuracy')
-            plt.title('Evolution of the accuracy during training of : ' + folder))
+            plt.title('Evolution of the accuracy during training of : ' + folder)
 
             # Save the plot
             save_directory = 'plots'
