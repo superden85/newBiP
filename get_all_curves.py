@@ -6,6 +6,7 @@ import os
 
 
 n = 22338314 // 2
+iterations_to_plot = [9 + 10 * i for i in range(10)]
 
 def main():
     # Create an ArgumentParser object
@@ -113,7 +114,8 @@ def main():
             plt.clf()
 
             #below_treshold plot
-            plt.plot([10**exp for exp in treshold_list], below_treshold_list)
+            for iteration in iterations_to_plot:
+                plt.plot([10**exp for exp in treshold_list], below_treshold_list[iteration], label='Epoch ' + str(iteration))
             plt.xlabel('Treshold')
             plt.ylabel('Ratio of elements below treshold')
             plt.title('Evolution of the ratio of elements below treshold during training of ' + folder)
@@ -238,7 +240,8 @@ def main():
             plt.clf()
 
             #below_treshold plot
-            plt.plot([10**exp for exp in treshold_list], below_treshold_list)
+            for iteration in iterations_to_plot:
+                plt.plot([10**exp for exp in treshold_list], below_treshold_list[iteration], label='Epoch ' + str(iteration))
             plt.xlabel('Treshold')
             plt.ylabel('Ratio of elements below treshold')
             plt.title('Evolution of the ratio of elements below treshold during training of ' + folder)
@@ -255,7 +258,8 @@ def main():
             plt.clf()
 
             #over_treshold plot
-            plt.plot([1-10**exp for exp in treshold_list], over_treshold_list)
+            for iteration in iterations_to_plot:
+                plt.plot([1-10**exp for exp in treshold_list], over_treshold_list[iteration], label='Epoch ' + str(iteration))
             plt.xlabel('Treshold')
             plt.ylabel('Ratio of elements over treshold')
             plt.title('Evolution of the ratio of elements over treshold during training of ' + folder)
