@@ -25,6 +25,7 @@ def main():
 
         #we continue if the folder does not contain 'prune'
         if 'prune' not in os.listdir(os.path.join('trained_models', folder)):
+            print('No prune folder in ' + folder)
             continue
 
         #we have to go inside the folder 'prune/latest_exp/' in folder
@@ -160,9 +161,11 @@ def main():
 
         #clear the plot
         plt.clf()
+
+        print('Plots done for ' + folder)
        
 
-    print('Plots saved with success.')
+    print('All plots done with success.')
 
 if __name__ == '__main__':
     main()
