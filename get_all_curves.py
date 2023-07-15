@@ -34,6 +34,8 @@ def main():
         #open the file 'epochs_data.npy' inside folder
         file_path = os.path.join(path, 'epochs_data.npy')
 
+        print('Plots for ' + folder + ' in progress ...')
+
         l = load(file_path, allow_pickle=True)
 
         l0_list = []
