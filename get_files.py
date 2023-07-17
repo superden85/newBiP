@@ -1,12 +1,7 @@
-from torch import load
-from numpy import linspace, zeros, log10
 import os
 import shutil
 
 def main():
-    # Create an ArgumentParser object
-    parser = argparse.ArgumentParser(description='Put the files in folder')
-
 
     #folder to create
     folder_to_create = 'npy_files'
