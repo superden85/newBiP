@@ -25,6 +25,9 @@ def main():
         file = os.path.join(path, 'epochs_data.npy')
         destination_path = os.path.join(folder_to_create, folder)
         destination_path = os.path.join(destination_path, 'epochs_data.npy')
+
+        #create the path if not exists
+        os.makedirs(os.path.dirname(destination_path), exist_ok=True)
         #copy the file to the folder_to_create folder
         shutil.copy(file, destination_path)
 
@@ -33,6 +36,8 @@ def main():
         destination_path = os.path.join(folder_to_create, folder)
         destination_path = os.path.join(destination_path, 'setup.log')
 
+        #create the path if not exists
+        os.makedirs(os.path.dirname(destination_path), exist_ok=True)
         #copy the file to the folder_to_create folder
         shutil.copy(file, destination_path)
 
