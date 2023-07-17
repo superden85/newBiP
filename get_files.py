@@ -6,6 +6,11 @@ def main():
     #folder to create
     folder_to_create = 'npy_files'
 
+    #create the folder if not exists
+    if not os.path.exists(folder_to_create):
+        os.mkdir(folder_to_create)
+    
+
     #go to the folder trained_models, and copy all the files to the folder_to_create folder
     for folder in os.listdir('trained_models'):
         #skip if the folder does not contain the word RC
@@ -25,7 +30,7 @@ def main():
         file = os.path.join(path, 'setup.log')
         shutil.copy(file, folder_to_create)
 
-print('Done!')
+    print('Done!')
 
 if __name__ == '__main__':
     main()
