@@ -23,12 +23,13 @@ def main():
         #get the 'epochs_data.npy' file
         file = os.path.join(path, 'epochs_data.npy')
 
+        destination_folder = os.path.join(folder_to_create, folder)
         #copy the file to the folder_to_create folder
-        shutil.copy(file, folder_to_create)
+        shutil.copy(file, destination_folder)
 
         #same with setup.log
         file = os.path.join(path, 'setup.log')
-        shutil.copy(file, folder_to_create)
+        shutil.copy(file, destination_folder)
 
     print('Done!')
 
