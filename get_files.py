@@ -20,15 +20,20 @@ def main():
         path = os.path.join('trained_models', folder)
         #go to prune/latest_exp folder
         path = os.path.join(path, 'prune', 'latest_exp')
+
         #get the 'epochs_data.npy' file
         file = os.path.join(path, 'epochs_data.npy')
-
-        destination_folder = os.path.join(folder_to_create, folder)
+        destination_path = os.path.join(folder_to_create, folder)
+        destination_path = os.path.join(destination_path, 'epochs_data.npy')
         #copy the file to the folder_to_create folder
         shutil.copy(file, destination_folder)
 
         #same with setup.log
         file = os.path.join(path, 'setup.log')
+        destination_path = os.path.join(folder_to_create, folder)
+        destination_path = os.path.join(destination_path, 'setup.log')
+
+        #copy the file to the folder_to_create folder
         shutil.copy(file, destination_folder)
 
     print('Done!')
