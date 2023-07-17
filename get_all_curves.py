@@ -113,7 +113,7 @@ def main():
 
             #below_treshold plot
             for iteration in iterations_to_plot:
-                plt.plot(['10**exp' for exp in treshold_list], below_treshold_list[iteration], label='Epoch ' + str(iteration))
+                plt.plot(['10**-{}'.format for exp in treshold_list], below_treshold_list[iteration], label='Epoch ' + str(iteration))
             plt.xlabel('Treshold')
             plt.ylabel('Ratio of elements below treshold')
             plt.title('Evolution of the ratio of elements below treshold during training of ' + folder)
@@ -235,7 +235,7 @@ def main():
 
             #below_treshold plot
             for iteration in iterations_to_plot:
-                plt.plot(['10**exp' for exp in treshold_list], below_treshold_list[iteration], label='Epoch ' + str(iteration))
+                plt.plot(['10**-{}'.format(exp) in treshold_list], below_treshold_list[iteration], label='Epoch ' + str(iteration))
             plt.xlabel('Treshold')
             plt.ylabel('Ratio of elements below treshold')
             plt.title('Evolution of the ratio of elements below treshold during training of ' + folder)
@@ -253,7 +253,7 @@ def main():
 
             #over_treshold plot
             for iteration in iterations_to_plot:
-                plt.plot(['1-10**exp' for exp in treshold_list], over_treshold_list[iteration], label='Epoch ' + str(iteration))
+                plt.plot(['1-10**-{}'.format(exp) for exp in treshold_list], over_treshold_list[iteration], label='Epoch ' + str(iteration))
             plt.xlabel('Treshold')
             plt.ylabel('Ratio of elements over treshold')
             plt.title('Evolution of the ratio of elements over treshold during training of ' + folder)
