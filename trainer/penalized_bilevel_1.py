@@ -177,7 +177,7 @@ def train(
         if i % args.print_freq == 0:
             progress.display(i)
         
-        if i <= 0:
+        if i <= 5:
             #print stats
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
@@ -207,7 +207,7 @@ def train(
             print("number of positive values in the outer gradient: ", torch.sum(outer_gradient > 0).item())
             #print the number of zero values in the outer gradient
             print("number of zero values in the outer gradient: ", torch.sum(outer_gradient == 0).item())
-            
+
         
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
