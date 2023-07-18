@@ -177,7 +177,7 @@ def train(
         if i % args.print_freq == 0:
             progress.display(i)
         
-        if i == 0:
+        if i <= 0:
             #print stats
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
@@ -194,6 +194,20 @@ def train(
             print("l1 norm of mask: ", l1)
             print("min of mask: ", mini)
             print("max of mask: ", maxi)
+
+            #print stats for the outer gradient
+            print("l0 norm of outer gradient: ", torch.sum(outer_gradient != 0).item())
+            print("l1 norm of outer gradient: ", torch.sum(torch.abs(outer_gradient)).item())
+            print("min of outer gradient: ", torch.min(outer_gradient).item())
+            print("max of outer gradient: ", torch.max(outer_gradient).item())
+
+            #print the number of negative values in the outer gradient
+            print("number of negative values in the outer gradient: ", torch.sum(outer_gradient < 0).item())
+            #print the number of positive values in the outer gradient
+            print("number of positive values in the outer gradient: ", torch.sum(outer_gradient > 0).item())
+            #print the number of zero values in the outer gradient
+            print("number of zero values in the outer gradient: ", torch.sum(outer_gradient == 0).item())
+            
         
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
