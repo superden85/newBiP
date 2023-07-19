@@ -36,6 +36,8 @@ def train(
     model.train()
     end = time.time()
 
+    outer_gradients = []
+    masks = []
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
         val_images, val_targets = val_data_batch[0].to(device), val_data_batch[1].to(device)
@@ -177,9 +179,10 @@ def train(
         if i % args.print_freq == 0:
             progress.display(i)
         
-        if I == 0:
+        iteration_number = epoch * len(train_loader) + i
+        if epoch == 0 and iteration_number < 100:
             #print stats
-            l0, l1 = 0, 0
+            """ l0, l1 = 0, 0
             mini, maxi = 1000, -1000
             for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
@@ -195,8 +198,31 @@ def train(
             print("min of mask: ", mini)
             print("max of mask: ", maxi)
 
-        
+            #print stats for the outer gradient
+            print("l0 norm of outer gradient: ", torch.sum(outer_gradient != 0).item())
+            print("l1 norm of outer gradient: ", torch.sum(torch.abs(outer_gradient)).item())
+            print("min of outer gradient: ", torch.min(outer_gradient).item())
+            print("max of outer gradient: ", torch.max(outer_gradient).item())
+
+            #print the number of negative values in the outer gradient
+            print("number of negative values in the outer gradient: ", torch.sum(outer_gradient < 0).item())
+            #print the number of positive values in the outer gradient
+            print("number of positive values in the outer gradient: ", torch.sum(outer_gradient > 0).item())
+            #print the number of zero values in the outer gradient
+            print("number of zero values in the outer gradient: ", torch.sum(outer_gradient == 0).item()) """
+
+            #add the outer gradient to the list of outer gradients
+            outer_gradients.append(outer_gradient.detach().cpu().numpy())
+
+            #add the mask to the list of masks
+            masks.append(model.get_mask())
+
+
+    
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
+    if epoch == 0:
+        epoch_data.append(outer_gradients)
+        epoch_data.append(masks)
 
     return epoch_data

@@ -107,6 +107,15 @@ class MnistModel(nn.Module):
     
     def forward(self, x):
         return self._forward_impl(x)
+    
+    def get_mask(self):
+        mask = []
+        for (name, vec) in self.named_modules():
+            if hasattr(vec, "weight"):
+                attr = getattr(vec, "weight")
+                if attr is not None:
+                    mask.append(attr.numpy())
+        return mask
 
 
 def mnist_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
