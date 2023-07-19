@@ -174,7 +174,7 @@ def train(
 
             def mask_tensor(parameters):
                 params = []
-                for param in self.parameters:
+                for param in parameters:
                     if param.requires_grad:
                         params.append(torch.zeros_like(param.view(-1)).detach())
                     else:
