@@ -9,7 +9,7 @@ scaled_score_init: True
 #k: 0.1 no k here but a lambda and alpha
 
 # ->->->->-> Train <-<-<-<-<-
-trainer: "penalized_bilevel_1"
+trainer: "penalized_bilevel_debug"
 layer_type: "unstructured"
 epochs: 1
 optimizer: "sgd"
