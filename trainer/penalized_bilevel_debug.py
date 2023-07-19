@@ -232,15 +232,15 @@ def train(
             print("number of zero values in the outer gradient: ", torch.sum(outer_gradient == 0).item())
 
             #add the outer gradient to the list of outer gradients
-            outer_gradients.append(outer_gradient.detach().cpu().numpy())
+            #outer_gradients.append(outer_gradient.detach().cpu().numpy())
 
             #add the mask to the list of masks
-            masks.append(model.get_mask().cpu().numpy())
+            #masks.append(model.get_mask().cpu().numpy())
 
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
-    epoch_data.append(outer_gradients)
-    epoch_data.append(masks)
+    #epoch_data.append(outer_gradients)
+    #epoch_data.append(masks)
     epoch_data.append(duality_gaps)
 
     return epoch_data
