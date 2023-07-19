@@ -182,7 +182,7 @@ def train(
         iteration_number = epoch * len(train_loader) + i
         if epoch == 0 and iteration_number < 40:
             #print stats
-            """ l0, l1 = 0, 0
+            l0, l1 = 0, 0
             mini, maxi = 1000, -1000
             for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
@@ -209,7 +209,7 @@ def train(
             #print the number of positive values in the outer gradient
             print("number of positive values in the outer gradient: ", torch.sum(outer_gradient > 0).item())
             #print the number of zero values in the outer gradient
-            print("number of zero values in the outer gradient: ", torch.sum(outer_gradient == 0).item()) """
+            print("number of zero values in the outer gradient: ", torch.sum(outer_gradient == 0).item())
 
             #add the outer gradient to the list of outer gradients
             outer_gradients.append(outer_gradient.detach().cpu().numpy())
