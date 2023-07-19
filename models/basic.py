@@ -114,7 +114,7 @@ class MnistModel(nn.Module):
             if hasattr(vec, "weight"):
                 attr = getattr(vec, "weight")
                 if attr is not None:
-                    mask.append(attr.numpy())
+                    mask.append(attr.numpy().detach().cpu().numpy())
         return mask
 
 
