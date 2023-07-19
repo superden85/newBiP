@@ -39,6 +39,7 @@ def train(
     outer_gradients = []
     masks = []
     duality_gaps = []
+    losses_list = []
 
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
@@ -184,6 +185,7 @@ def train(
             params = mask_tensor(model.parameters())
             duality_gap = -torch.dot(outer_gradient, m_star - params).item()
             duality_gaps.append(duality_gap)
+            losses_list.append(loss.item())
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
             losses.update(loss.item(), train_images.size(0))
@@ -236,11 +238,13 @@ def train(
 
             #add the mask to the list of masks
             #masks.append(model.get_mask().cpu().numpy())
+        
 
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
     #epoch_data.append(outer_gradients)
     #epoch_data.append(masks)
     epoch_data.append(duality_gaps)
+    epoch_data.append(losses_list)
 
     return epoch_data
