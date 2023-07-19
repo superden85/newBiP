@@ -215,7 +215,7 @@ def train(
             outer_gradients.append(outer_gradient.detach().cpu().numpy())
 
             #add the mask to the list of masks
-            masks.append(model.get_mask())
+            masks.append(model.get_mask().detach().cpu().numpy().flatten())
 
 
     

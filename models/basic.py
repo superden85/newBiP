@@ -114,8 +114,8 @@ class MnistModel(nn.Module):
             if hasattr(vec, "weight"):
                 attr = getattr(vec, "weight")
                 if attr is not None:
-                    mask.append(attr.detach().cpu().numpy())
-        return mask
+                    mask.append(attr)
+        return torch.cat(mask)
 
 
 def mnist_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):

@@ -7,15 +7,15 @@ data = np.random.rand(10, 100)
 
 fig, ax = plt.subplots()
 
-# Initialize a line object for the plot
-line, = ax.plot(data[0, :])
+# Initialize a scatter object for the plot
+scatter = ax.scatter(range(len(vectors[0])), vectors[0])
 
 # Define an update function for the animation
 def update(i):
-    line.set_ydata(data[i, :])  # update the data of the line object
-    return line,
+    scatter.set_offsets(np.c_[range(len(vectors[i])), vectors[i]])  # update the data of the scatter object
+    return scatter,
 
 # Create an animation
-ani = animation.FuncAnimation(fig, update, frames=range(10), interval=200)
+ani = animation.FuncAnimation(fig, update, frames=len(vectors), interval=200)
 
 plt.show()
