@@ -118,6 +118,7 @@ class MnistModel(nn.Module):
         return torch.cat(mask)
 
 
+
 def mnist_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
     assert init_type == "kaiming_normal", "only supporting kaiming_normal init"
     model = MnistModel(conv_layer, linear_layer, init_type, **kwargs)

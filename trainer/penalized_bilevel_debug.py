@@ -170,10 +170,19 @@ def train(
 
 
             #we want to compute the duality gap as well
-            #it is equal to d = - <outer_gradient, m_star - mask>
+            #it is equal to d = - <outer_gradient, m_star - params>
 
-            mask = model.get_mask()
-            duality_gap = -torch.dot(outer_gradient, m_star - mask).item()
+            def mask_tensor(parameters):
+                params = []
+                for param in self.parameters:
+                    if param.requires_grad:
+                        params.append(torch.zeros_like(param.view(-1)).detach())
+                    else:
+                        params.append(param.view(-1).detach())
+                return torch.cat(params)
+
+            params = model.get_params()
+            duality_gap = -torch.dot(outer_gradient, m_star - params).item()
             duality_gaps.append(duality_gap)
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
