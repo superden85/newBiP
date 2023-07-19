@@ -181,7 +181,7 @@ def train(
                         params.append(param.view(-1).detach())
                 return torch.cat(params)
 
-            params = model.get_params()
+            params = get_params(model.parameters())
             duality_gap = -torch.dot(outer_gradient, m_star - params).item()
             duality_gaps.append(duality_gap)
             output = model(train_images)
