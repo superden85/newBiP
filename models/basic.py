@@ -114,7 +114,7 @@ class MnistModel(nn.Module):
             if hasattr(vec, "weight"):
                 attr = getattr(vec, "weight")
                 if attr is not None:
-                    mask.append(attr)
+                    mask.append(attr.view(-1).detach())
         return torch.cat(mask)
 
 
