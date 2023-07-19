@@ -111,8 +111,8 @@ class MnistModel(nn.Module):
     def get_mask(self):
         mask = []
         for (name, vec) in self.named_modules():
-            if hasattr(vec, "weight"):
-                attr = getattr(vec, "weight")
+            if hasattr(vec, "popup_scores"):
+                attr = getattr(vec, "popup_scores")
                 if attr is not None:
                     mask.append(attr.view(-1).detach())
         return torch.cat(mask)
