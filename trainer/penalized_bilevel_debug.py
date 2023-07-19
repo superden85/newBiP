@@ -180,7 +180,7 @@ def train(
             progress.display(i)
         
         iteration_number = epoch * len(train_loader) + i
-        if epoch == 0 and iteration_number < 100:
+        if epoch == 0 and iteration_number < 40:
             #print stats
             """ l0, l1 = 0, 0
             mini, maxi = 1000, -1000
