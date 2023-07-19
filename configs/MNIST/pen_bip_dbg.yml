@@ -1,7 +1,7 @@
 # ->->->->-> Primary <-<-<-<-<-
-arch: "resnet20s"
+arch: "mnist_model"
 result_dir: "./trained_models"
-exp_name: "CIFAR10_resnet20s_Unstructured_Pen_BiP_1_Debug"
+exp_name: "MNIST_mnist_model_Penalized_Bilevel_1_Debug"
 exp_mode: "prune"
 normalize: True
 scaled_score_init: True
@@ -22,8 +22,8 @@ warmup_epochs: 0
 warmup_lr: 0.1
 
 #hyperparameters of penalty term
-lambd : 0.999999
-alpha : 1
+lambd : 100
+alpha : 10
 
 
 # ->->->->-> Eval <-<-<-<-<-
@@ -31,7 +31,7 @@ val_method: base
 
 
 # ->->->->-> Dataset <-<-<-<-<-
-dataset: CIFAR10
+dataset: MNIST
 batch_size: 128
 test_batch_size: 128
 num_classes: 10
