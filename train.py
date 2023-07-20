@@ -130,6 +130,15 @@ def main():
         num_params += param.numel()
     print(f"Number of parameters: {num_params}")
 
+    #print the mask length
+    mask_length = 0
+    for (name, vec) in model.named_modules():
+        if hasattr(vec, "popup_scores"):
+            attr = getattr(vec, "popup_scores")
+            if attr is not None:
+                mask_length += attr.numel()
+    print(f"Mask length: {mask_length}")
+
     #print if CUDA is available
     print(f"Using CUDA: {torch.cuda.is_available()}")
     print(f"Using device: {device}")
