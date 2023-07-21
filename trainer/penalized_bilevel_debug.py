@@ -274,6 +274,7 @@ def train(
     #epoch_data.append(outer_gradients)
     #epoch_data.append(masks)
     epoch_data.append(duality_gaps)
+    epoch_data.append(duality_gaps_bis)
     epoch_data.append(losses_list)
 
     return epoch_data
