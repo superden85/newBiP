@@ -231,7 +231,7 @@ def train(
             progress.display(i)
         
         iteration_number = epoch * len(train_loader) + i
-        if iteration_number <= 40:
+        """ if iteration_number <= 40:
             #print stats
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
@@ -266,7 +266,7 @@ def train(
             #outer_gradients.append(outer_gradient.detach().cpu().numpy())
 
             #add the mask to the list of masks
-            #masks.append(model.get_mask().cpu().numpy())
+            #masks.append(model.get_mask().cpu().numpy()) """
         
 
     #return data related to the mask of this epoch
