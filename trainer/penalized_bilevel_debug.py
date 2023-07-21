@@ -13,6 +13,8 @@ from utils.model import (
 
 import numpy as np
 
+import copy
+
 
 def train(
         model, device, train_loader, criterion, optimizer_list, epoch, args
@@ -39,7 +41,10 @@ def train(
     outer_gradients = []
     masks = []
     duality_gaps = []
+    duality_gaps_bis = []
     losses_list = []
+
+    model_clone = copy.deepcopy(model)
 
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
@@ -185,6 +190,30 @@ def train(
             params = mask_tensor(model.parameters())
             duality_gap = -torch.dot(outer_gradient, m_star - params).item()
             duality_gaps.append(duality_gap)
+
+            #calculate the duality gap in an another way:
+            #copy the weights of the model_clone into the model
+
+            model_clone.load_state_dict(model.state_dict())
+            #calculate the loss of the model_clone
+            #update the mask parameters to m_star
+            pointer = 0
+            for param in model_clone.parameters():
+                num_param = param.numel()
+
+                #update only if it is a popup score
+                #i.e. if param.requires_grad = True
+
+                if param.requires_grad:
+                    param.data = m_star[pointer:pointer + num_param].view_as(param).data
+
+                pointer += num_param
+
+            #calculate the loss of the model_clone
+            loss_m_star = criterion(model_clone(train_images), train_targets)
+            duality_gap_bis = loss_mask.item() - loss_m_star.item()
+            duality_gaps_bis.append(duality_gap_bis)
+            
             losses_list.append(loss.item())
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
