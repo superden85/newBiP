@@ -11,7 +11,7 @@ scaled_score_init: True
 # ->->->->-> Train <-<-<-<-<-
 trainer: "penalized_bilevel_debug"
 layer_type: "unstructured"
-epochs: 100
+epochs: 10
 optimizer: "sgd"
 lr: 0.1
 lr_schedule: "cosine"
