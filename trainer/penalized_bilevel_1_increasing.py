@@ -98,7 +98,7 @@ def train(
             #here only the iteration number is a triangular number
             iteration_number = epoch * len(train_loader) + i + 1
 
-            if int(sqrt(1 + 8 * iteration_number)) ** 2 == 1 + 8 * iteration_number:
+            if int(np.sqrt(1 + 8 * iteration_number)) ** 2 == 1 + 8 * iteration_number:
                 
                 print('Updating the mask at iteration : ', iteration_number)
             
