@@ -82,6 +82,8 @@ def train(
             iteration_number = epoch * len(train_loader) + i
 
             if int(sqrt(1 + 8 * iteration_number)) ** 2 == 1 + 8 * iteration_number:
+                
+                print('Updating the mask at iteration : ', iteration_number)
                 switch_to_bilevel(model)
                 optimizer.zero_grad()
                 output = model(train_images)
@@ -129,6 +131,8 @@ def train(
                 losses.update(loss.item(), train_images.size(0))
                 top1.update(acc1[0], train_images.size(0))
                 top5.update(acc5[0], train_images.size(0))
+
+                losses_list.append(loss.item())
 
         batch_time.update(time.time() - end)
         end = time.time()
