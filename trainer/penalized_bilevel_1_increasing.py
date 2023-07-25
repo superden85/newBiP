@@ -36,6 +36,7 @@ def train(
     model.train()
     end = time.time()
 
+    duality_gaps = []
     losses_list = []
 
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
@@ -173,6 +174,23 @@ def train(
 
                     pointer += num_param
 
+
+                #we want to compute the duality gap as well
+                #it is equal to d = - <outer_gradient, m_star - params>
+
+                def mask_tensor(parameters):
+                    params = []
+                    for param in parameters:
+                        if param.requires_grad:
+                            params.append(torch.zeros_like(param.view(-1)).detach())
+                        else:
+                            params.append(param.view(-1).detach())
+                    return torch.cat(params)
+
+                params = mask_tensor(model.parameters())
+                duality_gap = -torch.dot(outer_gradient, m_star - params).item()
+                duality_gaps.append(duality_gap)
+
                 output = model(train_images)
                 acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
                 losses.update(loss.item(), train_images.size(0))
@@ -209,6 +227,7 @@ def train(
         
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
+    epoch_data.append(duality_gaps)
     epoch_data.append(losses_list)
 
     return epoch_data
