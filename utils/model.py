@@ -457,4 +457,3 @@ def get_epoch_data_2(model):
     epoch_data.append((treshold_exp_list, percentage_below_treshold_2))
 
     return epoch_data
-

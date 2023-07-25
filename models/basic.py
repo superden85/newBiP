@@ -116,8 +116,19 @@ class MnistModel(nn.Module):
                 if attr is not None:
                     mask.append(attr.view(-1).detach())
         return torch.cat(mask)
+    
+"""     def prune(self):
+        #set the weights that are zero in the mask to zero weights in the model
+        #and set an attribute frozen = True for them
 
-
+        for (name, vec) in self.named_modules():
+            if hasattr(vec, "popup_scores"):
+                attr = getattr(vec, "popup_scores")
+                if attr is not None:
+                    mask = attr.view(-1).detach()
+                    vec.weight.data *= mask
+                    vec.frozen = True """
+        
 
 def mnist_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
     assert init_type == "kaiming_normal", "only supporting kaiming_normal init"

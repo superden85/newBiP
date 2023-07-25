@@ -223,7 +223,7 @@ def parse_args():
     parser.add_argument(
         "--accelerate",
         action="store_true",
-        help="Use PFTT to accelerate",
+        help="Leverage sparsity to speed up pruning",
     )
 
     return parser.parse_args()
