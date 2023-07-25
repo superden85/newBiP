@@ -131,4 +131,4 @@ def train(
         if i % args.print_freq == 0:
             progress.display(i)
 
-    return lo
+    return losses_list
