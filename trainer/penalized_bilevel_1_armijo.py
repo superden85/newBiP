@@ -155,7 +155,7 @@ def train(
             """ #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2) """
 
-            def update_parameters():
+            def update_parameters(step_size, d):
                 if not isinstance(m_star, torch.Tensor):
                     raise TypeError('expected torch.Tensor, but got: {}'
                                     .format(torch.typename(vec)))
@@ -168,7 +168,7 @@ def train(
                     #i.e. if param.requires_grad = True
 
                     if param.requires_grad:
-                        param.data = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
+                        param.data = (param.data + step_size * d.view_as(param).data)
 
                     pointer += num_param
 
@@ -188,17 +188,21 @@ def train(
             dk = m_star - mask_tensor(model.parameters())
             p = torch.dot(outer_gradient, dk).item()
 
-            update_parameters()
+            update_parameters(step_size, dk)
 
             fk_new = calculate_loss_mask().item()
 
+            counter = 0
+
             while fk_new > fk + args.gamma * step_size * p:
+
+                update_parameters((args.gamma - 1) * step_size, dk)
 
                 step_size *= args.gamma
 
-                update_parameters()
-
                 fk_new = calculate_loss_mask().item()
+
+                counter += 1
 
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
@@ -213,6 +217,10 @@ def train(
             top5.update(acc5[0], train_images.size(0))
 
             losses_list.append(loss.item())
+
+            if i == 0:
+                #print the number of steps in the armijo line search
+                print("number of steps in the line search: ", counter)
 
 
 
