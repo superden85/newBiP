@@ -176,9 +176,9 @@ def train(
                 params = []
                 for param in parameters:
                     if param.requires_grad:
-                        params.append(torch.zeros_like(param.view(-1)).detach())
+                        params.append(param.view(-1).detach()) 
                     else:
-                        params.append(param.view(-1).detach())
+                        params.append(torch.zeros_like(param.view(-1)).detach())
                 return torch.cat(params)
             
             #here we are doing the armijo line search for the stepsize
@@ -190,30 +190,13 @@ def train(
 
             update_parameters(step_size, dk)
 
-            if i == 0:
-                l0, l1 = 0, 0
-                mini, maxi = 1000, -1000
-                for (name, vec) in model.named_modules():
-                    if hasattr(vec, "popup_scores"):
-                        attr = getattr(vec, "popup_scores")
-                        if attr is not None:
-                            l0 += torch.sum(attr != 0).item()
-                            l1 += (torch.sum(torch.abs(attr)).item())
-                            mini = min(mini, torch.min(attr).item())
-                            maxi = max(maxi, abs(torch.max(attr).item()))
-                
-                print("l0 norm of mask: ", l0)
-                print("l1 norm of mask: ", l1)
-                print("min of mask: ", mini)
-                print("max of mask: ", maxi)
-
             fk_new = calculate_loss_mask().item()
 
             counter = 0
 
             while fk_new > fk + args.gamma * step_size * p:
                 
-                print("stepsize : ", (args.gamma - 1) * step_size)
+                #print("stepsize : ", (args.gamma - 1) * step_size)
                 update_parameters((args.gamma - 1) * step_size, dk)
 
                 step_size *= args.gamma

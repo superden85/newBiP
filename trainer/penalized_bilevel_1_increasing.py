@@ -182,9 +182,9 @@ def train(
                     params = []
                     for param in parameters:
                         if param.requires_grad:
-                            params.append(torch.zeros_like(param.view(-1)).detach())
-                        else:
                             params.append(param.view(-1).detach())
+                        else:
+                            params.append(torch.zeros_like(param.view(-1)).detach())
                     return torch.cat(params)
 
                 params = mask_tensor(model.parameters())
