@@ -197,7 +197,8 @@ def train(
             while fk_new > fk + args.gamma * step_size * p:
                 
                 step_size *= args.gamma
-                update_parameters(mk + step_size * dk)
+                new_value = (1-step_size) * mk + step_size * m_star
+                update_parameters(new_value)
 
                 fk_new = calculate_loss_mask().item()
 
