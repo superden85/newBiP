@@ -190,6 +190,23 @@ def train(
 
             update_parameters(step_size, dk)
 
+            if i == 0:
+                l0, l1 = 0, 0
+                mini, maxi = 1000, -1000
+                for (name, vec) in model.named_modules():
+                    if hasattr(vec, "popup_scores"):
+                        attr = getattr(vec, "popup_scores")
+                        if attr is not None:
+                            l0 += torch.sum(attr != 0).item()
+                            l1 += (torch.sum(torch.abs(attr)).item())
+                            mini = min(mini, torch.min(attr).item())
+                            maxi = max(maxi, abs(torch.max(attr).item()))
+                
+                print("l0 norm of mask: ", l0)
+                print("l1 norm of mask: ", l1)
+                print("min of mask: ", mini)
+                print("max of mask: ", maxi)
+
             fk_new = calculate_loss_mask().item()
 
             counter = 0
