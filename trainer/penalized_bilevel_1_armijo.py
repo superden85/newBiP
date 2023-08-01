@@ -168,7 +168,7 @@ def train(
                     #i.e. if param.requires_grad = True
 
                     if param.requires_grad:
-                        param.data = (param.data + step_size * d.view_as(param).data)
+                        param.data = (param.data + step_size * d[pointer:pointer+num_param].view_as(param).data)
 
                     pointer += num_param
 
@@ -186,7 +186,6 @@ def train(
             step_size = 1.0
             fk = loss_mask.item()
             dk = m_star - mask_tensor(model.parameters())
-            print(dk.shape)
             p = torch.dot(outer_gradient, dk).item()
 
             update_parameters(step_size, dk)
