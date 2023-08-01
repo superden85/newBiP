@@ -155,8 +155,8 @@ def train(
             """ #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2) """
 
-            def update_parameters(step_size, d):
-                if not isinstance(d, torch.Tensor):
+            def update_parameters(new_value):
+                if not isinstance(new_value, torch.Tensor):
                     raise TypeError('expected torch.Tensor, but got: {}'
                                     .format(torch.typename(vec)))
 
@@ -168,7 +168,7 @@ def train(
                     #i.e. if param.requires_grad = True
 
                     if param.requires_grad:
-                        param.data = (param.data + step_size * d[pointer:pointer+num_param].view_as(param).data)
+                        param.data = new_value[pointer:pointer+num_param].view_as(param).data
 
                     pointer += num_param
 
@@ -185,21 +185,19 @@ def train(
 
             step_size = 1.0
             fk = loss_mask.item()
-            dk = m_star - mask_tensor(model.parameters())
+            mk = mask_tensor(model.parameters())
+            dk = m_star - mk
             p = torch.dot(outer_gradient, dk).item()
 
-            update_parameters(step_size, dk)
-
+            update_parameters(m_star)
             fk_new = calculate_loss_mask().item()
 
             counter = 0
 
             while fk_new > fk + args.gamma * step_size * p:
                 
-                #print("stepsize : ", (args.gamma - 1) * step_size)
-                update_parameters((args.gamma - 1) * step_size, dk)
-
                 step_size *= args.gamma
+                update_parameters(mk + step_size * dk)
 
                 fk_new = calculate_loss_mask().item()
 
