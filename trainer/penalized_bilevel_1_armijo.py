@@ -253,6 +253,7 @@ def train(
             print("min of mask: ", mini)
             print("max of mask: ", maxi)
             print("number of negative values: ", negs)
+            print("number of zeros: ", zeros)
 
         
     #return data related to the mask of this epoch
