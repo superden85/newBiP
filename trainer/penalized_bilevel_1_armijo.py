@@ -186,6 +186,7 @@ def train(
             step_size = 1.0
             fk = loss_mask.item()
             dk = m_star - mask_tensor(model.parameters())
+            print(dk.shape)
             p = torch.dot(outer_gradient, dk).item()
 
             update_parameters(step_size, dk)
