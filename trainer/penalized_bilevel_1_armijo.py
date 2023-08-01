@@ -228,6 +228,15 @@ def train(
             if i <= 10:
                 #print the number of steps in the armijo line search
                 print("number of steps in the line search: ", counter)
+                if counter == 0:
+                    #print the max and the min of mstar and mk
+                    print('----')
+                    print("min of mstar: ", m_star.min().item())
+                    print("max of mstar: ", m_star.max().item())
+                    print("min of mk: ", mk.min().item())
+                    print("max of mk: ", mk.max().item())
+                    print('----')
+
 
 
 
