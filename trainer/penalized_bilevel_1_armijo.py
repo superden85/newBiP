@@ -236,6 +236,7 @@ def train(
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
             negs = 0
+            zeros = 0
             for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
                     attr = getattr(vec, "popup_scores")
@@ -245,6 +246,7 @@ def train(
                         mini = min(mini, torch.min(attr).item())
                         maxi = max(maxi, abs(torch.max(attr).item()))
                         negs += torch.sum(attr < 0).item()
+                        zeros += torch.sum(attr == 0).item()
             
             print("l0 norm of mask: ", l0)
             print("l1 norm of mask: ", l1)
