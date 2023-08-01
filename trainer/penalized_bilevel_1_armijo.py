@@ -161,7 +161,7 @@ def train(
                                     .format(torch.typename(vec)))
 
                 pointer = 0
-                for param in parameters():
+                for param in model.parameters():
                     num_param = param.numel()
 
                     #update only if it is a popup score
