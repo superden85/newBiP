@@ -156,7 +156,7 @@ def train(
             step_size = 2/(epoch * len(train_loader) + i + 2) """
 
             def update_parameters(step_size, d):
-                if not isinstance(m_star, torch.Tensor):
+                if not isinstance(d, torch.Tensor):
                     raise TypeError('expected torch.Tensor, but got: {}'
                                     .format(torch.typename(vec)))
 
@@ -195,7 +195,8 @@ def train(
             counter = 0
 
             while fk_new > fk + args.gamma * step_size * p:
-
+                
+                print("stepsize : ", (args.gamma - 1) * step_size)
                 update_parameters((args.gamma - 1) * step_size, dk)
 
                 step_size *= args.gamma
@@ -218,7 +219,7 @@ def train(
 
             losses_list.append(loss.item())
 
-            if i == 0:
+            if i <= 10:
                 #print the number of steps in the armijo line search
                 print("number of steps in the line search: ", counter)
 
@@ -230,7 +231,7 @@ def train(
         if i % args.print_freq == 0:
             progress.display(i)
         
-        if i == 0:
+        if i <= 10:
             #print stats
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
