@@ -186,6 +186,12 @@ def train(
             step_size = 1.0
             fk = loss_mask.item()
             mk = mask_tensor(model.parameters())
+
+            if i <= 5:
+                #print the min and max of mk
+                print("min of mk: ", mk.min().item())
+                print("max of mk: ", mk.max().item())
+
             dk = m_star - mk
             p = torch.dot(outer_gradient, dk).item()
 
@@ -197,7 +203,8 @@ def train(
             while fk_new > fk + args.gamma * step_size * p:
                 
                 step_size *= args.gamma
-                new_value = (1-step_size) * mk + step_size * m_star
+                print("step size: ", step_size)
+                new_value = mk + step_size * dk
                 update_parameters(new_value)
 
                 fk_new = calculate_loss_mask().item()
