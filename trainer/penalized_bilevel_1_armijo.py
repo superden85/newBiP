@@ -235,6 +235,8 @@ def train(
                     print("max of mstar: ", m_star.max().item())
                     print("min of mk: ", mk.min().item())
                     print("max of mk: ", mk.max().item())
+                    #check on how many components they are different
+                    print("number of different components: ", torch.sum(m_star != mk).item())
                     print('----')
 
 
