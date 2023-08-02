@@ -181,16 +181,26 @@ def train(
                         params.append(torch.zeros_like(param.view(-1)).detach())
                 return torch.cat(params)
             
+            def mask_tensor_only(parameters):
+                params = []
+                for param in parameters:
+                    if param.requires_grad:
+                        params.append(param.view(-1).detach()) 
+                return torch.cat(params)
+            
+            if i <= 10:
+                mk_only = mask_tensor_only(model.parameters())
+
+                #get the argmin of mk_only, and its value
+                min_value, min_index = torch.min(mk_only, dim=0, keepdim=False)
+                print("Minimum Value:", min_value.item())
+                print("Index of Minimum Value:", min_index.item())
+
             #here we are doing the armijo line search for the stepsize
 
             step_size = 1.0
             fk = loss_mask.item()
             mk = mask_tensor(model.parameters())
-
-            if i <= 5:
-                #print the min and max of mk
-                print("min of mk: ", mk.min().item())
-                print("max of mk: ", mk.max().item())
 
             dk = m_star - mk
             p = torch.dot(outer_gradient, dk).item()
@@ -228,18 +238,6 @@ def train(
             if i <= 10:
                 #print the number of steps in the armijo line search
                 print("number of steps in the line search: ", counter)
-                if counter == 0:
-                    #print the max and the min of mstar and mk
-                    print('----')
-                    print("min of mstar: ", m_star.min().item())
-                    print("max of mstar: ", m_star.max().item())
-                    print("min of mk: ", mk.min().item())
-                    print("max of mk: ", mk.max().item())
-                    #check on how many components they are different
-                    print("number of different components: ", torch.sum(m_star != mk).item())
-                    print('----')
-
-
 
 
         batch_time.update(time.time() - end)
