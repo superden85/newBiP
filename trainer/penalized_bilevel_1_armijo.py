@@ -8,7 +8,8 @@ from utils.model import (
     switch_to_bilevel,
     switch_to_prune,
     switch_to_finetune,
-    get_epoch_data
+    get_epoch_data,
+    calculate_IOU
 )
 
 import numpy as np
@@ -108,8 +109,8 @@ def train(
 
 
             print('-1-')
-            mk_only = mask_tensor_only(model.parameters())
-            print('Coefficient at 85 :', mk_only[85].item())
+            mk_only_old = mask_tensor_only(model.parameters())
+            print('Coefficient at 85 :', mk_only_old[85].item())
             print('-1-')
             
             
@@ -130,6 +131,11 @@ def train(
             mk_only = mask_tensor_only(model.parameters())
             print('Coefficient at 85 :', mk_only[85].item())
             print('-2-')
+
+            print('-2.5-')
+            print('Intersection/Union :', calculate_IOU(mk_only_old, mk_only))
+            print('-2.5-')
+
 
             acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
             losses.update(loss.item(), val_images.size(0))
