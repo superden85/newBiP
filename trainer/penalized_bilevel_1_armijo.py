@@ -40,6 +40,11 @@ def train(
     duality_gaps = []
     losses_list = []
 
+    if epoch == 0:
+        #print the list of the named_modules as well as the number of the parameters
+        for name, param in model.named_parameters():
+            print(name, param.shape)
+
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
         val_images, val_targets = val_data_batch[0].to(device), val_data_batch[1].to(device)
@@ -138,7 +143,7 @@ def train(
             print('Coefficient at 85 :', mk_only[85].item())
             print('Number of different coefficients :', (mk_only_old != mk_only).sum().item())
             print('-1.25-')
-            
+
             optimizer.step()
 
             print('-1.5-')
