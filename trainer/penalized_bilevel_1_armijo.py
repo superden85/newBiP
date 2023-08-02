@@ -127,17 +127,6 @@ def train(
             loss.backward()
             optimizer.step()
 
-            print('-2-')
-            mk_only = mask_tensor_only(model.parameters())
-            print('Coefficient at 85 :', mk_only[85].item())
-            print('-2-')
-
-            print('-2.5-')
-            print('Shapes : ', mk_only_old.shape, mk_only.shape)
-            print('Intersection/Union :', calculate_IOU(mk_only_old, mk_only))
-            print('-2.5-')
-
-
             acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
             losses.update(loss.item(), val_images.size(0))
             top1.update(acc1[0], val_images.size(0))
