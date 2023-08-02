@@ -163,6 +163,11 @@ def train(
             switch_to_prune(model)
             mask_optimizer.zero_grad()
 
+            print('-2-')
+            mk_only = mask_tensor_only(model.parameters())
+            print('Coefficient at 85 :', mk_only[85].item())
+            print('-2-')
+
             def calculate_loss_mask():
                 loss_mask = criterion(model(train_images), train_targets)
 
