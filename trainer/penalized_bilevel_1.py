@@ -225,7 +225,9 @@ def train(
             print("min of mask: ", mini)
             print("max of mask: ", maxi)
 
-        
+            #print the length of the support of mstar :
+            print("support of mstar: ", torch.sum(m_star).item())
+
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
     epoch_data.append(duality_gaps)
