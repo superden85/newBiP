@@ -72,6 +72,46 @@ def train(
             top5.update(acc5[0], val_images.size(0))
 
         else:
+
+            def update_parameters(new_value):
+                if not isinstance(new_value, torch.Tensor):
+                    raise TypeError('expected torch.Tensor, but got: {}'
+                                    .format(torch.typename(vec)))
+
+                pointer = 0
+                for param in model.parameters():
+                    num_param = param.numel()
+
+                    #update only if it is a popup score
+                    #i.e. if param.requires_grad = True
+
+                    if param.requires_grad:
+                        param.data = new_value[pointer:pointer+num_param].view_as(param).data
+
+                    pointer += num_param
+
+            def mask_tensor(parameters):
+                params = []
+                for param in parameters:
+                    if param.requires_grad:
+                        params.append(param.view(-1).detach()) 
+                    else:
+                        params.append(torch.zeros_like(param.view(-1)).detach())
+                return torch.cat(params)
+            
+            def mask_tensor_only(parameters):
+                params = []
+                for param in parameters:
+                    if param.requires_grad:
+                        params.append(param.view(-1).detach()) 
+                return torch.cat(params)
+
+
+            print('-1-')
+            mk_only = mask_tensor_only(model.parameters())
+            print('Coefficient at 85 :', mk_only[85].item())
+            print('-1-')
+            
             
             #Lower level step
             #We do 1 step of SGD on the parameters of the model
@@ -85,6 +125,11 @@ def train(
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+
+            print('-2-')
+            mk_only = mask_tensor_only(model.parameters())
+            print('Coefficient at 85 :', mk_only[85].item())
+            print('-2-')
 
             acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
             losses.update(loss.item(), val_images.size(0))
@@ -140,6 +185,11 @@ def train(
             
             loss_mask.backward()
 
+            print('-3-')
+            mk_only = mask_tensor_only(model.parameters())
+            print('Coefficient at 85 :', mk_only[85].item())
+            print('-3-')
+
             mask_grad_vec = grad2vec(model.parameters())
             implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec            
             
@@ -155,38 +205,6 @@ def train(
             """ #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2) """
 
-            def update_parameters(new_value):
-                if not isinstance(new_value, torch.Tensor):
-                    raise TypeError('expected torch.Tensor, but got: {}'
-                                    .format(torch.typename(vec)))
-
-                pointer = 0
-                for param in model.parameters():
-                    num_param = param.numel()
-
-                    #update only if it is a popup score
-                    #i.e. if param.requires_grad = True
-
-                    if param.requires_grad:
-                        param.data = new_value[pointer:pointer+num_param].view_as(param).data
-
-                    pointer += num_param
-
-            def mask_tensor(parameters):
-                params = []
-                for param in parameters:
-                    if param.requires_grad:
-                        params.append(param.view(-1).detach()) 
-                    else:
-                        params.append(torch.zeros_like(param.view(-1)).detach())
-                return torch.cat(params)
-            
-            def mask_tensor_only(parameters):
-                params = []
-                for param in parameters:
-                    if param.requires_grad:
-                        params.append(param.view(-1).detach()) 
-                return torch.cat(params)
             
             if i <= 10:
                 mk_only = mask_tensor_only(model.parameters())
@@ -197,9 +215,9 @@ def train(
                 print("Index of Minimum Value:", min_index.item()) """
 
                 #print the coefficient at 85 and the i
-                print('USH')
+                print('-4-')
                 print("Coefficient at 85:", mk_only[85].item())
-                print('USH')
+                print('-4-')
 
 
             #here we are doing the armijo line search for the stepsize
@@ -243,8 +261,6 @@ def train(
             if i <= 10:
                 #print the number of steps in the armijo line search
                 print("number of steps in the line search: ", counter)
-                mk = mask_tensor(model.parameters())
-                print("Number of different values in mk and mstar : ", torch.sum(mk != m_star).item())
 
 
         batch_time.update(time.time() - end)
@@ -277,8 +293,10 @@ def train(
             print("number of negative values: ", negs)
             print("number of zeros: ", zeros)
             
+            print('-5-')
             mk_only = mask_tensor_only(model.parameters())
-            print("coefficient at 85: ", mk_only[85].item())
+            print('Coefficient at 85 :', mk_only[85].item())
+            print('-5-')
 
         
     #return data related to the mask of this epoch
