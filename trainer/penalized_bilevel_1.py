@@ -207,7 +207,7 @@ def train(
         if i % args.print_freq == 0:
             progress.display(i)
         
-        if i <= 15:
+        if i <= 1000:
             #print stats
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
