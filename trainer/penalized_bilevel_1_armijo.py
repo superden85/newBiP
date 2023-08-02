@@ -213,7 +213,6 @@ def train(
             while fk_new > fk + args.gamma * step_size * p:
                 
                 step_size *= args.gamma
-                print("step size: ", step_size)
                 new_value = mk + step_size * dk
                 update_parameters(new_value)
 
