@@ -278,7 +278,7 @@ def train(
             print("number of negative values: ", negs)
             print("number of zeros: ", zeros)
             
-            mk = mask_tensor(model.parameters())
+            mk_only = mask_tensor_only(model.parameters())
             print("coefficient at 85: ", mk[85].item())
 
         
