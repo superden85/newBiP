@@ -142,6 +142,9 @@ def train(
             mk_only = mask_tensor_only_inverse(model.parameters())
             print('Coefficient at 85 :', mk_only[85].item())
             print('Number of different coefficients :', (mk_only_old != mk_only).sum().item())
+            #print the dtypes of the two tensors
+            print('dtype of mk_only_old :', mk_only_old.dtype)
+            print('dtype of mk_only :', mk_only.dtype)
             print('-1.25-')
 
             optimizer.step()
