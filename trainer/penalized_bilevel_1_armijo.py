@@ -191,10 +191,17 @@ def train(
             if i <= 10:
                 mk_only = mask_tensor_only(model.parameters())
 
-                #get the argmin of mk_only, and its value
+                """ #get the argmin of mk_only, and its value
                 min_value, min_index = torch.min(mk_only, dim=0, keepdim=False)
                 print("Minimum Value:", min_value.item())
-                print("Index of Minimum Value:", min_index.item())
+                print("Index of Minimum Value:", min_index.item()) """
+
+                #print the coefficient at 85 and the i
+                print('USH')
+                print("Coefficient at 85:", mk_only[85].item())
+                print('USH')
+
+
 
             #here we are doing the armijo line search for the stepsize
 
