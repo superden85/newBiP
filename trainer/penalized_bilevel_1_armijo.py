@@ -202,7 +202,6 @@ def train(
                 print('USH')
 
 
-
             #here we are doing the armijo line search for the stepsize
 
             step_size = 1.0
@@ -244,6 +243,9 @@ def train(
             if i <= 10:
                 #print the number of steps in the armijo line search
                 print("number of steps in the line search: ", counter)
+                if counter == 0:
+                    mk = mask_tensor(model.parameters())
+                    print("Number of different values in mk and mstar : ", torch.sum(mk != m_star).item())
 
 
         batch_time.update(time.time() - end)
