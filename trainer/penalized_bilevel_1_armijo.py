@@ -132,13 +132,20 @@ def train(
 
             optimizer.zero_grad()
             loss.backward()
-            optimizer.step()
-
-            print('-2.5-')
+            
+            print('-1.25-')
             mk_only = mask_tensor_only_inverse(model.parameters())
             print('Coefficient at 85 :', mk_only[85].item())
             print('Number of different coefficients :', (mk_only_old != mk_only).sum().item())
-            print('-2.5-')
+            print('-1.25-')
+            
+            optimizer.step()
+
+            print('-1.5-')
+            mk_only = mask_tensor_only_inverse(model.parameters())
+            print('Coefficient at 85 :', mk_only[85].item())
+            print('Number of different coefficients :', (mk_only_old != mk_only).sum().item())
+            print('-1.5-')
 
             acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
             losses.update(loss.item(), val_images.size(0))
