@@ -38,6 +38,7 @@ def train(
 
     duality_gaps = []
     losses_list = []
+    supports = []
 
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
@@ -191,6 +192,10 @@ def train(
             duality_gap = -torch.dot(outer_gradient, m_star - params).item()
             duality_gaps.append(duality_gap)
 
+            #calculate the lenght of the support of mstar
+            support = torch.sum(m_star).item()
+            supports.append(support)
+
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
             losses.update(loss.item(), train_images.size(0))
@@ -207,7 +212,7 @@ def train(
         if i % args.print_freq == 0:
             progress.display(i)
         
-        if i <= 1000:
+        if i <= 10:
             #print stats
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
@@ -232,5 +237,6 @@ def train(
     epoch_data = get_epoch_data(model)
     epoch_data.append(duality_gaps)
     epoch_data.append(losses_list)
+    epoch_data.append(supports)
 
     return epoch_data

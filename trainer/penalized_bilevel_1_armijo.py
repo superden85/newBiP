@@ -39,6 +39,9 @@ def train(
 
     duality_gaps = []
     losses_list = []
+    supports = []
+    counters = []
+
 
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
@@ -265,6 +268,16 @@ def train(
             duality_gap = -p
             duality_gaps.append(duality_gap)
 
+            #calculate the length of the support of mstar :
+            support = torch.sum(m_star != 0).item()
+            supports.append(support)
+
+            if i <= 10:
+                #print the number of steps in the armijo line search
+                print("number of steps in the line search: ", counter)
+            
+            counters.append(counter)
+
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
             losses.update(loss.item(), train_images.size(0))
@@ -272,11 +285,6 @@ def train(
             top5.update(acc5[0], train_images.size(0))
 
             losses_list.append(loss.item())
-
-            if i <= 10:
-                #print the number of steps in the armijo line search
-                print("number of steps in the line search: ", counter)
-
 
         batch_time.update(time.time() - end)
         end = time.time()
@@ -288,8 +296,6 @@ def train(
             #print stats
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
-            negs = 0
-            zeros = 0
             for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
                     attr = getattr(vec, "popup_scores")
@@ -298,8 +304,6 @@ def train(
                         l1 += (torch.sum(torch.abs(attr)).item())
                         mini = min(mini, torch.min(attr).item())
                         maxi = max(maxi, abs(torch.max(attr).item()))
-                        negs += torch.sum(attr < 0).item()
-                        zeros += torch.sum(attr == 0).item()
             
             print("l0 norm of mask: ", l0)
             print("l1 norm of mask: ", l1)
@@ -316,5 +320,8 @@ def train(
     epoch_data = get_epoch_data(model)
     epoch_data.append(duality_gaps)
     epoch_data.append(losses_list)
+    epoch_data.append(counters)
+    epoch_data.append(supports)
+
 
     return epoch_data

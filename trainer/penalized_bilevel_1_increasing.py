@@ -38,6 +38,7 @@ def train(
 
     duality_gaps = []
     losses_list = []
+    supports = []
 
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
@@ -84,6 +85,13 @@ def train(
 
             optimizer.zero_grad()
             loss.backward()
+
+            #patch for the rounding bug
+            #set to None all the gradients for the popup scores
+            for param in model.parameters():
+                if not param.requires_grad:
+                    param.grad = None
+            
             optimizer.step()
 
             acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
@@ -191,6 +199,10 @@ def train(
                 duality_gap = -torch.dot(outer_gradient, m_star - params).item()
                 duality_gaps.append(duality_gap)
 
+                #calculate the lenght of the support of mstar
+                support = torch.sum(m_star).item()
+                supports.append(support)
+
                 output = model(train_images)
                 acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
                 losses.update(loss.item(), train_images.size(0))
@@ -198,6 +210,7 @@ def train(
                 top5.update(acc5[0], train_images.size(0))
 
                 losses_list.append(loss.item())
+
 
 
         batch_time.update(time.time() - end)
