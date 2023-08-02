@@ -106,6 +106,13 @@ def train(
                     if param.requires_grad:
                         params.append(param.view(-1).detach()) 
                 return torch.cat(params)
+            
+            def mask_tensor_only_inverse(parameters):
+                params = []
+                for param in parameters:
+                    if not param.requires_grad:
+                        params.append(param.view(-1).detach()) 
+                return torch.cat(params)
 
 
             print('-1-')
@@ -127,6 +134,11 @@ def train(
             loss.backward()
             optimizer.step()
 
+            print('-2.5-')
+            mk_only = mask_tensor_only_inverse(model.parameters())
+            print('Coefficient at 85 :', mk_only[85].item())
+            print('-2.5-')
+            
             acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
             losses.update(loss.item(), val_images.size(0))
             top1.update(acc1[0], val_images.size(0))
