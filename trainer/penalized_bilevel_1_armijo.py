@@ -40,11 +40,6 @@ def train(
     duality_gaps = []
     losses_list = []
 
-    if epoch == 0:
-        #print the list of the named_modules as well as the number of the parameters
-        for name, param in model.named_parameters():
-            print(name, param.shape)
-
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
         val_images, val_targets = val_data_batch[0].to(device), val_data_batch[1].to(device)
@@ -147,6 +142,11 @@ def train(
             print('dtype of mk_only :', mk_only.dtype)
             print('-1.25-')
 
+            #set to None all the gradients for the popup scores
+            for param in model.parameters():
+                if not param.requires_grad:
+                    param.grad = None
+            
             optimizer.step()
 
             print('-1.5-')
