@@ -277,6 +277,9 @@ def train(
             print("max of mask: ", maxi)
             print("number of negative values: ", negs)
             print("number of zeros: ", zeros)
+            
+            mk = mask_tensor(model.parameters())
+            print("coefficient at 85: ", mk[85].item())
 
         
     #return data related to the mask of this epoch
