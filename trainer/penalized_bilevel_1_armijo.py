@@ -133,6 +133,7 @@ def train(
             print('-2-')
 
             print('-2.5-')
+            print('Shapes : ', mk_only_old.shape, mk_only.shape)
             print('Intersection/Union :', calculate_IOU(mk_only_old, mk_only))
             print('-2.5-')
 
