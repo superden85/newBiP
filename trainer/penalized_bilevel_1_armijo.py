@@ -115,10 +115,10 @@ def train(
                 return torch.cat(params)
 
 
-            print('-1-')
+            """ print('-1-')
             mk_only_old = mask_tensor_only(model.parameters())
             print('Coefficient at 85 :', mk_only_old[85].item())
-            print('-1-')
+            print('-1-') """
             
             
             #Lower level step
@@ -133,15 +133,16 @@ def train(
             optimizer.zero_grad()
             loss.backward()
             
-            print('-1.25-')
+            """ print('-1.25-')
             mk_only = mask_tensor_only_inverse(model.parameters())
             print('Coefficient at 85 :', mk_only[85].item())
             print('Number of different coefficients :', (mk_only_old != mk_only).sum().item())
             #print the dtypes of the two tensors
             print('dtype of mk_only_old :', mk_only_old.dtype)
             print('dtype of mk_only :', mk_only.dtype)
-            print('-1.25-')
+            print('-1.25-') """
 
+            #patch to the rounding bug
             #set to None all the gradients for the popup scores
             for param in model.parameters():
                 if not param.requires_grad:
@@ -149,11 +150,11 @@ def train(
             
             optimizer.step()
 
-            print('-1.5-')
+            """ print('-1.5-')
             mk_only = mask_tensor_only_inverse(model.parameters())
             print('Coefficient at 85 :', mk_only[85].item())
             print('Number of different coefficients :', (mk_only_old != mk_only).sum().item())
-            print('-1.5-')
+            print('-1.5-') """
 
             acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
             losses.update(loss.item(), val_images.size(0))
@@ -191,10 +192,10 @@ def train(
             switch_to_prune(model)
             mask_optimizer.zero_grad()
 
-            print('-2-')
+            """ print('-2-')
             mk_only = mask_tensor_only(model.parameters())
             print('Coefficient at 85 :', mk_only[85].item())
-            print('-2-')
+            print('-2-') """
 
             def calculate_loss_mask():
                 loss_mask = criterion(model(train_images), train_targets)
@@ -214,10 +215,10 @@ def train(
             
             loss_mask.backward()
 
-            print('-3-')
+            """ print('-3-')
             mk_only = mask_tensor_only(model.parameters())
             print('Coefficient at 85 :', mk_only[85].item())
-            print('-3-')
+            print('-3-') """
 
             mask_grad_vec = grad2vec(model.parameters())
             implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec            
@@ -233,21 +234,6 @@ def train(
 
             """ #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2) """
-
-            
-            if i <= 10:
-                mk_only = mask_tensor_only(model.parameters())
-
-                """ #get the argmin of mk_only, and its value
-                min_value, min_index = torch.min(mk_only, dim=0, keepdim=False)
-                print("Minimum Value:", min_value.item())
-                print("Index of Minimum Value:", min_index.item()) """
-
-                #print the coefficient at 85 and the i
-                print('-4-')
-                print("Coefficient at 85:", mk_only[85].item())
-                print('-4-')
-
 
             #here we are doing the armijo line search for the stepsize
 
@@ -319,13 +305,11 @@ def train(
             print("l1 norm of mask: ", l1)
             print("min of mask: ", mini)
             print("max of mask: ", maxi)
-            print("number of negative values: ", negs)
-            print("number of zeros: ", zeros)
             
-            print('-5-')
+            """ print('-5-')
             mk_only = mask_tensor_only(model.parameters())
             print('Coefficient at 85 :', mk_only[85].item())
-            print('-5-')
+            print('-5-') """
 
         
     #return data related to the mask of this epoch

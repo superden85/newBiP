@@ -86,11 +86,11 @@ def train(
             loss.backward()
 
 
-            """ #patch for the rounding bug
+            #patch for the rounding bug
             #set to None all the gradients for the popup scores
             for param in model.parameters():
                 if not param.requires_grad:
-                    param.grad = None """
+                    param.grad = None
             
             optimizer.step()
 
