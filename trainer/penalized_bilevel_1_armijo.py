@@ -278,7 +278,7 @@ def train(
             print("number of zeros: ", zeros)
             
             mk_only = mask_tensor_only(model.parameters())
-            print("coefficient at 85: ", mk[85].item())
+            print("coefficient at 85: ", mk_only[85].item())
 
         
     #return data related to the mask of this epoch
