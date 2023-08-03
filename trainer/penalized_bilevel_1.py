@@ -111,12 +111,12 @@ def train(
 
             loss*=args.lambd
 
-            # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
+            """ # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
             for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
                     attr = getattr(vec, "popup_scores")
                     if attr is not None:
-                        loss += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum()
+                        loss += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum() """
             
             loss.backward()
 
@@ -136,7 +136,7 @@ def train(
 
             loss_mask.backward()
 
-            first_part = grad2vec(model.parameters())
+            """ first_part = grad2vec(model.parameters())
 
             mask_optimizer.zero_grad()
 
@@ -149,13 +149,23 @@ def train(
             
             loss_mask.backward()
 
-            second_part = grad2vec(model.parameters())
+            second_part = grad2vec(model.parameters()) """
 
             mask_grad_vec = grad2vec(model.parameters())
             implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec            
             
+            def pen_grad2vec(parameters):
+                penalization_grad = []
+                for param in parameters:
+                    if param.requires_grad:
+                        penalization_grad.append((1 - args.lambd) * args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
+                    else:
+                        penalization_grad.append(torch.zeros_like(param.view(-1).detach()))
+                return torch.cat(penalization_grad)
+            
+            penalization_grad = pen_grad2vec(model.parameters())
             #then the outer gradient is simply:
-            outer_gradient = mask_grad_vec + implicit_gradient
+            outer_gradient = mask_grad_vec + implicit_gradient + penalization_grad
 
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
