@@ -1,0 +1,1 @@
+python3 train.py --arch mnist_model --exp-mode prune --configs configs/MNIST/bip.yml --k 0.01 --source-net MNIST_mnist_model/pretrain/latest_exp/checkpoint/model_best.pth.tar --seed 1234 --exp-name debug
