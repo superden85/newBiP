@@ -134,6 +134,12 @@ def train(
 
             loss_mask *= args.lambd
 
+            loss_mask.backward()
+
+            first_part = grad2vec(model.parameters())
+
+            mask_optimizer.zero_grad()
+
             # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
             for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
@@ -142,6 +148,8 @@ def train(
                         loss_mask += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum()
             
             loss_mask.backward()
+
+            second_part = grad2vec(model.parameters())
 
             mask_grad_vec = grad2vec(model.parameters())
             implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec            

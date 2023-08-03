@@ -113,6 +113,10 @@ def train(
                     pointer += num_param
 
             append_grad_to_vec(implicit_gradient, model.parameters())
+
+            hyper_gradient = grad2vec(model.parameters())
+            #print the first 10 elements of hyper_gradient
+            print(hyper_gradient[:10])
             mask_optimizer.step()
 
 
