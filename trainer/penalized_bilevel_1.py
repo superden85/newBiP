@@ -109,7 +109,7 @@ def train(
             output = model(train_images)
             loss = criterion(output, train_targets)
 
-            loss*=args.lambd
+            #loss*=args.lambd
 
             """ # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
             for (name, vec) in model.named_modules():
@@ -132,7 +132,7 @@ def train(
             mask_optimizer.zero_grad()
             loss_mask = criterion(model(train_images), train_targets)
 
-            loss_mask *= args.lambd
+            #loss_mask *= args.lambd
 
             loss_mask.backward()
 
@@ -158,14 +158,15 @@ def train(
                 penalization_grad = []
                 for param in parameters:
                     if param.requires_grad:
-                        penalization_grad.append((1 - args.lambd) * args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
+                        penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
                     else:
                         penalization_grad.append(torch.zeros_like(param.view(-1).detach()))
                 return torch.cat(penalization_grad)
             
             penalization_grad = pen_grad2vec(model.parameters())
-            #then the outer gradient is simply:
-            outer_gradient = mask_grad_vec + implicit_gradient + penalization_grad
+
+            #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
+            hypergradient = args.lambd * (mask_grad_vec + implicit_gradient) + (1 - args.lambd) * penalization_grad
 
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
