@@ -152,7 +152,7 @@ def train(
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
 
-            if i<=20:
+            if i<=3:
             #print the ten first components of the outer gradient
                 print(outer_gradient[:10])
 
@@ -216,7 +216,7 @@ def train(
         if i % args.print_freq == 0:
             progress.display(i)
         
-        if i <= 10:
+        if i <= 3:
             #print stats
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
