@@ -117,8 +117,8 @@ def train(
             hyper_gradient = grad2vec(model.parameters())
 
             if i == 0:
-                #print the first 10 non zero elements of hyper_gradient as well as the l1 norm
-                print(hyper_gradient[hyper_gradient!=0], hyper_gradient.norm(1))
+                #print the first 10 non zero elements of hyper_gradient as well as the inf norm
+                print(hyper_gradient[hyper_gradient!=0], hyper_gradient.norm(float('inf')))
             mask_optimizer.step()
 
 
