@@ -152,6 +152,10 @@ def train(
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
 
+            if i<=20:
+            #print the ten first components of the outer gradient
+            print(outer_gradient[:10])
+
             m_star = torch.zeros_like(outer_gradient)
             m_star[outer_gradient < 0] = 1
 
