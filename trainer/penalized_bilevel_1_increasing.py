@@ -248,6 +248,8 @@ def train(
             print("min of mask: ", mini)
             print("max of mask: ", maxi)
 
+            print('duality gap: ', duality_gap)
+
         
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
