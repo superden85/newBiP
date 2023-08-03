@@ -171,9 +171,10 @@ def train(
             #mstar is equal to 1 if c is negative, 0 otherwise
 
             if i<=3:
-            #print the ten highest components and the linf norm
+            #print the ten highest components and the linf norm and the 10 smallest ones
                 print("Linf norm: ", torch.norm(outer_gradient, p=float("inf")))
                 print("Ten highest components: ", torch.topk(outer_gradient, 10))
+                print("Ten lowest components: ", torch.topk(-outer_gradient, 10))
 
             m_star = torch.zeros_like(outer_gradient)
             m_star[outer_gradient < 0] = 1
