@@ -207,7 +207,7 @@ def train(
                     return torch.cat(params)
 
                 params = mask_tensor(model.parameters())
-                duality_gap = -torch.dot(outer_gradient, m_star - params).item()
+                duality_gap = -torch.dot(hypergradient, m_star - params).item()
                 duality_gaps.append(duality_gap)
 
                 #calculate the lenght of the support of mstar
