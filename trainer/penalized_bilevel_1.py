@@ -163,22 +163,22 @@ def train(
                         penalization_grad.append(torch.zeros_like(param.view(-1).detach()))
                 return torch.cat(penalization_grad)
             
-            penalization_grad = pen_grad2vec(model.parameters())
+            pen_grad_vec = pen_grad2vec(model.parameters())
 
             #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
-            hypergradient = args.lambd * (mask_grad_vec + implicit_gradient) + (1 - args.lambd) * penalization_grad
+            hypergradient = args.lambd * (mask_grad_vec + implicit_gradient) + (1 - args.lambd) * pen_grad_vec
 
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
 
             if i<=3:
             #print the ten highest components and the linf norm and the 10 smallest ones
-                print("Linf norm: ", torch.norm(outer_gradient, p=float("inf")))
-                print("Ten highest components: ", torch.topk(outer_gradient, 10))
-                print("Ten lowest components: ", torch.topk(-outer_gradient, 10))
+                print("Linf norm: ", torch.norm(hypergradient, p=float("inf")))
+                print("Ten highest components: ", torch.topk(hypergradient, 10))
+                print("Ten lowest components: ", torch.topk(-hypergradient, 10))
 
-            m_star = torch.zeros_like(outer_gradient)
-            m_star[outer_gradient < 0] = 1
+            m_star = torch.zeros_like(hypergradient)
+            m_star[hypergradient < 0] = 1
 
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
@@ -214,7 +214,7 @@ def train(
                 return torch.cat(params)
 
             params = mask_tensor(model.parameters())
-            duality_gap = -torch.dot(outer_gradient, m_star - params).item()
+            duality_gap = -torch.dot(hypergradient, m_star - params).item()
             duality_gaps.append(duality_gap)
 
             #calculate the lenght of the support of mstar
