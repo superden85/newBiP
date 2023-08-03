@@ -115,14 +115,14 @@ def train(
                 output = model(train_images)
                 loss = criterion(output, train_targets)
 
-                loss*=args.lambd
+                #loss*=args.lambd
 
-                # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
+                """ # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
                 for (name, vec) in model.named_modules():
                     if hasattr(vec, "popup_scores"):
                         attr = getattr(vec, "popup_scores")
                         if attr is not None:
-                            loss += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum()
+                            loss += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum() """
                 
                 loss.backward()
 
@@ -138,28 +138,39 @@ def train(
                 mask_optimizer.zero_grad()
                 loss_mask = criterion(model(train_images), train_targets)
 
-                loss_mask *= args.lambd
+                #loss_mask *= args.lambd
 
-                # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
+                """ # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
                 for (name, vec) in model.named_modules():
                     if hasattr(vec, "popup_scores"):
                         attr = getattr(vec, "popup_scores")
                         if attr is not None:
-                            loss_mask += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum()
+                            loss_mask += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum() """
                 
                 loss_mask.backward()
 
                 mask_grad_vec = grad2vec(model.parameters())
                 implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec            
                 
-                #then the outer gradient is simply:
-                outer_gradient = mask_grad_vec + implicit_gradient
+                def pen_grad2vec(parameters):
+                    penalization_grad = []
+                    for param in parameters:
+                        if param.requires_grad:
+                            penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
+                        else:
+                            penalization_grad.append(torch.zeros_like(param.view(-1).detach()))
+                    return torch.cat(penalization_grad)
+            
+                pen_grad_vec = pen_grad2vec(model.parameters())
+
+                #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
+                hypergradient = args.lambd * (mask_grad_vec + implicit_gradient) + (1 - args.lambd) * pen_grad_vec
 
                 #the linear minimization problem is very simple we don't need to use a solver
                 #mstar is equal to 1 if c is negative, 0 otherwise
 
-                m_star = torch.zeros_like(outer_gradient)
-                m_star[outer_gradient < 0] = 1
+                m_star = torch.zeros_like(hypergradient)
+                m_star[hypergradient < 0] = 1
 
                 #we want to have a diminishing step size
                 step_size = 2/(epoch * len(train_loader) + i + 2)
