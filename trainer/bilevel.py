@@ -115,8 +115,10 @@ def train(
             append_grad_to_vec(implicit_gradient, model.parameters())
 
             hyper_gradient = grad2vec(model.parameters())
-            #print the first 10 non zero elements of hyper_gradient as well as the l1 norm
-            print(hyper_gradient[hyper_gradient!=0][:10], hyper_gradient.norm(1))
+
+            if i == 0:
+                #print the first 10 non zero elements of hyper_gradient as well as the l1 norm
+                print(hyper_gradient[hyper_gradient!=0], hyper_gradient.norm(1))
             mask_optimizer.step()
 
 
