@@ -210,9 +210,8 @@ def train(
                 duality_gap = -torch.dot(hypergradient, m_star - params).item()
                 duality_gaps.append(duality_gap)
 
-                #print the duality gap if i == 0
-                if i == 0:
-                    print('Duality gap : ', duality_gap)
+                #print the duality gap
+                print('Duality gap : ', duality_gap)
 
                 #calculate the lenght of the support of mstar
                 support = torch.sum(m_star).item()
