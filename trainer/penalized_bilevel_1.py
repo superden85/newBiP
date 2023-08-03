@@ -154,7 +154,7 @@ def train(
 
             if i<=20:
             #print the ten first components of the outer gradient
-            print(outer_gradient[:10])
+                print(outer_gradient[:10])
 
             m_star = torch.zeros_like(outer_gradient)
             m_star[outer_gradient < 0] = 1
