@@ -210,6 +210,10 @@ def train(
                 duality_gap = -torch.dot(hypergradient, m_star - params).item()
                 duality_gaps.append(duality_gap)
 
+                #print the duality gap if i == 0
+                if i == 0:
+                    print('Duality gap : ', duality_gap)
+
                 #calculate the lenght of the support of mstar
                 support = torch.sum(m_star).item()
                 supports.append(support)
@@ -247,8 +251,6 @@ def train(
             print("l1 norm of mask: ", l1)
             print("min of mask: ", mini)
             print("max of mask: ", maxi)
-
-            print('duality gap: ', duality_gap)
 
         
     #return data related to the mask of this epoch
