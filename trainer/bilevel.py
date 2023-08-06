@@ -80,9 +80,17 @@ def train(
             loss.backward()
 
             def grad2vec(parameters):
+
+                if i == 0:
+                    print("Calculating a gradient vector: ")
                 grad_vec = []
                 for param in parameters:
+                    if i == 0:
+                        #print the name of the parameter
+                        print(param.shape, param.requires_grad)
                     grad_vec.append(param.grad.view(-1).detach())
+                if i == 0:
+                    print("The length of the gradient vector is: ", len(grad_vec))
                 return torch.cat(grad_vec)
 
             param_grad_vec = grad2vec(model.parameters())
