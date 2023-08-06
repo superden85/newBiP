@@ -99,7 +99,7 @@ def train(
 
             if i == 0:
                 pointer = 0
-                for param in parameters:
+                for param in model.parameters():
                     num_param = param.numel()
                     print(param.shape, param.requires_grad)
                     #print if mask_grad_vec and param_grad_vec are the same on this portion:
