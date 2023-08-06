@@ -33,8 +33,6 @@ def train(
     model.train()
     end = time.time()
 
-    losses_list = []
-
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
         val_images, val_targets = val_data_batch[0].to(device), val_data_batch[1].to(device)
@@ -113,15 +111,7 @@ def train(
                     pointer += num_param
 
             append_grad_to_vec(implicit_gradient, model.parameters())
-
-            hyper_gradient = grad2vec(model.parameters())
-
-            if i == 0:
-                #print the first 10 non zero elements of hyper_gradient as well as the inf norm
-                print(hyper_gradient[hyper_gradient!=0], hyper_gradient.norm(float('inf')))
             mask_optimizer.step()
-
-
 
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
@@ -129,12 +119,8 @@ def train(
             top1.update(acc1[0], train_images.size(0))
             top5.update(acc5[0], train_images.size(0))
 
-        losses_list.append(loss.item())
-
         batch_time.update(time.time() - end)
         end = time.time()
 
         if i % args.print_freq == 0:
             progress.display(i)
-
-    return losses_list

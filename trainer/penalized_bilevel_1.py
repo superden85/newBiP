@@ -47,9 +47,6 @@ def train(
             switch_to_prune(model)
             output = model(train_images)
             loss = criterion(output, train_targets)
-            
-            # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
-            loss += args.lambd * (1 - torch.exp(-args.alpha * model.mask)).sum()
 
             mask_optimizer.zero_grad()
             loss.backward()
@@ -80,8 +77,6 @@ def train(
             switch_to_finetune(model)
             output = model(val_images)
             loss = criterion(output, val_targets)
-
-            loss*=args.lambd
 
             optimizer.zero_grad()
             loss.backward()
@@ -134,38 +129,19 @@ def train(
 
             loss_mask *= args.lambd
 
-            loss_mask.backward()
-
-            """ first_part = grad2vec(model.parameters())
-
-            mask_optimizer.zero_grad()"""
-
             #add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
             for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
                     attr = getattr(vec, "popup_scores")
                     if attr is not None:
                         loss_mask += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum()
-            
-            """loss_mask.backward()
 
-            second_part = grad2vec(model.parameters()) """
+            loss_mask.backward()
 
             mask_grad_vec = grad2vec(model.parameters())
             implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec            
-            
-            """ def pen_grad2vec(parameters):
-                penalization_grad = []
-                for param in parameters:
-                    if param.requires_grad:
-                        penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
-                    else:
-                        penalization_grad.append(torch.zeros_like(param.view(-1).detach()))
-                return torch.cat(penalization_grad)
-            
-            pen_grad_vec = pen_grad2vec(model.parameters()) """
 
-            #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
+            #then the hypergradient is the sum of the mask gradient and the implicit gradient
             hypergradient = mask_grad_vec + implicit_gradient
 
             #the linear minimization problem is very simple we don't need to use a solver
