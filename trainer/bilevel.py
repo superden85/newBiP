@@ -68,6 +68,14 @@ def train(
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
+
+            if i == 0:
+                print("Calculating a gradient vector: ")
+                for param in model.parameters():
+                    print(param.shape, param.requires_grad)
+            print("The length of the gradient vector is: ", len(model.parameters()))
+
+            
             acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
             losses.update(loss.item(), val_images.size(0))
             top1.update(acc1[0], val_images.size(0))
