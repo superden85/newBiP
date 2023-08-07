@@ -117,7 +117,6 @@ def train(
                     pointer += num_param
 
             append_grad_to_vec(implicit_gradient, model.parameters())
-            hypergradient = (param.grad)
             mask_optimizer.step()
 
             output = model(train_images)
