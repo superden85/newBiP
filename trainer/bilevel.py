@@ -95,16 +95,12 @@ def train(
             loss_mask.backward()
 
             mask_grad_vec = grad2vec(model.parameters())
-            implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec
 
             if i == 0:
-                pointer = 0
                 for param in model.parameters():
-                    num_param = param.numel()
                     print(param.shape, param.requires_grad)
-                    #print if mask_grad_vec and param_grad_vec are the same on this portion:
-                    print("Are they equal on this portion : ", torch.equal(mask_grad_vec[pointer:pointer + num_param], param_grad_vec[pointer:pointer + num_param]))
-                    pointer += num_param
+                    print("The gradient of this portion is equal to zero: ", param.grad == 0)
+            implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec
 
             def append_grad_to_vec(vec, parameters):
 
@@ -121,6 +117,7 @@ def train(
                     pointer += num_param
 
             append_grad_to_vec(implicit_gradient, model.parameters())
+            hypergradient = (param.grad)
             mask_optimizer.step()
 
             output = model(train_images)
