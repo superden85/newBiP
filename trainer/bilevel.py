@@ -103,8 +103,9 @@ def train(
                 for param in model.parameters():
                     print(param.shape, param.requires_grad)
                     num_param = param.numel()
-                    print("The gradient of this portion on the implicit is equal to zero: ", torch.all(implicit_gradient[pointer: pointer + num_param] == 0))
+                    print("Mask grad vec and Param grad vec are equal: ", torch.all(mask_grad_vec[pointer: pointer + num_param] == param_grad_vec[pointer: pointer + num_param]))
                     pointer += num_param
+            
             def append_grad_to_vec(vec, parameters):
 
                 if not isinstance(vec, torch.Tensor):
