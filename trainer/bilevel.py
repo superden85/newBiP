@@ -99,7 +99,7 @@ def train(
             if i == 0:
                 for param in model.parameters():
                     print(param.shape, param.requires_grad)
-                    print("The gradient of this portion is equal to zero: ", param.grad == 0)
+                    print("The gradient of this portion is equal to zero: ", torch.all(param.grad == 0))
             implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec
 
             def append_grad_to_vec(vec, parameters):
