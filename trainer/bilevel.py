@@ -96,7 +96,7 @@ def train(
 
             mask_grad_vec = grad2vec(model.parameters())
 
-            if i == 0:
+            if i == 2:
                 for param in model.parameters():
                     print(param.shape, param.requires_grad)
                     print("The gradient of this portion is equal to zero: ", torch.all(param.grad == 0))
