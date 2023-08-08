@@ -14,7 +14,7 @@ from utils.model import (
 
 
 def train(
-        model, device, train_loader, criterion, optimizer_list, epoch, args, dummy_model, dummy_optimizer
+        model, device, train_loader, criterion, optimizer_list, epoch, args, dummy_model
 ):
     print("->->->->->->->->->-> One epoch with Natural training <-<-<-<-<-<-<-<-<-<-")
     train_loader, val_loader = train_loader
@@ -141,7 +141,9 @@ def train(
                             vec.w = score_list[pointer: pointer + numel].view_as(attr) * param_list[pointer: pointer + numel].view_as(attr)
                             pointer += numel
             
-            dummy_optimizer.zero_grad()
+            with torch.no_grad():
+                for param in dummy_model.parameters():
+                    param.grad = None
             loss_mask = criterion(dummy_model(train_images), train_targets)
 
             loss_mask.backward()

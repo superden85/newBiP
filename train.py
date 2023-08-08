@@ -92,6 +92,7 @@ def main():
 
     # Customize models for training/pruning/fine-tuning
     prepare_model(model, args)
+    prepare_model(dummy_model, args)
 
     # Dataloader
     D = datasets.__dict__[args.dataset](args, normalize=args.normalize)
@@ -105,13 +106,6 @@ def main():
     # For bi-level only
     mask_optimizer = torch.optim.SGD(
         model.parameters(),
-        lr=args.mask_lr,
-        momentum=args.momentum,
-        weight_decay=args.wd,
-    )
-
-    dummy_optimizer = torch.optim.SGD(
-        dummy_model.parameters(),
         lr=args.mask_lr,
         momentum=args.momentum,
         weight_decay=args.wd,
@@ -228,8 +222,7 @@ def main():
             optimizer,
             epoch,
             args,
-            dummy_model = dummy_model,
-            dummy_optimizer = dummy_optimizer,
+            dummy_model,
         )
         
         epochs_data.append(epoch_data)
