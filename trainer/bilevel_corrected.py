@@ -144,9 +144,9 @@ def train(
             with torch.no_grad():
                 for param in dummy_model.parameters():
                     param.grad = None
-            loss_mask = criterion(dummy_model(train_images), train_targets)
+            z_loss = criterion(dummy_model(train_images), train_targets)
 
-            loss_mask.backward()
+            z_loss.backward()
 
             grad_z_list = []
             for (name, vec) in dummy_model.named_modules():
@@ -154,6 +154,7 @@ def train(
                     if hasattr(vec, "weight"):
                         attr = getattr(vec, "weight")
                         if attr is not None:
+                            print("the number of param.grad to None : ", attr.grad.numel())
                             grad_z_list.append(attr.grad.view(-1))
             
             grad_z_list = torch.cat(grad_z_list)
