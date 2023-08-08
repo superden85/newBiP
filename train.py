@@ -92,7 +92,6 @@ def main():
 
     # Customize models for training/pruning/fine-tuning
     prepare_model(model, args)
-    prepare_model(dummy_model, args)
 
     # Dataloader
     D = datasets.__dict__[args.dataset](args, normalize=args.normalize)
