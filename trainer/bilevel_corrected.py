@@ -144,13 +144,13 @@ def train(
             with torch.no_grad():
                 for param in dummy_model.parameters():
                     param.grad = None
+            
             z_loss = criterion(dummy_model(train_images), train_targets)
 
             z_loss.backward()
 
             grad_z_list = []
             for (name, vec) in dummy_model.named_modules():
-                print(name)
                 if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
                     if hasattr(vec, "weight"):
                         attr = getattr(vec, "weight")

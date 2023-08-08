@@ -125,6 +125,7 @@ def main():
             if args.source_net.split(".")[-1] == "pt":
                 checkpoint = {"state_dict": checkpoint}
             model.load_state_dict(checkpoint["state_dict"], strict=False)
+            dummy_model.load_state_dict(checkpoint["state_dict"], strict=False)
             logger.info("=> loaded checkpoint '{}'".format(args.source_net))
         else:
             raise ValueError("=> no checkpoint found at '{}'".format(args.source_net))
