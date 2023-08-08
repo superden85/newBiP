@@ -2,6 +2,8 @@ import time
 
 import torch
 
+import torch.nn as nn
+
 from utils.eval import accuracy
 from utils.general_utils import AverageMeter, ProgressMeter
 from utils.model import (
