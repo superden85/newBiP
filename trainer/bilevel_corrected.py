@@ -110,7 +110,7 @@ def train(
             #first_part = grad2vec(model.parameters())
 
             #calculating the second part with the dummy model
-            switch_to_prune(dummy_model)
+            switch_to_finetune(dummy_model)
 
             #the parameters of the dummy model should be set to m * theta of the model
             score_list = []
