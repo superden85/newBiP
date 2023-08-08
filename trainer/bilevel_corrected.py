@@ -154,7 +154,7 @@ def train(
                     if hasattr(vec, "weight"):
                         attr = getattr(vec, "weight")
                         if attr is not None:
-                            print(attr.shape, attr.requires_grad, attr.grad.shape)
+                            print(attr.shape, attr.requires_grad, attr.grad)
                             grad_z_list.append(attr.grad.view(-1))
             
             grad_z_list = torch.cat(grad_z_list)
