@@ -151,7 +151,7 @@ def train(
             grad_z_list = []
             for (name, param) in dummy_model.named_parameters():
                 if i == 0:
-                    print(name, param.shape, param.grad.shape)
+                    print(name, param.shape)
                 
                             
             
