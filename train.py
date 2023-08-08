@@ -84,6 +84,12 @@ def main():
         k=args.k, unstructured=unstructured
     ).to(device)
 
+    #for calculating the gradients without the mask at the forward:
+    dummy_model = models.__dict__[args.arch](
+        ConvLayer, LinearLayer, num_classes=args.num_classes,
+        k=args.k, unstructured=False
+    ).to(device)
+
     # Customize models for training/pruning/fine-tuning
     prepare_model(model, args)
 
@@ -99,6 +105,13 @@ def main():
     # For bi-level only
     mask_optimizer = torch.optim.SGD(
         model.parameters(),
+        lr=args.mask_lr,
+        momentum=args.momentum,
+        weight_decay=args.wd,
+    )
+
+    dummy_optimizer = torch.optim.SGD(
+        dummy_model.parameters(),
         lr=args.mask_lr,
         momentum=args.momentum,
         weight_decay=args.wd,
@@ -215,6 +228,8 @@ def main():
             optimizer,
             epoch,
             args,
+            dummy_model = dummy_model,
+            dummy_optimizer = dummy_optimizer,
         )
         
         epochs_data.append(epoch_data)
