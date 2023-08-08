@@ -149,11 +149,12 @@ def train(
             z_loss.backward()
 
             grad_z_list = []
-            for (name, param) in dummy_model.named_parameters():
-                if i == 0:
-                    print(name, param.shape)
-                
-                            
+            for (name, vec) in model.named_modules():
+                if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
+                    if hasattr(vec, "weight"):
+                        attr = getattr(vec, "weight")
+                        if attr is not None:
+                            grad_z_list.append(attr.grad.view(-1))
             
             grad_z_list = torch.cat(grad_z_list)
 
