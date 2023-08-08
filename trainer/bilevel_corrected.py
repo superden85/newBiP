@@ -149,7 +149,8 @@ def train(
             z_loss.backward()
 
             grad_z_list = []
-            for (name, vec) in model.named_modules():
+            for (name, vec) in dummy_model.named_modules():
+                print(name)
                 if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
                     if hasattr(vec, "weight"):
                         attr = getattr(vec, "weight")
