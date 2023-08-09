@@ -177,11 +177,11 @@ def train(
 
             pointer = 0
             for param in model.parameters():
-                numel = param.numel()
                 if param.requires_grad:
-                    print(param.grad.shape, implicit_gradient[pointer: pointer + numel].view_as(param).shape)
+                    numel = param.numel()
+                    #print(param.grad.shape, implicit_gradient[pointer: pointer + numel].view_as(param).shape)
                     param.grad.copy_(param.grad + implicit_gradient[pointer: pointer + numel].view_as(param).data)
-                pointer += numel
+                    pointer += numel
 
             mask_optimizer.step()
 
