@@ -143,7 +143,7 @@ def train(
             
             with torch.no_grad():
                 for param in dummy_model.parameters():
-                    param.grad = None
+                    param.grad = torch.zeros_like(param)
             
             z_loss = criterion(dummy_model(train_images), train_targets)
 
