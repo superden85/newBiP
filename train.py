@@ -87,7 +87,7 @@ def main():
     #for calculating the gradients without the mask at the forward:
     dummy_model = models.__dict__[args.arch](
         ConvLayer, LinearLayer, num_classes=args.num_classes,
-        k=args.k, unstructured=True
+        k=args.k, unstructured=False
     ).to(device)
 
     # Customize models for training/pruning/fine-tuning
@@ -222,7 +222,7 @@ def main():
             optimizer,
             epoch,
             args,
-            dummy_model,
+            dummy_model = dummy_model
         )
         
         epochs_data.append(epoch_data)

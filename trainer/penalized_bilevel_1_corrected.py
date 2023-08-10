@@ -17,7 +17,7 @@ import numpy as np
 
 
 def train(
-        model, device, train_loader, criterion, optimizer_list, epoch, args, dummy_model
+        model, device, train_loader, criterion, optimizer_list, epoch, args, **kwargs
 ):
     print("->->->->->->->->->-> One epoch with Natural training <-<-<-<-<-<-<-<-<-<-")
     train_loader, val_loader = train_loader
@@ -33,9 +33,11 @@ def train(
         prefix="Epoch: [{}]".format(epoch),
     )
 
+    dummy_model = kwargs["dummy_model"]
     optimizer, mask_optimizer = optimizer_list
 
     model.train()
+    dummy_model.train()
     end = time.time()
 
     duality_gaps = []
