@@ -176,6 +176,7 @@ def train(
                     print("implicit gradient: ", implicit_gradient[pointer:pointer + param.numel()].shape)
                     second_part[pointer:pointer + param.numel()] = implicit_gradient[pointer:pointer + param.numel()]
                 pointer += param.numel()
+                print("pointer: ", pointer)
             
             def pen_grad2vec(parameters):
                 penalization_grad = []
