@@ -140,6 +140,8 @@ def train(
                 if isinstance(param, (nn.BatchNorm2d, nn.BatchNorm2d)):
                     print('This param is a batch norm layer of shape : ', param.shape)
                 if param.requires_grad and not isinstance(param, (nn.BatchNorm2d, nn.BatchNorm2d)):
+                    print('This param is a layer of shape : ', param.shape)
+                    print('Number of elements : ', param.numel())
                     param.data = param_list[pointer:pointer + param.numel()].reshape(param.shape)
                     pointer += param.numel()
             
