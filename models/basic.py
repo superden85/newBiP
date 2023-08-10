@@ -93,7 +93,7 @@ class MnistModel(nn.Module):
                             numel = attr.numel()
                             vec.w = attr * adj[pointer: pointer + numel].view_as(attr)
                             pointer += numel
-        else:
+        """ else:
             pointer = 0
             for (name, vec) in self.named_modules():
                 if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
@@ -102,7 +102,7 @@ class MnistModel(nn.Module):
                         if attr is not None:
                             numel = attr.numel()
                             vec.w = attr
-                            pointer += numel
+                            pointer += numel """
 
 
         x = self.conv1(x)
