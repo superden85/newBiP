@@ -164,6 +164,8 @@ def train(
 
             implicit_gradient = -args.lr2 * score_list * grad_z_list ** 2
 
+            print("implicit gradient: ", implicit_gradient.shape)
+
             #we have to put the implicit gradient in the same shape as the mask gradient
             #we do that by putting zeros everywhere except where there is a mask
             second_part = torch.zeros_like(first_part)
