@@ -164,19 +164,14 @@ def train(
 
             implicit_gradient = -args.lr2 * score_list * grad_z_list ** 2
 
-            print("implicit gradient: ", implicit_gradient.shape)
-
             #we have to put the implicit gradient in the same shape as the mask gradient
             #we do that by putting zeros everywhere except where there is a mask
             second_part = torch.zeros_like(first_part)
             pointer = 0
             for param in dummy_model.parameters():
                 if not param.requires_grad:
-                    print("second part: ", second_part[pointer:pointer + param.numel()].shape)
-                    print("implicit gradient: ", implicit_gradient[pointer:pointer + param.numel()].shape)
                     second_part[pointer:pointer + param.numel()] = implicit_gradient[pointer:pointer + param.numel()]
-                pointer += param.numel()
-                print("pointer: ", pointer)
+                    pointer += param.numel()
             
             def pen_grad2vec(parameters):
                 penalization_grad = []
