@@ -136,14 +136,13 @@ def train(
             param_list = torch.cat(param_list)
 
             pointer = 0
-            for param in dummy_model.parameters():
-                if isinstance(param, (nn.BatchNorm2d, nn.BatchNorm2d)):
-                    print('This param is a batch norm layer of shape : ', param.shape)
-                if param.requires_grad and not isinstance(param, (nn.BatchNorm2d, nn.BatchNorm2d)):
-                    print('This param is a layer of shape : ', param.shape)
-                    print('Number of elements : ', param.numel())
-                    param.data = param_list[pointer:pointer + param.numel()].reshape(param.shape)
-                    pointer += param.numel()
+            for (name, vec) in dummy_model.named_modules():
+                if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
+                    if hasattr(vec, "weight"):
+                        attr = getattr(vec, "weight")
+                        if attr is not None:
+                            attr.data = param_list[pointer:pointer + attr.numel()].view_as(attr)
+                            pointer += attr.numel()
             
             with torch.no_grad():
                 for param in dummy_model.parameters():
