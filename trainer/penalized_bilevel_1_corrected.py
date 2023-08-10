@@ -166,7 +166,7 @@ def train(
 
             #we have to put the implicit gradient in the same shape as the mask gradient
             #we do that by putting zeros everywhere except where there is a mask
-            second_part = torch.zeros_like(mask_grad_vec)
+            second_part = torch.zeros_like(first_part)
             pointer = 0
             for param in dummy_model.parameters():
                 if not param.requires_grad:
