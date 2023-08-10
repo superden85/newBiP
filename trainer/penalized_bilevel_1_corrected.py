@@ -170,9 +170,9 @@ def train(
             pointer = 0
             for param in dummy_model.parameters():
                 if not param.requires_grad:
-                    second_part[pointer:pointer + param.numel()] = implicit_gradient[pointer:pointer + param.numel()]
                     print("second part: ", second_part[pointer:pointer + param.numel()].shape)
                     print("implicit gradient: ", implicit_gradient[pointer:pointer + param.numel()].shape)
+                    second_part[pointer:pointer + param.numel()] = implicit_gradient[pointer:pointer + param.numel()]
                 pointer += param.numel()
             
             def pen_grad2vec(parameters):
