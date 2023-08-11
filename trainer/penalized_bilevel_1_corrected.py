@@ -148,9 +148,9 @@ def train(
                             vec.w = param_list[pointer:pointer + attr.numel()].view_as(attr)
                             pointer += attr.numel()
             
-            for (name, param) in dummy_model_named_parameters():
+            for (name, param) in dummy_model.named_parameters():
                 if i == 0:
-                    print(name, param)
+                    print(name, type(param))
             
             with torch.no_grad():
                 for param in dummy_model.parameters():
