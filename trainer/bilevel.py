@@ -12,7 +12,7 @@ from utils.model import (
 
 
 def train(
-        model, device, train_loader, criterion, optimizer_list, epoch, args
+        model, device, train_loader, criterion, optimizer_list, epoch, args, **kwargs
 ):
     print("->->->->->->->->->-> One epoch with Natural training <-<-<-<-<-<-<-<-<-<-")
     train_loader, val_loader = train_loader
