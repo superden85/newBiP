@@ -93,17 +93,6 @@ class MnistModel(nn.Module):
                             numel = attr.numel()
                             vec.w = attr * adj[pointer: pointer + numel].view_as(attr)
                             pointer += numel
-        """ else:
-            pointer = 0
-            for (name, vec) in self.named_modules():
-                if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
-                    if hasattr(vec, "weight"):
-                        attr = getattr(vec, "weight")
-                        if attr is not None:
-                            numel = attr.numel()
-                            vec.w = attr
-                            pointer += numel """
-
 
         x = self.conv1(x)
         x = F.relu(x)

@@ -143,6 +143,10 @@ def train(
                     if hasattr(vec, "weight"):
                         attr = getattr(vec, "weight")
                         if attr is not None:
+                            if i == 0:
+                                print(type(attr), attr.shape)
+                                print(type(vec))
+                                print(type(vec.w), vec.w.shape)
                             vec.w = param_list[pointer:pointer + attr.numel()].view_as(attr)
                             pointer += attr.numel()
             
