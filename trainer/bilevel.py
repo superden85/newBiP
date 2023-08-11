@@ -78,22 +78,13 @@ def train(
 
             switch_to_bilevel(model)
             optimizer.zero_grad()
+
+            #set grad to None for popup_scores
+            for name, param in model.named_parameters():
+                if 'popup_scores' in name:
+                    param.grad = None
             output = model(train_images)
             loss = criterion(output, train_targets)
-            print('Popup scores grad check:')
-            for name, param in model.named_parameters():
-                print(f"Parameter: {name}")
-                print(f"Shape : {param.shape}")
-                print(f"Requires grad: {param.requires_grad}")
-                if param.requires_grad:
-                    # Check the grad_fn attribute for parameters that require gradients
-                    print(f"Grad_fn: {param.grad_fn}")
-                    if param.grad_fn is not None:
-                        # If the parameter is a result of an operation, inspect the operation's inputs
-                        for input_tensor in param.grad_fn.next_functions:
-                            if input_tensor[0] is not None:
-                                print(f"Linked to: {input_tensor[0]}")
-                print()
             loss.backward()
 
             def grad2vec(parameters):
