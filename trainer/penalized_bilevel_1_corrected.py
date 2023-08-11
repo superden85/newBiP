@@ -145,8 +145,8 @@ def train(
                     if hasattr(vec, "weight"):
                         attr = getattr(vec, "weight")
                         if attr is not None:
-                            attr = param_list[pointer:pointer + attr.numel()].view_as(attr)
-                            print(type(vec.w), type(attr), type(attr.data))
+                            attr.data = param_list[pointer:pointer + attr.numel()].view_as(attr)
+                            print(vec.w, type(attr), type(attr.data))
                             pointer += attr.numel()
             
             for (name, param) in dummy_model.named_parameters():
