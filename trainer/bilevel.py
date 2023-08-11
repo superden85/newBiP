@@ -92,7 +92,7 @@ def train(
             print('Zero grad mask check:')
             for (name, param) in model.named_parameters():
                 num_param = param.numel()
-                print(name, torch.all(param.grad == 0.0), param.grad.shape)
+                print(name, torch.all(param.grad == 0.0), param.grad.norm(1), param.grad.shape, param.grad.norm(torch.inf))
 
             switch_to_prune(model)
             mask_optimizer.zero_grad()
