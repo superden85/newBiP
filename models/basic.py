@@ -95,6 +95,7 @@ class MnistModel(nn.Module):
                             pointer += numel
 
         print(x.shape)
+        print(type(self.conv1.w)
         x = self.conv1(x)
         x = F.relu(x)
         x = self.conv2(x)
