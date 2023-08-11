@@ -87,6 +87,12 @@ def train(
             loss = criterion(output, train_targets)
             loss.backward()
 
+            #checking that the gradients of the mask are still None
+            print('None grad mask check:')
+            for (name, param) in model.named_parameters():
+                if 'popup_scores' in name:
+                    print(name, param.grad is None)
+
             def grad2vec(parameters):
                 grad_vec = []
                 for param in parameters:
