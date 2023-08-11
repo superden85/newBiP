@@ -94,6 +94,7 @@ class MnistModel(nn.Module):
                             vec.w = attr * adj[pointer: pointer + numel].view_as(attr)
                             pointer += numel
 
+        print(x.shape)
         x = self.conv1(x)
         x = F.relu(x)
         x = self.conv2(x)
