@@ -2,6 +2,8 @@ import time
 
 import torch
 
+from torchviz import make_dot
+
 from utils.eval import accuracy
 from utils.general_utils import AverageMeter, ProgressMeter
 from utils.model import (
@@ -89,11 +91,27 @@ def train(
             param_grad_vec = grad2vec(model.parameters())
 
             #checking that the gradients of the mask are always zero
-            print('Zero grad mask check:')
+            """ print('Zero grad mask check:')
             for (name, param) in model.named_parameters():
                 num_param = param.numel()
-                print(name, torch.all(param.grad == 0.0), param.grad.norm(1), param.grad.shape, param.grad.norm(torch.inf))
+                print(name, torch.all(param.grad == 0.0), param.grad.norm(1), param.grad.shape, param.grad.norm(torch.inf)) """
 
+            #check where the popupscores are involved in the computation graph
+            # Access the parameters of the model
+            print('Popup scores grad check:')
+            for name, param in model.named_parameters():
+                print(f"Parameter: {name}")
+                print(f"Shape : {param.shape}")
+                print(f"Requires grad: {param.requires_grad}")
+                if param.requires_grad:
+                    # Check the grad_fn attribute for parameters that require gradients
+                    print(f"Grad_fn: {param.grad_fn}")
+                    if param.grad_fn is not None:
+                        # If the parameter is a result of an operation, inspect the operation's inputs
+                        for input_tensor in param.grad_fn.next_functions:
+                            if input_tensor[0] is not None:
+                                print(f"Linked to: {input_tensor[0]}")
+                print()
             switch_to_prune(model)
             mask_optimizer.zero_grad()
             loss_mask = criterion(model(train_images), train_targets)
