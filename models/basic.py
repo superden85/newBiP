@@ -91,7 +91,7 @@ class MnistModel(nn.Module):
                         attr = getattr(vec, "weight")
                         if attr is not None:
                             numel = attr.numel()
-                            vec.w = attr * adj[pointer: pointer + numel].view_as(attr)
+                            #vec.w = attr * adj[pointer: pointer + numel].view_as(attr)
                             pointer += numel
         
         x = self.conv1(x)

@@ -188,7 +188,7 @@ class SubnetConvUnstructured(nn.Conv2d):
         self.weight.requires_grad = False
         if self.bias is not None:
             self.bias.requires_grad = False
-        self.w = 0
+        #self.w = 0
 
     def set_prune_rate(self, k):
         self.k = k
@@ -208,7 +208,7 @@ class SubnetLinear(nn.Linear):
         nn.init.constant_(self.popup_scores, 1.0)
         self.weight.requires_grad = False
         self.bias.requires_grad = False
-        self.w = 0
+        #self.w = 0
 
     def set_prune_rate(self, k):
         self.k = k

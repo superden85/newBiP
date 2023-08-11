@@ -78,20 +78,9 @@ def train(
 
             switch_to_bilevel(model)
             optimizer.zero_grad()
-
-            #set grad to None for popup_scores
-            for name, param in model.named_parameters():
-                if 'popup_scores' in name:
-                    param.grad = None
             output = model(train_images)
             loss = criterion(output, train_targets)
             loss.backward()
-
-            #checking that the gradients of the mask are still None
-            print('None grad mask check:')
-            for (name, param) in model.named_parameters():
-                if 'popup_scores' in name:
-                    print(name, param.grad is None)
 
             def grad2vec(parameters):
                 grad_vec = []
@@ -102,10 +91,10 @@ def train(
             param_grad_vec = grad2vec(model.parameters())
 
             #checking that the gradients of the mask are always zero
-            """ print('Zero grad mask check:')
+            print('Zero grad mask check:')
             for (name, param) in model.named_parameters():
                 num_param = param.numel()
-                print(name, torch.all(param.grad == 0.0), param.grad.norm(1), param.grad.shape, param.grad.norm(torch.inf)) """
+                print(name, torch.all(param.grad == 0.0), param.grad.norm(1), param.grad.shape, param.grad.norm(torch.inf))
 
             switch_to_prune(model)
             mask_optimizer.zero_grad()
