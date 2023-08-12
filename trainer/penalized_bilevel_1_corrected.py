@@ -159,9 +159,8 @@ def train(
                 if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
                     if hasattr(vec, "weight"):
                         attr = getattr(vec, "weight")
-                        print(name, type(attr))
                         if attr is not None:
-                            grad_z_list.append(attr.grad.view(-1))
+                            grad_z_list.append(attr.grad.view(-1).detach())
             
             grad_z_list = torch.cat(grad_z_list)
 
@@ -174,15 +173,15 @@ def train(
             for param in dummy_model.parameters():
                 if not param.requires_grad:
                     second_part[pointer:pointer + param.numel()] = implicit_gradient[pointer:pointer + param.numel()]
-                    pointer += param.numel()
+                pointer += param.numel()
 
             #check that in the second part only the popup scores have a non zero gradient
             if i == 0:
                 pointer = 0
                 for (name, param) in dummy_model.named_parameters():
-                    if not param.requires_grad:
+                    if param.requires_grad:
                         print(name, torch.all(second_part[pointer:pointer + param.numel()] == 0))
-                        pointer += param.numel()
+                    pointer += param.numel()
             
             def pen_grad2vec(parameters):
                 penalization_grad = []
