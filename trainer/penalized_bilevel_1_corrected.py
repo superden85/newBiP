@@ -181,7 +181,7 @@ def train(
             if i == 0:
                 pointer = 0
                 for (name, param) in dummy_model.named_parameters():
-                    if not param.requires_grad:
+                    if param.requires_grad:
                         print(name, param.grad.shape, torch.sum(param.grad != 0).item())
                         pointer += param.numel()
             
