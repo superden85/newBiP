@@ -88,7 +88,7 @@ def train(
             print('Check that after the LL the mask has zero grad :')
             for (name, param) in model.named_parameters():
                 if 'popup_scores' in name:
-                    print(name, torch.all(param.grad == 0), param.grad)
+                    print(name, param.grad)
             
             #patch for the rounding bug
             #set to None all the gradients for the popup scores
