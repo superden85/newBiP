@@ -121,46 +121,36 @@ def train(
             #the parameters of the dummy model should be set to m * theta of the model
             score_list = []
             param_list = []
-            for (name, vec) in model.named_modules():
+
+            for (name, param) in model.named_parameters():
                 #retrieve the mask
-                if hasattr(vec, "popup_scores"):
-                    attr = getattr(vec, "popup_scores")
-                    if attr is not None:
-                        score_list.append(attr.view(-1))
+                if not param.requires_grad:
+                    score_list.append(param.view(-1))
                 #retrieve the parameters
-                if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
-                    if hasattr(vec, "weight"):
-                        attr = getattr(vec, "weight")
-                        if attr is not None:
-                            param_list.append(attr.view(-1))
-
-            score_list = torch.cat(score_list)
-            param_list = torch.cat(param_list)
-
+                if param.requires_grad and not 'bias' in name:
+                    param_list.append(param.view(-1))
+            
             pointer = 0
-            for (name, vec) in dummy_model.named_modules():
-                if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
-                    if hasattr(vec, "weight"):
-                        attr = getattr(vec, "weight")
-                        if attr is not None:
-                            attr.data = param_list[pointer:pointer + attr.numel()].view_as(attr) * score_list[pointer:pointer + attr.numel()].view_as(attr)
-                            pointer += attr.numel()
+            for (name, param) in dummy_model.named_parameters():
+                if param.requires_grad and not 'bias' in name:
+                    param.data = param_list[pointer] * score_list[pointer]
+                    pointer += 1
             
             with torch.no_grad():
                 for param in dummy_model.parameters():
                     param.grad = torch.zeros_like(param)
             
+            #compute grad_z l(z = m * theta)
             z_loss = criterion(dummy_model(train_images), train_targets)
 
             z_loss.backward()
 
+            #retrieve grad_z l(z = m * theta)
             grad_z_list = []
-            for (name, vec) in dummy_model.named_modules():
-                if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
-                    if hasattr(vec, "weight"):
-                        attr = getattr(vec, "weight")
-                        if attr is not None:
-                            grad_z_list.append(attr.grad.view(-1).detach())
+            
+            for (name, param) in dummy_model.named_parameters():
+                if param.requires_grad and not 'bias' in name:
+                    grad_z_list.append(param.grad.view(-1).detach())
             
             grad_z_list = torch.cat(grad_z_list)
 
@@ -176,14 +166,6 @@ def train(
                     second_part[big_pointer:big_pointer + param.numel()] = implicit_gradient[small_pointer:small_pointer + param.numel()]
                     small_pointer += param.numel()
                 big_pointer += param.numel()
-
-            #check that in the second part only the popup scores have a non zero gradient
-            if i == 0:
-                pointer = 0
-                for (name, param) in dummy_model.named_parameters():
-                    if param.requires_grad:
-                        print(name, torch.all(second_part[pointer:pointer + param.numel()] == 0))
-                    pointer += param.numel()
             
             def pen_grad2vec(parameters):
                 penalization_grad = []
