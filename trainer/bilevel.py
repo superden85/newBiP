@@ -90,12 +90,6 @@ def train(
 
             param_grad_vec = grad2vec(model.parameters())
 
-            #checking that the gradients of the mask are always zero
-            print('Zero grad mask check:')
-            for (name, param) in model.named_parameters():
-                num_param = param.numel()
-                print(name, torch.all(param.grad == 0.0), param.grad.norm(1), param.grad.shape, param.grad.norm(torch.inf))
-
             switch_to_prune(model)
             mask_optimizer.zero_grad()
             loss_mask = criterion(model(train_images), train_targets)

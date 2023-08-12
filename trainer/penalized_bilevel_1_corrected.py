@@ -145,13 +145,8 @@ def train(
                     if hasattr(vec, "weight"):
                         attr = getattr(vec, "weight")
                         if attr is not None:
-                            attr.data = param_list[pointer:pointer + attr.numel()].view_as(attr)
-                            print(type(vec.w), type(attr), type(attr.data))
+                            attr.data = param_list[pointer:pointer + attr.numel()].view_as(attr) * score_list[pointer:pointer + attr.numel()].view_as(attr)
                             pointer += attr.numel()
-            
-            for (name, param) in dummy_model.named_parameters():
-                if i == 0:
-                    print(name, type(param))
             
             with torch.no_grad():
                 for param in dummy_model.parameters():
@@ -181,6 +176,14 @@ def train(
                 if not param.requires_grad:
                     second_part[pointer:pointer + param.numel()] = implicit_gradient[pointer:pointer + param.numel()]
                     pointer += param.numel()
+
+            #check that in the second part only the popup scores have a non zero gradient
+            if i == 0:
+                pointer = 0
+                for (name, param) in dummy_model.named_parameters():
+                    if not param.requires_grad:
+                        print(name, param.grad.shape, torch.sum(param.grad != 0).item())
+                        pointer += param.numel()
             
             def pen_grad2vec(parameters):
                 penalization_grad = []
