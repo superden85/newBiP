@@ -181,8 +181,8 @@ def train(
             if i == 0:
                 pointer = 0
                 for (name, param) in dummy_model.named_parameters():
-                    if param.requires_grad:
-                        print(name, second_part[pointer:pointer + param.numel()])
+                    if not param.requires_grad:
+                        print(name, torch.all(second_part[pointer:pointer + param.numel()] == 0))
                         pointer += param.numel()
             
             def pen_grad2vec(parameters):
