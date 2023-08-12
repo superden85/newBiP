@@ -126,6 +126,8 @@ def train(
                 #retrieve the mask
                 if not param.requires_grad:
                     score_list.append(param.view(-1))
+                    if i == 0:
+                        print(name, type(param.view(-1)))
                 #retrieve the parameters
                 if param.requires_grad and not 'bias' in name:
                     param_list.append(param.view(-1))
