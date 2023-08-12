@@ -169,11 +169,13 @@ def train(
             #we have to put the implicit gradient in the same shape as the mask gradient
             #we do that by putting zeros everywhere except where there is a mask
             second_part = torch.zeros_like(first_part)
-            pointer = 0
+            big_pointer = 0
+            small_pointer = 0
             for param in dummy_model.parameters():
                 if not param.requires_grad:
-                    second_part[pointer:pointer + param.numel()] = implicit_gradient[pointer:pointer + param.numel()]
-                pointer += param.numel()
+                    second_part[big_pointer:big_pointer + param.numel()] = implicit_gradient[small_pointer:small_pointer + param.numel()]
+                    small_pointer += param.numel()
+                big_pointer += param.numel()
 
             #check that in the second part only the popup scores have a non zero gradient
             if i == 0:
