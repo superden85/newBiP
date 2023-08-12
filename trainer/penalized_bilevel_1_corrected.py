@@ -84,7 +84,12 @@ def train(
 
             optimizer.zero_grad()
             loss.backward()
-
+            
+            print('Check that after the LL the mask has zero grad :')
+            for (name, param) in model.named_parameters():
+                if 'popup_scores' in name:
+                    print(name, torch.sum(param.grad == 0))
+            
             #patch for the rounding bug
             #set to None all the gradients for the popup scores
             for param in model.parameters():
@@ -139,8 +144,6 @@ def train(
 
             pointer = 0
             for (name, vec) in dummy_model.named_modules():
-                if i == 0:  
-                    print(name, vec)
                 if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
                     if hasattr(vec, "weight"):
                         attr = getattr(vec, "weight")
