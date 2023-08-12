@@ -128,11 +128,8 @@ def train(
                     score_list.append(param.view(-1))
                 #retrieve the parameters
                 if param.requires_grad and not 'bias' in name:
+                    print(name, param.shape)
                     param_list.append(param.view(-1))
-
-            if i == 0:
-
-                print('Check sizes : ', len(score_list), len(param_list))
             
             pointer = 0
             for (name, param) in dummy_model.named_parameters():
