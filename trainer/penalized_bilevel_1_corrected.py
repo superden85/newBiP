@@ -84,11 +84,6 @@ def train(
 
             optimizer.zero_grad()
             loss.backward()
-
-            print('Check that after the LL the mask has zero grad :')
-            for (name, param) in model.named_parameters():
-                if 'popup_scores' in name:
-                    print(name, param.grad)
             
             #patch for the rounding bug
             #set to None all the gradients for the popup scores
@@ -164,6 +159,7 @@ def train(
                 if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
                     if hasattr(vec, "weight"):
                         attr = getattr(vec, "weight")
+                        print(name, type(attr))
                         if attr is not None:
                             grad_z_list.append(attr.grad.view(-1))
             
