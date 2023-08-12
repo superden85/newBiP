@@ -126,15 +126,19 @@ def train(
                 #retrieve the mask
                 if not param.requires_grad:
                     score_list.append(param.view(-1))
-                    if i == 0:
-                        print(name, type(param.view(-1)))
                 #retrieve the parameters
                 if param.requires_grad and not 'bias' in name:
                     param_list.append(param.view(-1))
+
+            if i == 0:
+
+                print('Check sizes : ', len(score_list), len(param_list))
             
             pointer = 0
             for (name, param) in dummy_model.named_parameters():
                 if param.requires_grad and not 'bias' in name:
+                    if i == 0:
+                        print(name, param.shape, param_list[pointer].shape, score_list[pointer].shape)
                     param.data = param_list[pointer] * score_list[pointer]
                     pointer += 1
             
