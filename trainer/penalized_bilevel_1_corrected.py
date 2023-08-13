@@ -156,7 +156,7 @@ def train(
             
             grad_z_list = torch.cat(grad_z_list)
             
-            score_list = torch.cat(score_list)
+            score_list = torch.cat([score.view(-1) for score in score_list])
             implicit_gradient = -args.lr2 * score_list * grad_z_list ** 2
 
             #we have to put the implicit gradient in the same shape as the mask gradient
