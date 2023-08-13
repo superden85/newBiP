@@ -174,8 +174,10 @@ def train(
                 for (name, param) in model.named_parameters():
                     numel = param.numel()
                     if param.requires_grad:
-                        print(name, torch.all(first_part[big_pointer:big_pointer+numel] == param_list[small_pointer:small_pointer + numel] * grad_z_list[small_pointer:small_pointer + numel]), 
+                        print(name, torch.all(first_part[big_pointer:big_pointer+numel] == param_list[small_pointer:small_pointer + numel] * grad_z_list[small_pointer:small_pointer + numel]),
                         torch.norm(first_part[big_pointer:big_pointer+numel] - param_list[small_pointer:small_pointer + numel] * grad_z_list[small_pointer:small_pointer + numel], p=float("inf")))
+                        x = first_part[big_pointer:big_pointer+numel]
+                        print(torch.norm(x, p=float("inf")), torch.norm(x, p=0), torch.norm(x, 1))
                         small_pointer += numel
                     big_pointer += numel
 
