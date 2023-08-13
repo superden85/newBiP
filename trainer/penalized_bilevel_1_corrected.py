@@ -169,7 +169,9 @@ def train(
                         torch.norm(first_part[big_pointer:big_pointer+numel] - param_list[small_pointer:small_pointer + numel] * grad_z_list[small_pointer:small_pointer + numel], p=0))
                         small_pointer += numel
                     big_pointer += numel
-            
+                print(small_pointer, big_pointer)
+                print(param_list.shape, grad_z_list.shape, first_part.shape)
+                
             score_list = torch.cat([score.view(-1) for score in score_list])
             implicit_gradient = -args.lr2 * score_list * grad_z_list ** 2
 
