@@ -125,10 +125,10 @@ def train(
             for (name, param) in model.named_parameters():
                 #retrieve the mask
                 if param.requires_grad:
-                    score_list.append(param.view(-1))
+                    score_list.append(param.data)
                 #retrieve the parameters
                 if not param.requires_grad and not 'bias' in name:
-                    param_list.append(param.view(-1))
+                    param_list.append(param.data)
             
             if i == 0:
                 print("score_list: ", len(score_list))
