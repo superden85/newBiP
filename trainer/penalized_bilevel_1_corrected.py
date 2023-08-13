@@ -121,6 +121,7 @@ def train(
             #the parameters of the dummy model should be set to m * theta of the model
             score_list = []
             param_list = []
+            bias_list = []
 
             #retrieve the parameters of the model
             for (name, param) in model.named_parameters():
@@ -130,13 +131,20 @@ def train(
                 #retrieve theta
                 if not param.requires_grad and not 'bias' in name:
                     param_list.append(param.data)
+                #retrieve bias
+                if not param.requires_grad and 'bias' in name:
+                    bias_list.append(param.data)
 
             #set the parameters of the dummy model to m * theta
-            pointer = 0
+            param_score_pointer = 0
+            bias_pointer = 0
             for (name, param) in dummy_model.named_parameters():
                 if param.requires_grad and not 'bias' in name:
-                    param.data = param_list[pointer] * score_list[pointer]
-                    pointer += 1
+                    param.data = score_list[param_score_pointer] * param_list[param_score_pointer]
+                    param_score_pointer += 1
+                if param.requires_grad and 'bias' in name:
+                    param.data = bias_list[bias_pointer]
+                    bias_pointer += 1
 
             with torch.no_grad():
                 for param in dummy_model.parameters():
@@ -165,8 +173,8 @@ def train(
                 for (name, param) in model.named_parameters():
                     numel = param.numel()
                     if param.requires_grad:
-                        print(name, torch.all(first_part[big_pointer:big_pointer+numel] == grad_z_list[small_pointer:small_pointer + numel]), 
-                        torch.norm(first_part[big_pointer:big_pointer+numel] - grad_z_list[small_pointer:small_pointer + numel], p=0))
+                        print(name, torch.all(first_part[big_pointer:big_pointer+numel] == param_list[small_pointer:small_pointer + numel] * grad_z_list[small_pointer:small_pointer + numel]), 
+                        torch.norm(first_part[big_pointer:big_pointer+numel] - param_list[small_pointer:small_pointer + numel] * grad_z_list[small_pointer:small_pointer + numel], p=0))
                         small_pointer += numel
                     big_pointer += numel
 
