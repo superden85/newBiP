@@ -140,15 +140,16 @@ def train(
             bias_pointer = 0
             for (name, param) in dummy_model.named_parameters():
                 if param.requires_grad and not 'bias' in name:
-                    param.data = score_list[param_score_pointer] * param_list[param_score_pointer]
+                    param.data.copy_(score_list[param_score_pointer] * param_list[param_score_pointer])
                     param_score_pointer += 1
                 if param.requires_grad and 'bias' in name:
-                    param.data = bias_list[bias_pointer]
+                    param.data.copy_(bias_list[bias_pointer])
                     bias_pointer += 1
-
-            with torch.no_grad():
-                for param in dummy_model.parameters():
-                    param.grad = torch.zeros_like(param)
+            
+            if i==0 and epoch==0:
+                with torch.no_grad():
+                    for param in dummy_model.parameters():
+                        param.grad.copy_(torch.zeros_like(param))
             
             #compute grad_z l(z = m * theta)
             z_loss = criterion(dummy_model(train_images), train_targets)
@@ -235,7 +236,7 @@ def train(
                 #i.e. if param.requires_grad = True
 
                 if param.requires_grad:
-                    param.data = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
+                    param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
                 pointer += num_param
 
