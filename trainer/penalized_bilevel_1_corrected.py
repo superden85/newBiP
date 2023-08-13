@@ -149,7 +149,7 @@ def train(
             if i==0 and epoch==0:
                 with torch.no_grad():
                     for param in dummy_model.parameters():
-                        param.grad.copy_(torch.zeros_like(param))
+                        param.grad = torch.zeros_like(param.data)
             
             #compute grad_z l(z = m * theta)
             z_loss = criterion(dummy_model(train_images), train_targets)
