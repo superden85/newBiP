@@ -88,8 +88,11 @@ def train(
             #checking that the gradients for the popup scores are actually zero:
             for param in model.parameters():
                 if not param.requires_grad:
-                    print(param.grad)
-            
+                    if param.grad is None:
+                        print("None")
+                    else:
+                        print(torch.all(param.grad == 0))
+                        
             """ #patch for the rounding bug
             #set to None all the gradients for the popup scores
             for param in model.parameters():
