@@ -84,6 +84,11 @@ def train(
 
             optimizer.zero_grad()
             loss.backward()
+
+            #checking that the gradients for the popup scores are actually zero:
+            for param in model.parameters():
+                if not param.requires_grad:
+                    print(torch.all(param.grad==0))
             
             """ #patch for the rounding bug
             #set to None all the gradients for the popup scores
