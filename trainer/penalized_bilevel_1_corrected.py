@@ -85,19 +85,11 @@ def train(
             optimizer.zero_grad()
             loss.backward()
 
-            #checking that the gradients for the popup scores are actually zero:
-            for param in model.parameters():
-                if not param.requires_grad:
-                    if param.grad is None:
-                        print("None")
-                    else:
-                        print(torch.all(param.grad == 0))
-                        
-            """ #patch for the rounding bug
+            #patch for the rounding bug
             #set to None all the gradients for the popup scores
             for param in model.parameters():
                 if not param.requires_grad:
-                    param.grad = None """
+                    param.grad = None
             
             optimizer.step()
 
@@ -160,9 +152,22 @@ def train(
             
             for (name, param) in dummy_model.named_parameters():
                 if param.requires_grad and not 'bias' in name:
-                    grad_z_list.append(param.grad.view(-1).detach())
+                    grad_z_list.append(param.grad.view(-1).detach())                        
             
             grad_z_list = torch.cat(grad_z_list)
+            
+            param_list = torch.cat([param.view(-1) for param in param_list])
+
+            small_pointer = 0
+            big_pointer = 0
+            if i <= 2:
+                print('Checking that the gradients are well computed :')
+                for (name, param) in model.named_parameters():
+                    numel = param.numel()
+                    if param.requires_grad:
+                        print(name, torch.all(first_part[big_pointer:big_pointer+numel] == param_list[small_pointer:small_pointer + numel] * grad_z_list[small_pointer:small_pointer + numel]))
+                        small_pointer += numel
+                    big_pointer += numel
             
             score_list = torch.cat([score.view(-1) for score in score_list])
             implicit_gradient = -args.lr2 * score_list * grad_z_list ** 2
