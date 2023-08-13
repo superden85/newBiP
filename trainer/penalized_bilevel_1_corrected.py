@@ -122,26 +122,22 @@ def train(
             score_list = []
             param_list = []
 
+            #retrieve the parameters of the model
             for (name, param) in model.named_parameters():
                 #retrieve the mask
                 if param.requires_grad:
                     score_list.append(param.data)
-                #retrieve the parameters
+                #retrieve theta
                 if not param.requires_grad and not 'bias' in name:
                     param_list.append(param.data)
-            
-            if i == 0:
-                print("score_list: ", len(score_list))
-                print("param_list: ", len(param_list))
 
+            #set the parameters of the dummy model to m * theta
             pointer = 0
             for (name, param) in dummy_model.named_parameters():
                 if param.requires_grad and not 'bias' in name:
-                    if i == 0:
-                        print(name, param.shape, param_list[pointer].shape, score_list[pointer].shape)
                     param.data = param_list[pointer] * score_list[pointer]
                     pointer += 1
-            
+
             with torch.no_grad():
                 for param in dummy_model.parameters():
                     param.grad = torch.zeros_like(param)
@@ -159,7 +155,8 @@ def train(
                     grad_z_list.append(param.grad.view(-1).detach())
             
             grad_z_list = torch.cat(grad_z_list)
-
+            
+            score_list = torch.cat(score_list)
             implicit_gradient = -args.lr2 * score_list * grad_z_list ** 2
 
             #we have to put the implicit gradient in the same shape as the mask gradient
