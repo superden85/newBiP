@@ -166,7 +166,7 @@ def main():
             k = initialize_sparse(model, args.k)
             args.k = k
         else:
-            initialize_constant(model, 0.5)
+            initialize_constant(model, 1.0)
     
 
     best_prec1 = 0
