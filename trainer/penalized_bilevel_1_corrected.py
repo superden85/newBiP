@@ -226,20 +226,22 @@ def train(
             step_size = 2/(epoch * len(train_loader) + i + 2)
 
             #then we update the parameters
-            with torch.no_grad():
+            """ with torch.no_grad():
                 pointer = 0
-                for (name, param) in model.named_parameters():
+                for param in model.parameters():
                     num_param = param.numel()
 
                     #update only if it is a popup score
                     #i.e. if param.requires_grad = True
 
                     if param.requires_grad:
-                        if i == 0:
-                            print(name)
                         param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
-                    pointer += num_param
+                    pointer += num_param """
+            
+            for m in model.modules():
+                if hasattr(m, 'popup_scores'):
+                    nn.init.constant_(m.popup_scores, 0.5)
 
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
