@@ -241,7 +241,7 @@ def train(
             
             for m in model.modules():
                 if hasattr(m, "popup_scores"):
-                    nn.init.zeros_(m.popup_scores)
+                    nn.init.bernoulli_(m.popup_scores, p=0.5)
 
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
