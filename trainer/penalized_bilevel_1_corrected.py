@@ -236,7 +236,8 @@ def train(
                     #i.e. if param.requires_grad = True
 
                     if param.requires_grad:
-                        param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
+                        updated_param = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data).detach()
+                        param.data.copy_(updated_param)
 
                     pointer += num_param
             
