@@ -184,43 +184,44 @@ def train(
 
             score_list = torch.cat([score.view(-1) for score in score_list])
             implicit_gradient = -args.lr2 * score_list * grad_z_list ** 2
-
-            #we have to put the implicit gradient in the same shape as the mask gradient
-            #we do that by putting zeros everywhere except where there is a mask
-            second_part = torch.zeros_like(first_part)
-            big_pointer = 0
-            small_pointer = 0
-            for param in dummy_model.parameters():
-                if not param.requires_grad:
-                    second_part[big_pointer:big_pointer + param.numel()] = implicit_gradient[small_pointer:small_pointer + param.numel()]
-                    small_pointer += param.numel()
-                big_pointer += param.numel()
             
-            def pen_grad2vec(parameters):
-                penalization_grad = []
-                for param in parameters:
-                    if param.requires_grad:
-                        penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
-                    else:
-                        penalization_grad.append(torch.zeros_like(param.view(-1).detach()))
-                return torch.cat(penalization_grad)
-            
-            pen_grad_vec = pen_grad2vec(model.parameters())
+            with torch.no_grad():
+                #we have to put the implicit gradient in the same shape as the mask gradient
+                #we do that by putting zeros everywhere except where there is a mask
+                second_part = torch.zeros_like(first_part)
+                big_pointer = 0
+                small_pointer = 0
+                for param in dummy_model.parameters():
+                    if not param.requires_grad:
+                        second_part[big_pointer:big_pointer + param.numel()] = implicit_gradient[small_pointer:small_pointer + param.numel()]
+                        small_pointer += param.numel()
+                    big_pointer += param.numel()
+                
+                def pen_grad2vec(parameters):
+                    penalization_grad = []
+                    for param in parameters:
+                        if param.requires_grad:
+                            penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
+                        else:
+                            penalization_grad.append(torch.zeros_like(param.view(-1).detach()))
+                    return torch.cat(penalization_grad)
+                
+                pen_grad_vec = pen_grad2vec(model.parameters())
 
-            #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
-            hypergradient = args.lambd * (first_part + second_part) + (1 - args.lambd) * pen_grad_vec
+                #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
+                hypergradient = args.lambd * (first_part + second_part) + (1 - args.lambd) * pen_grad_vec
 
-            #the linear minimization problem is very simple we don't need to use a solver
-            #mstar is equal to 1 if c is negative, 0 otherwise
+                #the linear minimization problem is very simple we don't need to use a solver
+                #mstar is equal to 1 if c is negative, 0 otherwise
 
-            """ if i<=3:
-            #print the ten highest components and the linf norm and the 10 smallest ones
-                print("Linf norm: ", torch.norm(hypergradient, p=float("inf")))
-                print("Ten highest components: ", torch.topk(hypergradient, 10))
-                print("Ten lowest components: ", torch.topk(-hypergradient, 10)) """
+                """ if i<=3:
+                #print the ten highest components and the linf norm and the 10 smallest ones
+                    print("Linf norm: ", torch.norm(hypergradient, p=float("inf")))
+                    print("Ten highest components: ", torch.topk(hypergradient, 10))
+                    print("Ten lowest components: ", torch.topk(-hypergradient, 10)) """
 
-            m_star = torch.zeros_like(hypergradient)
-            #m_star[hypergradient < 0] = 1
+                m_star = torch.zeros_like(hypergradient)
+                m_star[hypergradient < 0] = 1
 
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
