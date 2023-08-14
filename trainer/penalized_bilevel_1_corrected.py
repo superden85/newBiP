@@ -225,7 +225,7 @@ def train(
             step_size = 2/(epoch * len(train_loader) + i + 2)
 
             #then we update the parameters
-            pointer = 0
+            """ pointer = 0
             for param in model.parameters():
                 num_param = param.numel()
 
@@ -235,7 +235,7 @@ def train(
                 if param.requires_grad:
                     param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
-                pointer += num_param
+                pointer += num_param """
 
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
