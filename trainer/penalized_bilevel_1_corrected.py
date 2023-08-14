@@ -226,7 +226,7 @@ def train(
             step_size = 2/(epoch * len(train_loader) + i + 2)
 
             #then we update the parameters
-            if i == 0:
+            with torch.no_grad():
                 pointer = 0
                 for param in model.parameters():
                     num_param = param.numel()
