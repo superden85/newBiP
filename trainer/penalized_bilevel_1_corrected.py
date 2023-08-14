@@ -124,16 +124,17 @@ def train(
             bias_list = []
 
             #retrieve the parameters of the model
-            for (name, param) in model.named_parameters():
-                #retrieve the mask
-                if param.requires_grad:
-                    score_list.append(param.data)
-                #retrieve theta
-                if not param.requires_grad and not 'bias' in name:
-                    param_list.append(param.data)
-                #retrieve bias
-                if not param.requires_grad and 'bias' in name:
-                    bias_list.append(param.data)
+            with torch.no_grad():
+                for (name, param) in model.named_parameters():
+                    #retrieve the mask
+                    if param.requires_grad:
+                        score_list.append(param.data)
+                    #retrieve theta
+                    if not param.requires_grad and not 'bias' in name:
+                        param_list.append(param.data)
+                    #retrieve bias
+                    if not param.requires_grad and 'bias' in name:
+                        bias_list.append(param.data)
 
             #set the parameters of the dummy model to m * theta
             with torch.no_grad():
@@ -225,19 +226,20 @@ def train(
             step_size = 2/(epoch * len(train_loader) + i + 2)
 
             #then we update the parameters
-            pointer = 0
-            for (name, param) in model.named_parameters():
-                num_param = param.numel()
+            with torch.no_grad():
+                pointer = 0
+                for (name, param) in model.named_parameters():
+                    num_param = param.numel()
 
-                #update only if it is a popup score
-                #i.e. if param.requires_grad = True
+                    #update only if it is a popup score
+                    #i.e. if param.requires_grad = True
 
-                if param.requires_grad:
-                    if i == 0:
-                        print(name)
-                    param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
+                    if param.requires_grad:
+                        if i == 0:
+                            print(name)
+                        param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
-                pointer += num_param
+                    pointer += num_param
 
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
