@@ -128,13 +128,13 @@ def train(
                 for (name, param) in model.named_parameters():
                     #retrieve the mask
                     if param.requires_grad:
-                        score_list.append(param.data)
+                        score_list.append(param.data.detach())
                     #retrieve theta
                     if not param.requires_grad and not 'bias' in name:
-                        param_list.append(param.data)
+                        param_list.append(param.data.detach())
                     #retrieve bias
                     if not param.requires_grad and 'bias' in name:
-                        bias_list.append(param.data)
+                        bias_list.append(param.data.detach())
 
             #set the parameters of the dummy model to m * theta
             with torch.no_grad():
