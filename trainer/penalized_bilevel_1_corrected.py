@@ -176,8 +176,6 @@ def train(
                     if param.requires_grad:
                         print(name, torch.all(first_part[big_pointer:big_pointer+numel] == param_list[small_pointer:small_pointer + numel] * grad_z_list[small_pointer:small_pointer + numel]),
                         torch.norm(first_part[big_pointer:big_pointer+numel] - param_list[small_pointer:small_pointer + numel] * grad_z_list[small_pointer:small_pointer + numel], p=float("inf")))
-                        print(name, torch.all(first_part[big_pointer:big_pointer+numel] == grad_z_list[small_pointer:small_pointer + numel]),
-                        torch.norm(first_part[big_pointer:big_pointer+numel] - grad_z_list[small_pointer:small_pointer + numel], p=float("inf")))
                         x = first_part[big_pointer:big_pointer+numel]
                         print(torch.norm(x, p=float("inf")), torch.norm(x, p=0), torch.norm(x, 1))
                         small_pointer += numel
@@ -232,7 +230,7 @@ def train(
                 raise TypeError('expected torch.Tensor, but got: {}'
                                 .format(torch.typename(vec)))
 
-            pointer = 0
+            """ pointer = 0
             for param in model.parameters():
                 num_param = param.numel()
 
@@ -242,7 +240,7 @@ def train(
                 if param.requires_grad:
                     param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
-                pointer += num_param
+                pointer += num_param """
 
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
