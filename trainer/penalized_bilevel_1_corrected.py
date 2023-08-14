@@ -222,6 +222,7 @@ def train(
 
                 m_star = torch.zeros_like(hypergradient)
                 m_star[hypergradient < 0] = 1
+                m_star = m_star.detach()
 
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
@@ -236,7 +237,7 @@ def train(
                     #i.e. if param.requires_grad = True
 
                     if param.requires_grad:
-                        updated_param = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data).detach()
+                        updated_param = ((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
                         param.data.copy_(updated_param)
 
                     pointer += num_param
