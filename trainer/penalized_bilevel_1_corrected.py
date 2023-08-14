@@ -220,7 +220,7 @@ def train(
                 print("Ten lowest components: ", torch.topk(-hypergradient, 10)) """
 
             m_star = torch.zeros_like(hypergradient)
-            m_star[hypergradient < 0] = 1
+            #m_star[hypergradient < 0] = 1
 
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
@@ -237,7 +237,7 @@ def train(
                     if param.requires_grad:
                         
                         #t = (1 - step_size) * param.data
-                        s = step_size * hypergradient[pointer:pointer + num_param].view_as(param).data
+                        s = step_size * m_star[pointer:pointer + num_param].view_as(param).data
                         param.data.copy_(s)
 
                     pointer += num_param
