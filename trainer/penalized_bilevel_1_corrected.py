@@ -137,15 +137,16 @@ def train(
                     bias_list.append(param.data)
 
             #set the parameters of the dummy model to m * theta
-            param_score_pointer = 0
-            bias_pointer = 0
-            for (name, param) in dummy_model.named_parameters():
-                if param.requires_grad and not 'bias' in name:
-                    param.data.copy_(score_list[param_score_pointer] * param_list[param_score_pointer])
-                    param_score_pointer += 1
-                if param.requires_grad and 'bias' in name:
-                    param.data.copy_(bias_list[bias_pointer])
-                    bias_pointer += 1
+            with torch.no_grad():
+                param_score_pointer = 0
+                bias_pointer = 0
+                for (name, param) in dummy_model.named_parameters():
+                    if param.requires_grad and not 'bias' in name:
+                        param.data.copy_(score_list[param_score_pointer] * param_list[param_score_pointer])
+                        param_score_pointer += 1
+                    if param.requires_grad and 'bias' in name:
+                        param.data.copy_(bias_list[bias_pointer])
+                        bias_pointer += 1
             
             if i==0 and epoch==0:
                 with torch.no_grad():
