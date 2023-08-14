@@ -85,14 +85,13 @@ def train(
             optimizer.zero_grad()
             loss.backward()
 
-            if i == 0:
-                #patch for the rounding bug
-                #set to None all the gradients for the popup scores
-                for param in model.parameters():
-                    if not param.requires_grad:
-                        param.grad = None
-                
-                optimizer.step()
+            #patch for the rounding bug
+            #set to None all the gradients for the popup scores
+            for param in model.parameters():
+                if not param.requires_grad:
+                    param.grad = None
+            
+            optimizer.step()
 
             acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
             losses.update(loss.item(), val_images.size(0))
@@ -226,12 +225,7 @@ def train(
             step_size = 2/(epoch * len(train_loader) + i + 2)
 
             #then we update the parameters
-
-            if not isinstance(m_star, torch.Tensor):
-                raise TypeError('expected torch.Tensor, but got: {}'
-                                .format(torch.typename(vec)))
-
-            """ pointer = 0
+            pointer = 0
             for param in model.parameters():
                 num_param = param.numel()
 
@@ -241,7 +235,7 @@ def train(
                 if param.requires_grad:
                     param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
-                pointer += num_param """
+                pointer += num_param
 
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
