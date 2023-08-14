@@ -235,8 +235,8 @@ def train(
                     #i.e. if param.requires_grad = True
 
                     if param.requires_grad:
-                        t = torch.Tensor((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
-                        param.data.copy_(t)
+                        t = (1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data
+                        param.data = t
 
                     pointer += num_param
             
