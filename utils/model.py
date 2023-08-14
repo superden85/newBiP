@@ -190,7 +190,7 @@ def initialize_constant(model, value):
     )
     for m in model.modules():
         if hasattr(m, 'popup_scores'):
-            nn.init.normal_(m.popup_scores, mean=value, std=0.01)
+            nn.init.constant_(m.popup_scores, value)
 
 def initialize_sparse(model, k):
     print(
