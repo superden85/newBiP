@@ -239,11 +239,9 @@ def train(
 
                     pointer += num_param """
             
-            pointer = 0
             for m in model.modules():
                 if hasattr(m, "popup_scores"):
-                    m.popup_scores.data.copy_((1 - step_size) * m.popup_scores.data + step_size * m_star[pointer:pointer + m.popup_scores.numel()].view_as(m.popup_scores).data)
-                pointer += m.numel()
+                    nn.init.zeros_(m.popup_scores)
 
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
