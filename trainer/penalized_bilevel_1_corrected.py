@@ -237,10 +237,8 @@ def train(
                     if param.requires_grad:
                         
                         #t = (1 - step_size) * param.data
-                        s = step_size * m_star[pointer:pointer + num_param].view_as(param).data
-                        if i == 0:
-                            print(s.dtype)
-                        param.data.copy_(t)
+                        s = step_size * hypergradient[pointer:pointer + num_param].view_as(param).data
+                        param.data.copy_(s)
 
                     pointer += num_param
             
