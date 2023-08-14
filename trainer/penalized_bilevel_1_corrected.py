@@ -85,13 +85,14 @@ def train(
             optimizer.zero_grad()
             loss.backward()
 
-            #patch for the rounding bug
-            #set to None all the gradients for the popup scores
-            for param in model.parameters():
-                if not param.requires_grad:
-                    param.grad = None
-            
-            optimizer.step()
+            if i == 0:
+                #patch for the rounding bug
+                #set to None all the gradients for the popup scores
+                for param in model.parameters():
+                    if not param.requires_grad:
+                        param.grad = None
+                
+                optimizer.step()
 
             acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
             losses.update(loss.item(), val_images.size(0))
