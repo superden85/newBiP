@@ -78,8 +78,6 @@ def train(
             #Lower level step
             #We do 1 step of SGD on the parameters of the model
 
-            args.lambd = 0
-
             switch_to_finetune(model)
             output = model(val_images)
             loss = criterion(output, val_targets)
@@ -239,7 +237,7 @@ def train(
 
 
                     if param.requires_grad:
-                        param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
+                        param.data.copy_((1 - step_size) * param.data + step_size * second_part[pointer:pointer + num_param].view_as(param).data)
 
                     pointer += num_param
             
