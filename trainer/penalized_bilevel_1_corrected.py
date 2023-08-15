@@ -200,7 +200,7 @@ def train(
                 def pen_grad2vec(parameters):
                     penalization_grad = []
                     for param in parameters:
-                        if param.requires_grad:
+                        if not param.requires_grad:
                             penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
                         else:
                             penalization_grad.append(torch.zeros_like(param.view(-1).detach()))
