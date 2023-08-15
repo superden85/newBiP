@@ -152,8 +152,7 @@ def train(
 
             if i <= 2:
                 for (name, param) in model.named_parameters():
-                    if param.requires_grad and not 'bias' in name:
-                        print(name, torch.all(param.data == dummy_model.state_dict()[name]))
+                    print(name, torch.all(param.data == dummy_model.state_dict()[name]))
 
             with torch.no_grad():
                 for param in dummy_model.parameters():
