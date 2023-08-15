@@ -78,6 +78,8 @@ def train(
             #Lower level step
             #We do 1 step of SGD on the parameters of the model
 
+            args.lambd = 0
+
             switch_to_finetune(model)
             output = model(val_images)
             loss = criterion(output, val_targets)
