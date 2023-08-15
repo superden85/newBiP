@@ -201,12 +201,12 @@ def train(
                     penalization_grad = []
                     for param in parameters:
                         if param.requires_grad:
-                            penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.grad.view(-1).detach())))
+                            penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
                         else:
-                            penalization_grad.append(torch.zeros_like(param.grad.view(-1).detach()))
+                            penalization_grad.append(torch.zeros_like(param.view(-1).detach()))
                     return torch.cat(penalization_grad)
                 
-                pen_grad_vec = pen_grad2vec(model.parameters())
+                pen_grad_vec = pen_grad2vec(dummy_model.parameters())
 
                 #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
                 hypergradient = args.lambd * (first_part + second_part) + (1 - args.lambd) * pen_grad_vec
