@@ -36,8 +36,8 @@ def train(
     dummy_model = kwargs["dummy_model"]
     optimizer, mask_optimizer = optimizer_list
 
-    """ model.train()
-    dummy_model.train() """
+    model.train()
+    dummy_model.train()
     end = time.time()
 
     duality_gaps = []
