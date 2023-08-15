@@ -167,6 +167,7 @@ def main():
             args.k = k
         else:
             initialize_constant(model, 1.0)
+            initialize_constant(dummy_model, 1.0)
     
 
     best_prec1 = 0
