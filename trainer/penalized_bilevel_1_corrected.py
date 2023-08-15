@@ -148,6 +148,13 @@ def train(
                         param.data.copy_(bias_list[bias_pointer])
                         bias_pointer += 1
             
+            #check if the two models have the same weights :
+
+            if i <= 2:
+                for (name, param) in model.named_parameters():
+                    if param.requires_grad and not 'bias' in name:
+                        print(name, torch.all(param.data == dummy_model.state_dict()[name]))
+
             with torch.no_grad():
                 for param in dummy_model.parameters():
                     param.grad = torch.zeros_like(param.data)
@@ -200,13 +207,13 @@ def train(
                 def pen_grad2vec(parameters):
                     penalization_grad = []
                     for param in parameters:
-                        if not param.requires_grad:
+                        if param.requires_grad:
                             penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
                         else:
                             penalization_grad.append(torch.zeros_like(param.view(-1).detach()))
                     return torch.cat(penalization_grad)
                 
-                pen_grad_vec = pen_grad2vec(dummy_model.parameters())
+                pen_grad_vec = pen_grad2vec(model.parameters())
 
                 #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
                 hypergradient = args.lambd * (first_part + second_part) + (1 - args.lambd) * pen_grad_vec
