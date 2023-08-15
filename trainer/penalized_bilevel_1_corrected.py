@@ -36,8 +36,8 @@ def train(
     dummy_model = kwargs["dummy_model"]
     optimizer, mask_optimizer = optimizer_list
 
-    model.train()
-    dummy_model.train()
+    """ model.train()
+    dummy_model.train() """
     end = time.time()
 
     duality_gaps = []
@@ -222,7 +222,6 @@ def train(
 
                 m_star = torch.zeros_like(hypergradient)
                 m_star[hypergradient < 0] = 1
-                m_star = m_star.detach()
 
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
