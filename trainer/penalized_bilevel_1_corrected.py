@@ -128,12 +128,18 @@ def train(
                 for (name, param) in model.named_parameters():
                     #retrieve the mask
                     if param.requires_grad:
+                        if i <=2 :
+                            print(name)
                         score_list.append(param.data.detach())
                     #retrieve theta
                     if not param.requires_grad and not 'bias' in name:
+                        if i <=2 :
+                            print(name)
                         param_list.append(param.data.detach())
                     #retrieve bias
                     if not param.requires_grad and 'bias' in name:
+                        if i <=2 :
+                            print(name)
                         bias_list.append(param.data.detach())
 
             #set the parameters of the dummy model to m * theta
@@ -148,11 +154,6 @@ def train(
                         param.data.copy_(bias_list[bias_pointer])
                         bias_pointer += 1
             
-            #check if the two models have the same weights :
-
-            if i <= 2:
-                for (name, param) in model.named_parameters():
-                    print(name, torch.all(param.data == dummy_model.state_dict()[name]))
 
             with torch.no_grad():
                 for param in dummy_model.parameters():
