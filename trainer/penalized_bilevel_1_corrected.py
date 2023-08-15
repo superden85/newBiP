@@ -210,7 +210,6 @@ def train(
 
                 #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
                 hypergradient = args.lambd * (first_part + second_part) + (1 - args.lambd) * pen_grad_vec
-                hypergradient = hypergradient.detach()
 
                 #the linear minimization problem is very simple we don't need to use a solver
                 #mstar is equal to 1 if c is negative, 0 otherwise
@@ -223,6 +222,7 @@ def train(
 
                 m_star = torch.zeros_like(hypergradient)
                 m_star[hypergradient < 0] = 1
+                m_star = torch.ones_like(hypergradient)
 
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
@@ -235,6 +235,7 @@ def train(
 
                     #update only if it is a popup score
                     #i.e. if param.requires_grad = True
+
 
                     if param.requires_grad:
                         param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
