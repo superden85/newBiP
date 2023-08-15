@@ -109,8 +109,9 @@ def train(
 
             def grad2vec(parameters):
                 grad_vec = []
-                for param in parameters:
-                    grad_vec.append(param.grad.view(-1).detach())
+                with torch.no_grad():
+                    for param in parameters:
+                        grad_vec.append(param.grad.view(-1).detach())
                 return torch.cat(grad_vec)
 
             first_part = grad2vec(model.parameters())
