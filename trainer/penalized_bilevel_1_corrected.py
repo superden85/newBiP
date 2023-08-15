@@ -222,7 +222,7 @@ def train(
 
                 m_star = torch.zeros_like(hypergradient)
                 m_star[hypergradient < 0] = 1
-                m_star = torch.ones_like(hypergradient)
+                m_star = m_star.detach()
 
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
