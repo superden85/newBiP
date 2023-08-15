@@ -109,9 +109,8 @@ def train(
 
             def grad2vec(parameters):
                 grad_vec = []
-                with torch.no_grad():
-                    for param in parameters:
-                        grad_vec.append(param.grad.view(-1).detach())
+                for param in parameters:
+                    grad_vec.append(param.grad.view(-1).detach())
                 return torch.cat(grad_vec)
 
             first_part = grad2vec(model.parameters())
@@ -202,9 +201,9 @@ def train(
                     penalization_grad = []
                     for param in parameters:
                         if param.requires_grad:
-                            penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
+                            penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.grad.view(-1).detach())))
                         else:
-                            penalization_grad.append(torch.zeros_like(param.view(-1).detach()))
+                            penalization_grad.append(torch.zeros_like(param.grad.view(-1).detach()))
                     return torch.cat(penalization_grad)
                 
                 pen_grad_vec = pen_grad2vec(model.parameters())
@@ -235,7 +234,6 @@ def train(
 
                     #update only if it is a popup score
                     #i.e. if param.requires_grad = True
-
 
                     if param.requires_grad:
                         param.data.copy_((1 - step_size) * param.data + step_size * first_part[pointer:pointer + num_param].view_as(param).data)
