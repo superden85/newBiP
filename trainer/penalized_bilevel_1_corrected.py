@@ -183,13 +183,13 @@ def train(
                         u = score_list[small_pointer:small_pointer + numel]
                         print(name, torch.all(torch.eq(y, x* z)),
                         torch.norm(y - x*z, p=float("inf")))
-                        #print the first 10 components where y and x*z are different and print the components of y and x*z on these components
+                        """ #print the first 10 components where y and x*z are different and print the components of y and x*z on these components
                         print('Diff:', torch.topk(torch.abs(y - x*z), 10))
                         print('grad m:', y[torch.topk(torch.abs(y - x*z), 10)[1]])
                         print('grad z: ', z[torch.topk(torch.abs(y - x*z), 10)[1]])
                         #print also x, u,on these components
                         print('theta :', x[torch.topk(torch.abs(y - x*z), 10)[1]])
-                        print('m :', u[torch.topk(torch.abs(y - x*z), 10)[1]])
+                        print('m :', u[torch.topk(torch.abs(y - x*z), 10)[1]]) """
 
                         """ #do the same on the lowest components of the abs difference of y and x*z
                         print('Diff:', torch.topk(torch.abs(y - x*z), 10, largest=False))
@@ -198,6 +198,10 @@ def train(
                         #print also x, u,on these components
                         print('theta :', x[torch.topk(torch.abs(y - x*z), 10, largest=False)[1]])
                         print('m :', u[torch.topk(torch.abs(y - x*z), 10, largest=False)[1]]) """
+
+                        #check some hypothesis: the components were the mask is 0, the gradient of the mask should be 0
+                        #check that these two sets of indices are the same
+                        print('Are they the same?', torch.all(torch.eq(torch.where(u == 0)[0], torch.where(z == 0)[0])))
 
 
                         small_pointer += numel
