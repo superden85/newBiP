@@ -182,10 +182,16 @@ def train(
                 for (name, param) in model.named_parameters():
                     numel = param.numel()
                     if param.requires_grad:
-                        print(name, torch.all(first_part[big_pointer:big_pointer+numel] == param_list[small_pointer:small_pointer + numel] * grad_z_list[small_pointer:small_pointer + numel]),
-                        torch.norm(first_part[big_pointer:big_pointer+numel] - param_list[small_pointer:small_pointer + numel] * grad_z_list[small_pointer:small_pointer + numel], p=float("inf")))
-                        x = first_part[big_pointer:big_pointer+numel]
-                        print(torch.norm(x, p=float("inf")), torch.norm(x, p=0), torch.norm(x, 1))
+                        z = grad_z_list[small_pointer:small_pointer + numel]
+                        x = param_list[small_pointer:small_pointer + numel]
+                        y = first_part[big_pointer:big_pointer+numel]
+                        print(name, torch.all(torch.eq(y, x* z)),
+                        torch.norm(y - x*z, p=float("inf")))
+                        #print the first 10 components where y and x*z are different and print the components of y and x*z on these components
+                        print('Diff:', torch.topk(torch.abs(y - x*z), 10))
+                        print('grad m:', y[torch.topk(torch.abs(y - x*z), 10)[1]])
+                        print('theta * grad z: ', x[torch.topk(torch.abs(y - x*z), 10)[1]] * z[torch.topk(torch.abs(y - x*z), 10)[1]])
+
                         small_pointer += numel
                     big_pointer += numel
 
