@@ -200,8 +200,10 @@ def train(
                         print('m :', u[torch.topk(torch.abs(y - x*z), 10, largest=False)[1]]) """
 
                         #check some hypothesis: the components were the mask is 0, the gradient of the mask should be 0
-                        #check that these two sets of indices are the same
-                        print('Are they the same?', torch.all(torch.eq(torch.where(u == 0)[0], torch.where(y == 0)[0])))
+                        #print the length of these two sets of indices:
+                        print('Number of components where m == 0: ', torch.sum(u == 0).item())
+                        print('Number of components where grad_m == 0: ', torch.sum(y == 0).item())
+
 
 
                         small_pointer += numel
