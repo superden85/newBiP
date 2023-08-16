@@ -99,7 +99,7 @@ def train(
             top5.update(acc5[0], val_images.size(0))
 
             
-            #upper level step            
+            """ #upper level step            
             #calculating the first part
             switch_to_prune(model)
             mask_optimizer.zero_grad()
@@ -113,7 +113,7 @@ def train(
                     grad_vec.append(param.grad.view(-1).detach())
                 return torch.cat(grad_vec)
 
-            first_part = grad2vec(model.parameters())
+            first_part = grad2vec(model.parameters()) """
 
             #calculating the second part with the dummy model
             switch_to_finetune(dummy_model)
@@ -172,7 +172,7 @@ def train(
 
             small_pointer = 0
             big_pointer = 0
-            if i <= 2:
+            if i <= -1:
                 print('Checking that the gradients are well computed :')
                 for (name, param) in model.named_parameters():
                     numel = param.numel()
@@ -209,16 +209,15 @@ def train(
                         """ print('Is the set of indices defined by u == 0 included in the set of indices defined by y == 0 ? ', torch.all(y[u == 0] == 0)) """
                         
                         #check that the set of indices defined by y - x*z == 0 is included in the set of indices defined by u == 0
-                        print('Is the set of indices defined by y - x*z == 0 included in the set of indices defined by u == 0 ? ', torch.all(u[y - x*z == 0] == 0))
-
+                        """ print('Is the set of indices defined by y - x*z == 0 included in the set of indices defined by u == 0 ? ', torch.all(u[y - x*z == 0] == 0)) """
 
                         small_pointer += numel
                     big_pointer += numel
             
-            implicit_gradient = -args.lr2 * score_list * grad_z_list ** 2
+            loss_grad_vec = (param_list -args.lr2 * score_list * grad_z_list) * grad_z_list
             
-            with torch.no_grad():
-                #we have to put the implicit gradient in the same shape as the mask gradient
+            """ with torch.no_grad():
+                #we have to put the loss_grad_vec in the same shape as the mask gradient
                 #we do that by putting zeros everywhere except where there is a mask
                 second_part = torch.zeros_like(first_part)
                 big_pointer = 0
@@ -227,48 +226,48 @@ def train(
                     if not param.requires_grad:
                         second_part[big_pointer:big_pointer + param.numel()] = implicit_gradient[small_pointer:small_pointer + param.numel()]
                         small_pointer += param.numel()
-                    big_pointer += param.numel()
+                    big_pointer += param.numel() """
                 
-                def pen_grad2vec(parameters):
-                    penalization_grad = []
-                    for param in parameters:
-                        if param.requires_grad:
-                            penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
-                        else:
-                            penalization_grad.append(torch.zeros_like(param.view(-1).detach()))
-                    return torch.cat(penalization_grad)
+            def pen_grad2vec(parameters):
+                penalization_grad = []
+                for param in parameters:
+                    if param.requires_grad:
+                        penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
+                    """ else:
+                        penalization_grad.append(torch.zeros_like(param.view(-1).detach())) """
+                return torch.cat(penalization_grad)
                 
-                pen_grad_vec = pen_grad2vec(model.parameters())
+            pen_grad_vec = pen_grad2vec(model.parameters())
 
-                #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
-                hypergradient = args.lambd * (first_part + second_part) + (1 - args.lambd) * pen_grad_vec
+            #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
+            hypergradient = args.lambd * (loss_grad_vec) + (1 - args.lambd) * pen_grad_vec
 
-                #the linear minimization problem is very simple we don't need to use a solver
-                #mstar is equal to 1 if c is negative, 0 otherwise
+            #the linear minimization problem is very simple we don't need to use a solver
+            #mstar is equal to 1 if c is negative, 0 otherwise
 
-                """ if i<=3:
-                #print the ten highest components and the linf norm and the 10 smallest ones
-                    print("Linf norm: ", torch.norm(hypergradient, p=float("inf")))
-                    print("Ten highest components: ", torch.topk(hypergradient, 10))
-                    print("Ten lowest components: ", torch.topk(-hypergradient, 10)) """
+            """ if i<=3:
+            #print the ten highest components and the linf norm and the 10 smallest ones
+                print("Linf norm: ", torch.norm(hypergradient, p=float("inf")))
+                print("Ten highest components: ", torch.topk(hypergradient, 10))
+                print("Ten lowest components: ", torch.topk(-hypergradient, 10)) """
 
-                m_star = torch.zeros_like(hypergradient)
-                m_star[hypergradient < 0] = 1
+            m_star = torch.zeros_like(hypergradient)
+            m_star[hypergradient < 0] = 1
 
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
 
             #then we update the parameters
-            with torch.no_grad():
-                pointer = 0
-                for param in model.parameters():
-                    num_param = param.numel()
+            #with torch.no_grad():
+            pointer = 0
+            for param in model.parameters():
+                num_param = param.numel()
 
-                    #update only if it is a popup score
-                    #i.e. if param.requires_grad = True
+                #update only if it is a popup score
+                #i.e. if param.requires_grad = True
 
-                    if param.requires_grad:
-                        param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
+                if param.requires_grad:
+                    param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
                     pointer += num_param
             
