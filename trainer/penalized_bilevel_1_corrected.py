@@ -186,7 +186,8 @@ def train(
                         #print the first 10 components where y and x*z are different and print the components of y and x*z on these components
                         print('Diff:', torch.topk(torch.abs(y - x*z), 10))
                         print('grad m:', y[torch.topk(torch.abs(y - x*z), 10)[1]])
-                        #print also x, u on these components
+                        print('grad z: ', z[torch.topk(torch.abs(y - x*z), 10)[1]])
+                        #print also x, u,on these components
                         print('theta :', x[torch.topk(torch.abs(y - x*z), 10)[1]])
                         print('m :', u[torch.topk(torch.abs(y - x*z), 10)[1]])
 
