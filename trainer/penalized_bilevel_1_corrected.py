@@ -99,7 +99,7 @@ def train(
             top5.update(acc5[0], val_images.size(0))
 
             
-            """ #upper level step            
+            #upper level step            
             #calculating the first part
             switch_to_prune(model)
             mask_optimizer.zero_grad()
@@ -113,7 +113,7 @@ def train(
                     grad_vec.append(param.grad.view(-1).detach())
                 return torch.cat(grad_vec)
 
-            first_part = grad2vec(model.parameters()) """
+            first_part = grad2vec(model.parameters())
 
             #calculating the second part with the dummy model
             switch_to_finetune(dummy_model)
