@@ -331,9 +331,6 @@ def train(
 
             #print the duality gap 
             print("duality gap: ", duality_gap)
-        if i<=50:
-            #print the l0 norm of the mask:
-            print("l0 norm of mask: ", torch.sum(params != 0).item())
 
 
     #return data related to the mask of this epoch
