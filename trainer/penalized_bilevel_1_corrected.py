@@ -201,8 +201,10 @@ def train(
 
                         #check some hypothesis: the components were the mask is 0, the gradient of the mask should be 0
                         #print the length of these two sets of indices:
-                        print('Number of components where m == 0: ', torch.sum(u == 0).item())
-                        print('Number of components where grad_m == 0: ', torch.sum(y == 0).item())
+                        """ print('Number of components where m == 0: ', torch.sum(u == 0).item())
+                        print('Number of components where grad_m == 0: ', torch.sum(y == 0).item()) """
+                        #check that the set of indices defined by u == 0 is included in the set of indices defined by y == 0
+                        print('Is the set of indices defined by u == 0 included in the set of indices defined by y == 0 ? ', torch.all(y[u == 0] == 0))
 
 
 
