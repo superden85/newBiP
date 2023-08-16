@@ -163,7 +163,7 @@ def train(
             
             for (name, param) in dummy_model.named_parameters():
                 if param.requires_grad and not 'bias' in name:
-                    grad_z_list.append(param.grad.view(-1).detach())                        
+                    grad_z_list.append(param.grad.view(-1).detach())                       
             
             grad_z_list = torch.cat(grad_z_list)
             
