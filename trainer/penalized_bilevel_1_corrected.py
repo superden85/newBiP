@@ -128,18 +128,12 @@ def train(
                 for (name, param) in model.named_parameters():
                     #retrieve the mask
                     if param.requires_grad:
-                        if i <=2 :
-                            print(name)
                         score_list.append(param.data.detach())
                     #retrieve theta
                     if not param.requires_grad and not 'bias' in name:
-                        if i <=2 :
-                            print(name)
                         param_list.append(param.data.detach())
                     #retrieve bias
                     if not param.requires_grad and 'bias' in name:
-                        if i <=2 :
-                            print(name)
                         bias_list.append(param.data.detach())
 
             #set the parameters of the dummy model to m * theta
