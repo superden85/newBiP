@@ -102,7 +102,7 @@ def train(
             #upper level step            
             #calculating the first part
             switch_to_prune(model)
-            mask_optimizer.zero_grad()
+            """ mask_optimizer.zero_grad()
             loss_mask = criterion(model(train_images), train_targets)
 
             loss_mask.backward()
@@ -113,7 +113,7 @@ def train(
                     grad_vec.append(param.grad.view(-1).detach())
                 return torch.cat(grad_vec)
 
-            first_part = grad2vec(model.parameters())
+            first_part = grad2vec(model.parameters()) """
 
             #calculating the second part with the dummy model
             switch_to_finetune(dummy_model)
@@ -280,8 +280,8 @@ def train(
                 for param in parameters:
                     if param.requires_grad:
                         params.append(param.view(-1).detach())
-                    else:
-                        params.append(torch.zeros_like(param.view(-1)).detach())
+                    """ else:
+                        params.append(torch.zeros_like(param.view(-1)).detach()) """
                 return torch.cat(params)
 
             params = mask_tensor(model.parameters())
