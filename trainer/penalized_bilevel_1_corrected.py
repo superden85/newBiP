@@ -168,6 +168,7 @@ def train(
             grad_z_list = torch.cat(grad_z_list)
             
             param_list = torch.cat([param.view(-1) for param in param_list])
+            score_list = torch.cat([score.view(-1) for score in score_list])
 
             small_pointer = 0
             big_pointer = 0
@@ -191,8 +192,7 @@ def train(
 
                         small_pointer += numel
                     big_pointer += numel
-
-            score_list = torch.cat([score.view(-1) for score in score_list])
+            
             implicit_gradient = -args.lr2 * score_list * grad_z_list ** 2
             
             with torch.no_grad():
