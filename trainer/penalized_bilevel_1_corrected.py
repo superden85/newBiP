@@ -201,7 +201,7 @@ def train(
 
                         #check some hypothesis: the components were the mask is 0, the gradient of the mask should be 0
                         #check that these two sets of indices are the same
-                        print('Are they the same?', torch.all(torch.eq(torch.where(u == 0)[0], torch.where(z == 0)[0])))
+                        print('Are they the same?', torch.all(torch.eq(torch.where(u == 0)[0], torch.where(y == 0)[0])))
 
 
                         small_pointer += numel
