@@ -257,8 +257,18 @@ def train(
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
 
+
+            def mask_tensor(parameters):
+                params = []
+                for param in parameters:
+                    if param.requires_grad:
+                        params.append(param.view(-1).detach())
+                    """ else:
+                        params.append(torch.zeros_like(param.view(-1)).detach()) """
+                return torch.cat(params)
+
+            m_k = mask_tensor(model.parameters())
             #then we update the parameters
-            #with torch.no_grad():
             pointer = 0
             for param in model.parameters():
                 num_param = param.numel()
@@ -275,17 +285,7 @@ def train(
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
 
-            def mask_tensor(parameters):
-                params = []
-                for param in parameters:
-                    if param.requires_grad:
-                        params.append(param.view(-1).detach())
-                    """ else:
-                        params.append(torch.zeros_like(param.view(-1)).detach()) """
-                return torch.cat(params)
-
-            params = mask_tensor(model.parameters())
-            duality_gap = -torch.dot(hypergradient, m_star - params).item()
+            duality_gap = -torch.dot(hypergradient, m_star - m_k).item()
             duality_gaps.append(duality_gap)
 
             #calculate the length of the support of mstar
