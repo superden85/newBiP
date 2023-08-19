@@ -114,9 +114,13 @@ def train(
                     current_name = name.split('.')[0]
                     current_score = param.data
                     score_list.append(param.data.detach())
+                    if i == 0:
+                        print("current score: ", param.data.shape)
                 if name == current_name + '.weight':
                     dummy_param.data.copy_(current_score * dummy_param.data)
                     param_list.append(param.data.detach())
+                    if i == 0:
+                        print("current param: ", param.data.shape)
             
             param_list.reverse()
             score_list.reverse()
@@ -138,11 +142,11 @@ def train(
             
             grad_z = torch.cat(grad_z_list)
             
-            params = torch.cat([param.view(-1) for param in param_list])
+            param = torch.cat([param.view(-1) for param in param_list])
             score = torch.cat([score.view(-1) for score in score_list])
             
             print("grad_z: ", grad_z.shape)
-            print("params: ", params.shape)
+            print("param: ", param.shape)
             print("score: ", score.shape)
 
             loss_grad_vec = (param - args.lr2 * score * grad_z) * grad_z
