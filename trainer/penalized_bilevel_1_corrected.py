@@ -133,7 +133,7 @@ def train(
             grad_z_list = []
             
             for (name, param) in dummy_model.named_parameters():
-                if param.requires_grad and not 'bias' in name:
+                if 'popup_scores' in name:
                     grad_z_list.append(param.grad.view(-1).detach())                       
             
             grad_z = torch.cat(grad_z_list)
@@ -144,7 +144,7 @@ def train(
             print("grad_z: ", grad_z.shape)
             print("param: ", param.shape)
             print("score: ", score.shape)
-            
+
             loss_grad_vec = (param - args.lr2 * score * grad_z) * grad_z
         
                 
