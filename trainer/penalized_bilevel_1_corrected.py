@@ -146,11 +146,13 @@ def train(
             print("score: ", score.shape)
 
             loss_grad_vec = (param - args.lr2 * score * grad_z) * grad_z
-        
+
+            n = -0
             for (name, param) in model.named_parameters():
                 if param.requires_grad:
                     print(name, param.shape)
-                    
+                    n += param.numel()
+            print(n)
             def pen_grad2vec(parameters):
                 penalization_grad = []
                 for param in parameters:
