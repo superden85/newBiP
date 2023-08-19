@@ -111,7 +111,6 @@ def train(
             #retrieve the parameters of the model
             with torch.no_grad():
                 for (name, param) in model.named_parameters():
-                    print(name, param.shape)
                     #retrieve the mask
                     if param.requires_grad:
                         score_list.append(param.data.detach())
@@ -135,6 +134,23 @@ def train(
                         bias_pointer += 1
             
 
+            """ param_list = []
+            score_list = []
+            current_name = None
+            current_score = None
+            for (name, param), (_, dummy_param) in reversed(list(zip(model.named_parameters(), dummy_model.named_parameters()))):
+                dummy_param.data.copy_(param.data)
+                if 'popup_scores' in name:
+                    current_name = name.split('.')[0]
+                    current_score = param.data
+                    score_list.append(param.data.detach())
+                if name == current_name + '.weight':
+                    dummy_param.data.copy_(current_score * dummy_param.data)
+                    param_list.append(dummy_param.data.detach())
+            
+            param_list.reverse()
+            score_list.reverse() """
+        
             with torch.no_grad():
                 for param in dummy_model.parameters():
                     param.grad = torch.zeros_like(param.data)
