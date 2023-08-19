@@ -175,13 +175,13 @@ def train(
             m_k = mask_tensor(model.parameters())
             #then we update the parameters
             pointer = 0
-            for param in model.parameters():
+            for name, param in model.named_parameters():
                 num_param = param.numel()
 
                 #update only if it is a popup score
                 #i.e. if param.requires_grad = True
 
-                if param.requires_grad:
+                if 'popup_scores' in name:
                     param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
                     pointer += num_param
