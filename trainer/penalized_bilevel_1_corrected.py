@@ -140,26 +140,17 @@ def train(
             
             param = torch.cat([param.view(-1) for param in param_list])
             score = torch.cat([score.view(-1) for score in score_list])
-            
-            print("grad_z: ", grad_z.shape)
-            print("param: ", param.shape)
-            print("score: ", score.shape)
 
             loss_grad_vec = (param - args.lr2 * score * grad_z) * grad_z
 
-            n = -0
-            for (name, param) in model.named_parameters():
-                print(name, param.shape)
-                n += param.numel()
-            print(n)
             def pen_grad2vec(parameters):
                 penalization_grad = []
-                for param in parameters:
-                    if param.requires_grad:
+                for name, param in parameters:
+                    if 'popup_scores' in name:
                         penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
                 return torch.cat(penalization_grad)
                 
-            pen_grad_vec = pen_grad2vec(model.parameters())
+            pen_grad_vec = pen_grad2vec(model.named_parameters())
 
             #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
             hypergradient = args.lambd * (loss_grad_vec) + (1 - args.lambd) * pen_grad_vec
