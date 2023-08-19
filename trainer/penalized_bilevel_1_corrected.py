@@ -147,8 +147,10 @@ def train(
                     current_score = param.data
                     score_list.append(param.data.detach())
                 if name == current_name + '.weight':
+                    if i == 0:
+                        print(name, param.shape)
                     dummy_param.data.copy_(current_score * dummy_param.data)
-                    param_list.append(dummy_param.data.detach())
+                    param_list.append(param.data.detach())
             
             param_list.reverse()
             score_list.reverse()
