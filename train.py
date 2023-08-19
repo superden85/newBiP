@@ -224,7 +224,8 @@ def main():
             optimizer,
             epoch,
             args,
-            dummy_model = dummy_model
+            dummy_model = dummy_model,
+            n = mask_length
         )
         
         epochs_data.append(epoch_data)

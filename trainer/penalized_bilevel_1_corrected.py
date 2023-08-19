@@ -34,6 +34,7 @@ def train(
     )
 
     dummy_model = kwargs["dummy_model"]
+    n = kwargs["n"]
     optimizer, mask_optimizer = optimizer_list
 
     model.train()
@@ -147,7 +148,7 @@ def train(
                 penalization_grad = []
                 for name, param in parameters:
                     if 'popup_scores' in name:
-                        penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
+                        penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach()))/n)
                 return torch.cat(penalization_grad)
                 
             pen_grad_vec = pen_grad2vec(model.named_parameters())
