@@ -148,7 +148,7 @@ def train(
                 penalization_grad = []
                 for name, param in parameters:
                     if 'popup_scores' in name:
-                        penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach()))/n)
+                        penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
                 return torch.cat(penalization_grad)
                 
             pen_grad_vec = pen_grad2vec(model.named_parameters())
