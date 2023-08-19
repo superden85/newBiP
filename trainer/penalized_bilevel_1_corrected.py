@@ -107,6 +107,7 @@ def train(
             #the parameters of the dummy model should be set to m * theta of the model
             param_list = []
             score_list = []
+            name_list = []
             current_name = None
             current_score = None
             for (name, param), (_, dummy_param) in reversed(list(zip(model.named_parameters(), dummy_model.named_parameters()))):
@@ -116,6 +117,7 @@ def train(
                     current_score = param.data
                     score_list.append(param.data.detach())
                 if name == current_name + '.weight':
+                    name_list.append(name)
                     dummy_param.data.copy_(current_score * dummy_param.data)
                     param_list.append(param.data.detach())
             
@@ -134,7 +136,7 @@ def train(
             grad_z_list = []
             
             for (name, param) in dummy_model.named_parameters():
-                if 'popup_scores' in name:
+                if name in name_list:
                     grad_z_list.append(param.grad.view(-1).detach())                       
             
             grad_z = torch.cat(grad_z_list)
