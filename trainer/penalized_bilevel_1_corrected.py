@@ -104,7 +104,7 @@ def train(
             switch_to_finetune(dummy_model)
 
             #the parameters of the dummy model should be set to m * theta of the model
-            score_list = []
+            """ score_list = []
             param_list = []
             bias_list = []
 
@@ -131,10 +131,10 @@ def train(
                         param_score_pointer += 1
                     if param.requires_grad and 'bias' in name:
                         param.data.copy_(bias_list[bias_pointer])
-                        bias_pointer += 1
+                        bias_pointer += 1 """
             
 
-            """ param_list = []
+            param_list = []
             score_list = []
             current_name = None
             current_score = None
@@ -149,7 +149,7 @@ def train(
                     param_list.append(dummy_param.data.detach())
             
             param_list.reverse()
-            score_list.reverse() """
+            score_list.reverse()
         
             with torch.no_grad():
                 for param in dummy_model.parameters():
