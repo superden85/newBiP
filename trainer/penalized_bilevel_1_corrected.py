@@ -111,6 +111,7 @@ def train(
             #retrieve the parameters of the model
             with torch.no_grad():
                 for (name, param) in model.named_parameters():
+                    print(name, param.shape)
                     #retrieve the mask
                     if param.requires_grad:
                         score_list.append(param.data.detach())
