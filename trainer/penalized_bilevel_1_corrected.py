@@ -104,51 +104,17 @@ def train(
             switch_to_finetune(dummy_model)
 
             #the parameters of the dummy model should be set to m * theta of the model
-            """ score_list = []
-            param_list = []
-            bias_list = []
-
-            #retrieve the parameters of the model
-            with torch.no_grad():
-                for (name, param) in model.named_parameters():
-                    #retrieve the mask
-                    if param.requires_grad:
-                        score_list.append(param.data.detach())
-                    #retrieve theta
-                    if not param.requires_grad and not 'bias' in name:
-                        param_list.append(param.data.detach())
-                    #retrieve bias
-                    if not param.requires_grad and 'bias' in name:
-                        bias_list.append(param.data.detach())
-
-            #set the parameters of the dummy model to m * theta
-            with torch.no_grad():
-                param_score_pointer = 0
-                bias_pointer = 0
-                for (name, param) in dummy_model.named_parameters():
-                    if param.requires_grad and not 'bias' in name:
-                        param.data.copy_(score_list[param_score_pointer] * param_list[param_score_pointer])
-                        param_score_pointer += 1
-                    if param.requires_grad and 'bias' in name:
-                        param.data.copy_(bias_list[bias_pointer])
-                        bias_pointer += 1 """
-            
-
             param_list = []
             score_list = []
             current_name = None
             current_score = None
             for (name, param), (_, dummy_param) in reversed(list(zip(model.named_parameters(), dummy_model.named_parameters()))):
-                if i == 0:
-                    print(name, param.shape)
                 dummy_param.data.copy_(param.data)
                 if 'popup_scores' in name:
                     current_name = name.split('.')[0]
                     current_score = param.data
                     score_list.append(param.data.detach())
                 if name == current_name + '.weight':
-                    if i == 0:
-                        print(name, param.shape)
                     dummy_param.data.copy_(current_score * dummy_param.data)
                     param_list.append(param.data.detach())
             
