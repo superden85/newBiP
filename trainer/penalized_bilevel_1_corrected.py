@@ -172,7 +172,7 @@ def train(
                         params.append(param.view(-1).detach())
                 return torch.cat(params)
 
-            m_k = mask_tensor(model.parameters())
+            m_k = mask_tensor(model.named_parameters())
             #then we update the parameters
             pointer = 0
             for name, param in model.named_parameters():
