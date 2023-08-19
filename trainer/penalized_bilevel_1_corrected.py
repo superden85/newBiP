@@ -99,23 +99,8 @@ def train(
             top5.update(acc5[0], val_images.size(0))
 
             
-            #upper level step            
-            #calculating the first part
+            #upper level step 
             switch_to_prune(model)
-            """ mask_optimizer.zero_grad()
-            loss_mask = criterion(model(train_images), train_targets)
-
-            loss_mask.backward()
-
-            def grad2vec(parameters):
-                grad_vec = []
-                for param in parameters:
-                    grad_vec.append(param.grad.view(-1).detach())
-                return torch.cat(grad_vec)
-
-            first_part = grad2vec(model.parameters()) """
-
-            #calculating the second part with the dummy model
             switch_to_finetune(dummy_model)
 
             #the parameters of the dummy model should be set to m * theta of the model
@@ -155,7 +140,6 @@ def train(
             
             #compute grad_z l(z = m * theta)
             z_loss = criterion(dummy_model(train_images), train_targets)
-
             z_loss.backward()
 
             #retrieve grad_z l(z = m * theta)
@@ -165,76 +149,19 @@ def train(
                 if param.requires_grad and not 'bias' in name:
                     grad_z_list.append(param.grad.view(-1).detach())                       
             
-            grad_z_list = torch.cat(grad_z_list)
+            grad_z = torch.cat(grad_z_list)
             
-            param_list = torch.cat([param.view(-1) for param in param_list])
-            score_list = torch.cat([score.view(-1) for score in score_list])
-
-            small_pointer = 0
-            big_pointer = 0
-            if i <= -1:
-                print('Checking that the gradients are well computed :')
-                for (name, param) in model.named_parameters():
-                    numel = param.numel()
-                    if param.requires_grad:
-                        z = grad_z_list[small_pointer:small_pointer + numel]
-                        x = param_list[small_pointer:small_pointer + numel]
-                        y = first_part[big_pointer:big_pointer+numel]
-                        u = score_list[small_pointer:small_pointer + numel]
-                        print(name, torch.all(torch.eq(y, x* z)),
-                        torch.norm(y - x*z, p=float("inf")))
-                        """ #print the first 10 components where y and x*z are different and print the components of y and x*z on these components
-                        print('Diff:', torch.topk(torch.abs(y - x*z), 10))
-                        print('grad m:', y[torch.topk(torch.abs(y - x*z), 10)[1]])
-                        print('grad z: ', z[torch.topk(torch.abs(y - x*z), 10)[1]])
-                        #print also x, u,on these components
-                        print('theta :', x[torch.topk(torch.abs(y - x*z), 10)[1]])
-                        print('m :', u[torch.topk(torch.abs(y - x*z), 10)[1]]) """
-
-                        """ #do the same on the lowest components of the abs difference of y and x*z
-                        print('Diff:', torch.topk(torch.abs(y - x*z), 10, largest=False))
-                        print('grad m:', y[torch.topk(torch.abs(y - x*z), 10, largest=False)[1]])
-                        print('grad z: ', z[torch.topk(torch.abs(y - x*z), 10, largest=False)[1]])
-                        #print also x, u,on these components
-                        print('theta :', x[torch.topk(torch.abs(y - x*z), 10, largest=False)[1]])
-                        print('m :', u[torch.topk(torch.abs(y - x*z), 10, largest=False)[1]]) """
-
-                        #check some hypothesis: the components were the mask is 0, the gradient of the mask should be 0
-                        #print the length of these two sets of indices:
-                        """ print('Number of components where m == 0: ', torch.sum(u == 0).item())
-                        print('Number of components where grad_m == 0: ', torch.sum(y == 0).item())
-                        #print the number of non zero components of the abs difference of y and x*z
-                        print('Number of non zero components of the abs difference of y and x*z: ', torch.sum(torch.abs(y - x*z) != 0).item()) """
-                        #check that the set of indices defined by u == 0 is included in the set of indices defined by y == 0
-                        """ print('Is the set of indices defined by u == 0 included in the set of indices defined by y == 0 ? ', torch.all(y[u == 0] == 0)) """
-                        
-                        #check that the set of indices defined by y - x*z == 0 is included in the set of indices defined by u == 0
-                        """ print('Is the set of indices defined by y - x*z == 0 included in the set of indices defined by u == 0 ? ', torch.all(u[y - x*z == 0] == 0)) """
-
-                        small_pointer += numel
-                    big_pointer += numel
+            paramt = torch.cat([param.view(-1) for param in param_list])
+            score = torch.cat([score.view(-1) for score in score_list])
             
-            loss_grad_vec = (param_list -args.lr2 * score_list * grad_z_list) * grad_z_list
-            
-            """ with torch.no_grad():
-                #we have to put the loss_grad_vec in the same shape as the mask gradient
-                #we do that by putting zeros everywhere except where there is a mask
-                second_part = torch.zeros_like(first_part)
-                big_pointer = 0
-                small_pointer = 0
-                for param in dummy_model.parameters():
-                    if not param.requires_grad:
-                        second_part[big_pointer:big_pointer + param.numel()] = implicit_gradient[small_pointer:small_pointer + param.numel()]
-                        small_pointer += param.numel()
-                    big_pointer += param.numel() """
+            loss_grad_vec = (param - args.lr2 * score * grad_z) * grad_z
+        
                 
             def pen_grad2vec(parameters):
                 penalization_grad = []
                 for param in parameters:
                     if param.requires_grad:
                         penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
-                    """ else:
-                        penalization_grad.append(torch.zeros_like(param.view(-1).detach())) """
                 return torch.cat(penalization_grad)
                 
             pen_grad_vec = pen_grad2vec(model.parameters())
@@ -244,12 +171,6 @@ def train(
 
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
-
-            """ if i<=3:
-            #print the ten highest components and the linf norm and the 10 smallest ones
-                print("Linf norm: ", torch.norm(hypergradient, p=float("inf")))
-                print("Ten highest components: ", torch.topk(hypergradient, 10))
-                print("Ten lowest components: ", torch.topk(-hypergradient, 10)) """
 
             m_star = torch.zeros_like(hypergradient)
             m_star[hypergradient < 0] = 1
@@ -263,8 +184,6 @@ def train(
                 for param in parameters:
                     if param.requires_grad:
                         params.append(param.view(-1).detach())
-                    """ else:
-                        params.append(torch.zeros_like(param.view(-1)).detach()) """
                 return torch.cat(params)
 
             m_k = mask_tensor(model.parameters())
