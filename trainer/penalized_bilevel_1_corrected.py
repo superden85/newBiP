@@ -141,6 +141,10 @@ def train(
             param = torch.cat([param.view(-1) for param in param_list])
             score = torch.cat([score.view(-1) for score in score_list])
             
+            print("grad_z: ", grad_z.shape)
+            print("param: ", param.shape)
+            print("score: ", score.shape)
+            
             loss_grad_vec = (param - args.lr2 * score * grad_z) * grad_z
         
                 
