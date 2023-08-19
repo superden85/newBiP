@@ -139,6 +139,8 @@ def train(
             current_name = None
             current_score = None
             for (name, param), (_, dummy_param) in reversed(list(zip(model.named_parameters(), dummy_model.named_parameters()))):
+                if i == 0:
+                    print(name, param.shape)
                 dummy_param.data.copy_(param.data)
                 if 'popup_scores' in name:
                     current_name = name.split('.')[0]
