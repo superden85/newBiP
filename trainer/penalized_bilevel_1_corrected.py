@@ -167,8 +167,8 @@ def train(
 
             def mask_tensor(parameters):
                 params = []
-                for param in parameters:
-                    if param.requires_grad:
+                for name, param in parameters:
+                    if 'popup_scores' in name:
                         params.append(param.view(-1).detach())
                 return torch.cat(params)
 
