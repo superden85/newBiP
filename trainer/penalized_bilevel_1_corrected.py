@@ -176,9 +176,9 @@ def train(
                 return torch.cat(params)
 
             m_k = mask_tensor(model.named_parameters())
-            #then we update the parameters
+            #then we update the parameters of both models
             pointer = 0
-            for name, param in model.named_parameters():
+            for (name, param) in model.named_parameters():
                 num_param = param.numel()
 
                 #update only if it is a popup score
@@ -188,7 +188,6 @@ def train(
                     param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
                     pointer += num_param
-            
 
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
