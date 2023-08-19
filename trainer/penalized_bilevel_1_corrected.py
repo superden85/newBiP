@@ -168,7 +168,7 @@ def train(
             
             grad_z = torch.cat(grad_z_list)
             
-            paramt = torch.cat([param.view(-1) for param in param_list])
+            param = torch.cat([param.view(-1) for param in param_list])
             score = torch.cat([score.view(-1) for score in score_list])
             
             loss_grad_vec = (param - args.lr2 * score * grad_z) * grad_z
