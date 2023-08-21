@@ -131,6 +131,25 @@ def train(
             score = torch.cat([score.view(-1) for score in score_list])
 
             hypergradient = (param - args.lr2 * score * grad_z) * grad_z
+
+            #check the mathematical relation that should hold between grad_m and grad_z
+
+            def grad2vec(parameters):
+                grad_vec = []
+                for name, param in parameters:
+                    grad_vec.append(param.grad.view(-1).detach())
+                return torch.cat(grad_vec)
+
+            mask_optimizer.zero_grad()
+            loss_mask = criterion(model(train_images), train_targets)
+
+            loss_mask.backward()
+
+            mask_grad_vec = grad2vec(model.named_parameters())
+
+            if i <= 2:
+                #print if mask_grad_vec and param * grad_z are equal
+                print('theory check : ', torch.allclose(mask_grad_vec, param * grad_z, atol=1e-6))
             
             def append_grad_to_vec(vec, parameters):
 
