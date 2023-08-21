@@ -148,6 +148,8 @@ def train(
 
             mask_grad_vec = grad2vec(model.named_parameters())
 
+            mask_optimizer.zero_grad()
+
             if i <= 2:
                 #print if mask_grad_vec and param * grad_z are equal
                 print('theory check : ', torch.norm(mask_grad_vec - param*grad_z, p=0).item())
