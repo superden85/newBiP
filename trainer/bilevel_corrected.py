@@ -137,7 +137,8 @@ def train(
             def grad2vec(parameters):
                 grad_vec = []
                 for name, param in parameters:
-                    grad_vec.append(param.grad.view(-1).detach())
+                    if 'popup_scores' in name:
+                        grad_vec.append(param.grad.view(-1).detach())
                 return torch.cat(grad_vec)
 
             mask_optimizer.zero_grad()
