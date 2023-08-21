@@ -14,7 +14,7 @@ from utils.model import (
 
 
 def train(
-        model, device, train_loader, criterion, optimizer_list, epoch, args, dummy_model
+        model, device, train_loader, criterion, optimizer_list, epoch, args, **kwargs
 ):
     print("->->->->->->->->->-> One epoch with Natural training <-<-<-<-<-<-<-<-<-<-")
     train_loader, val_loader = train_loader
@@ -30,9 +30,11 @@ def train(
         prefix="Epoch: [{}]".format(epoch),
     )
 
+    dummy_model = kwargs["dummy_model"]
     optimizer, mask_optimizer = optimizer_list
 
     model.train()
+    dummy_model.train()
     end = time.time()
 
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
@@ -67,8 +69,16 @@ def train(
             switch_to_finetune(model)
             output = model(val_images)
             loss = criterion(output, val_targets)
+
             optimizer.zero_grad()
             loss.backward()
+
+            #patch for the rounding bug
+            #set to None all the gradients for the popup scores
+            for param in model.parameters():
+                if not param.requires_grad:
+                    param.grad = None
+            
             optimizer.step()
 
             acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
@@ -76,90 +86,51 @@ def train(
             top1.update(acc1[0], val_images.size(0))
             top5.update(acc5[0], val_images.size(0))
 
-            """ switch_to_bilevel(model)
-            optimizer.zero_grad()
-            output = model(train_images)
-            loss = criterion(output, train_targets)
-            loss.backward() """
-
-            def grad2vec(parameters):
-                grad_vec = []
-                for param in parameters:
-                    grad_vec.append(param.grad.view(-1).detach())
-                return torch.cat(grad_vec)
-
-            """ param_grad_vec = grad2vec(model.parameters())
-
+            #upper level step 
             switch_to_prune(model)
-            mask_optimizer.zero_grad()
-            loss_mask = criterion(model(train_images), train_targets)
-
-            loss_mask.backward()
-
-            mask_grad_vec = grad2vec(model.parameters())
-
-            implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec """
-            
-            #calculating the first part
-            switch_to_prune(model)
-            mask_optimizer.zero_grad()
-            loss_mask = criterion(model(train_images), train_targets)
-
-            loss_mask.backward()
-
-            #first_part = grad2vec(model.parameters())
-
-            #calculating the second part with the dummy model
             switch_to_finetune(dummy_model)
 
             #the parameters of the dummy model should be set to m * theta of the model
-            score_list = []
             param_list = []
-            for (name, vec) in model.named_modules():
-                #retrieve the mask
-                if hasattr(vec, "popup_scores"):
-                    attr = getattr(vec, "popup_scores")
-                    if attr is not None:
-                        score_list.append(attr.view(-1))
-                #retrieve the parameters
-                if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
-                    if hasattr(vec, "weight"):
-                        attr = getattr(vec, "weight")
-                        if attr is not None:
-                            param_list.append(attr.view(-1))
-
-            score_list = torch.cat(score_list)
-            param_list = torch.cat(param_list)
-
-            pointer = 0
-            for (name, vec) in dummy_model.named_modules():
-                if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
-                    if hasattr(vec, "weight"):
-                        attr = getattr(vec, "weight")
-                        if attr is not None:
-                            numel = attr.numel()
-                            vec.w = score_list[pointer: pointer + numel].view_as(attr) * param_list[pointer: pointer + numel].view_as(attr)
-                            pointer += numel
+            score_list = []
+            name_list = []
+            current_name = None
+            current_score = None
+            for (name, param), (_, dummy_param) in reversed(list(zip(model.named_parameters(), dummy_model.named_parameters()))):
+                dummy_param.data.copy_(param.data)
+                if 'popup_scores' in name:
+                    current_name = name[:-13]
+                    current_score = param.data
+                    score_list.append(param.data.detach())
+                if name == current_name + '.weight':
+                    name_list.append(name)
+                    dummy_param.data.copy_(current_score * dummy_param.data)
+                    param_list.append(param.data.detach())
             
+            param_list.reverse()
+            score_list.reverse()
+        
             with torch.no_grad():
                 for param in dummy_model.parameters():
-                    param.grad = torch.zeros_like(param)
+                    param.grad = torch.zeros_like(param.data)
             
+            #compute grad_z l(z = m * theta)
             z_loss = criterion(dummy_model(train_images), train_targets)
-
             z_loss.backward()
 
+            #retrieve grad_z l(z = m * theta)
             grad_z_list = []
-            for (name, vec) in dummy_model.named_modules():
-                if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
-                    if hasattr(vec, "weight"):
-                        attr = getattr(vec, "weight")
-                        if attr is not None:
-                            grad_z_list.append(attr.grad.view(-1))
             
-            grad_z_list = torch.cat(grad_z_list)
+            for (name, param) in dummy_model.named_parameters():
+                if name in name_list:
+                    grad_z_list.append(param.grad.view(-1).detach())                       
+            
+            grad_z = torch.cat(grad_z_list)
+            
+            param = torch.cat([param.view(-1) for param in param_list])
+            score = torch.cat([score.view(-1) for score in score_list])
 
-            implicit_gradient = -args.lr2 * score_list * grad_z_list ** 2 
+            hypergradient = (param - args.lr2 * score * grad_z) * grad_z
             
             def append_grad_to_vec(vec, parameters):
 
@@ -168,20 +139,16 @@ def train(
                                     .format(torch.typename(vec)))
 
                 pointer = 0
-                for param in parameters:
-                    num_param = param.numel()
+                for name, param in parameters:
 
-                    param.grad.copy_(param.grad + vec[pointer:pointer + num_param].view_as(param).data)
+                    if 'popup_scores' in name:
+                        num_param = param.numel()
 
-                    pointer += num_param
+                        param.grad.copy_(param.grad + vec[pointer:pointer + num_param].view_as(param).data)
 
-            pointer = 0
-            for param in model.parameters():
-                if param.requires_grad:
-                    numel = param.numel()
-                    #print(param.grad.shape, implicit_gradient[pointer: pointer + numel].view_as(param).shape)
-                    param.grad.copy_(param.grad + implicit_gradient[pointer: pointer + numel].view_as(param).data)
-                    pointer += numel
+                        pointer += num_param
+            
+            append_grad_to_vec(hypergradient, model.named_parameters())
 
             mask_optimizer.step()
 
