@@ -171,6 +171,8 @@ def train(
                         param.grad.copy_(param.grad + vec[pointer:pointer + num_param].view_as(param).data)
 
                         pointer += num_param
+                if i <= 2:
+                    print(pointer)
             
             append_grad_to_vec(hypergradient, model.named_parameters())
 
