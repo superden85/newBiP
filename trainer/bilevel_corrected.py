@@ -150,7 +150,7 @@ def train(
 
             if i <= 2:
                 #print if mask_grad_vec and param * grad_z are equal
-                print('theory check : ', torch.allclose(mask_grad_vec, param * grad_z, atol=1e-6))
+                print('theory check : ', torch.norm(mask_grad_vec - param*grad_z, p=0).item())))
             
             def append_grad_to_vec(vec, parameters):
 
