@@ -144,6 +144,8 @@ def train(
                     if 'popup_scores' in name:
                         num_param = param.numel()
 
+                        if param.grad is None:
+                            param.grad = torch.zeros_like(param.data)
                         param.grad.copy_(param.grad + vec[pointer:pointer + num_param].view_as(param).data)
 
                         pointer += num_param
