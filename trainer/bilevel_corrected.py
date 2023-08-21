@@ -134,7 +134,7 @@ def train(
 
             #check the mathematical relation that should hold between grad_m and grad_z
 
-            def grad2vec(parameters):
+            """ def grad2vec(parameters):
                 grad_vec = []
                 for name, param in parameters:
                     if 'popup_scores' in name:
@@ -152,7 +152,7 @@ def train(
 
             if i <= 2:
                 #print if mask_grad_vec and param * grad_z are equal
-                print('theory check : ', torch.norm(mask_grad_vec - param*grad_z, p=0).item())
+                print('theory check : ', torch.norm(mask_grad_vec - param*grad_z, p=0).item()) """
             
             def append_grad_to_vec(vec, parameters):
 
@@ -171,8 +171,6 @@ def train(
                         param.grad.copy_(param.grad + vec[pointer:pointer + num_param].view_as(param).data)
 
                         pointer += num_param
-                if i <= 2:
-                    print(pointer)
             
             append_grad_to_vec(hypergradient, model.named_parameters())
 
