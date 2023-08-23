@@ -266,6 +266,7 @@ def main():
             result_sub_dir, os.path.join(result_main_dir, "latest_exp")
         ) """
 
+        prec1, best_prec1 = 0, 0
         #stats on the mask: 
         if 'penalized_bilevel' in args.trainer:
             l0, l1 = 0, 0
