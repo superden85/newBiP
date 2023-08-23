@@ -13,7 +13,7 @@ class CustomDataset(Dataset):
         return 1  # Only one data point
 
     def __getitem__(self, idx):
-        sample = {'data': self.data_point, 'label': self.label}
+        sample = [self.data_point, self.label]
         if self.transform:
             sample['data'] = self.transform(sample['data'])
         return sample
