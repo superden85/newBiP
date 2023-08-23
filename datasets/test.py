@@ -30,9 +30,9 @@ class MINI:
         test_data_point = torch.tensor([5.0, 6.0])   # Modify as needed
 
         # Define fixed labels for each data point
-        train_label = torch.tensor([0])  # Modify as needed
-        val_label = torch.tensor([1])    # Modify as needed
-        test_label = torch.tensor([2])   # Modify as needed
+        train_label = torch.tensor([0.0])  # Modify as needed
+        val_label = torch.tensor([1.0])    # Modify as needed
+        test_label = torch.tensor([2.0])   # Modify as needed
 
         trainset = CustomDataset(train_data_point, train_label)
         valset = CustomDataset(val_data_point, val_label)
