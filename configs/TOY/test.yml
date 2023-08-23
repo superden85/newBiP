@@ -11,7 +11,7 @@ k: 0.1
 # ->->->->-> Train <-<-<-<-<-
 trainer: "bilevel_corrected_mini"
 layer_type: "unstructured"
-epochs: 1
+epochs: 5
 optimizer: "sgd"
 lr: 0.1
 lr_schedule: "cosine"
