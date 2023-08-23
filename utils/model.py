@@ -464,3 +464,11 @@ def checker(w, m, b, train_images):
     activation = torch.sigmoid(theta * x + b)
     res = 2 * x * activation**2 * (1 - activation)
     return res
+
+def loss_checker(w, m, b, train_images):
+    x = train_images[0]
+    theta = w*m
+    activation = torch.sigmoid(theta * x + b)
+    res = activation ** 2
+    return res
+    

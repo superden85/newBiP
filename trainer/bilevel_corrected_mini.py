@@ -10,7 +10,8 @@ from utils.model import (
     switch_to_bilevel,
     switch_to_prune,
     switch_to_finetune,
-    checker
+    checker,
+    loss_checker
 )
 
 
@@ -139,6 +140,8 @@ def train(
             for (name, param) in dummy_model.named_parameters():
                 print(name, param.data)
             print('Loss : ', z_loss)
+            t_loss_value = loss_checker(param_list[0], score_list[0], b, train_images)
+            print('Theorical loss : ', t_loss_value)
             print('Iteration : ', i, ' ', grad_z)
             t_value = checker(param_list[0], score_list[0], b, train_images)
             print('Theorical value : ', t_value)
