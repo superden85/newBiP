@@ -220,7 +220,6 @@ def main():
         if 'bilevel' in args.trainer:
             optimizer = (optimizer, mask_optimizer)
 
-        print(epoch, len(optimizer))
         # train
         epoch_data = trainer(
             model,
@@ -236,18 +235,18 @@ def main():
         
         epochs_data.append(epoch_data)
         
-        # evaluate on test set
+        """ # evaluate on test set
         if args.val_method == "smooth":
             prec1, radii = val(
                 model, device, test_loader, criterion, args, epoch
             )
             logger.info(f"Epoch {epoch}, mean provable Radii  {radii}")
-        prec1, _ = val(model, device, test_loader, criterion, args, epoch)
+        prec1, _ = val(model, device, test_loader, criterion, args, epoch) """
 
         # remember best prec@1 and save checkpoint
         if 'bilevel' in args.trainer:
             optimizer = optimizer[0]
-        is_best = prec1 > best_prec1
+        """ is_best = prec1 > best_prec1
         best_prec1 = max(prec1, best_prec1)
         save_checkpoint(
             {
@@ -265,7 +264,7 @@ def main():
 
         clone_results_to_latest_subdir(
             result_sub_dir, os.path.join(result_main_dir, "latest_exp")
-        )
+        ) """
 
         prec1, best_prec1 = 0, 0
         #stats on the mask: 
