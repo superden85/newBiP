@@ -49,7 +49,7 @@ def train(
             loss.backward()
             mask_optimizer.step()
 
-            acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))
+            acc1, acc5 = accuracy(output, train_targets, topk=(1, 1))
             losses.update(loss.item(), train_images.size(0))
             top1.update(acc1[0], train_images.size(0))
             top5.update(acc5[0], train_images.size(0))
@@ -61,7 +61,7 @@ def train(
             loss.backward()
             optimizer.step()
 
-            acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
+            acc1, acc5 = accuracy(output, val_targets, topk=(1, 1))
             losses.update(loss.item(), val_images.size(0))
             top1.update(acc1[0], val_images.size(0))
             top5.update(acc5[0], val_images.size(0))
@@ -82,7 +82,7 @@ def train(
             
             optimizer.step()
 
-            acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
+            acc1, acc5 = accuracy(output, val_targets, topk=(1, 1))
             losses.update(loss.item(), val_images.size(0))
             top1.update(acc1[0], val_images.size(0))
             top5.update(acc5[0], val_images.size(0))
@@ -180,7 +180,7 @@ def train(
             mask_optimizer.step()
 
             output = model(train_images)
-            acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
+            acc1, acc5 = accuracy(output, train_targets, topk=(1, 1))  # log
             losses.update(loss.item(), train_images.size(0))
             top1.update(acc1[0], train_images.size(0))
             top5.update(acc5[0], train_images.size(0))
