@@ -461,6 +461,7 @@ def get_epoch_data_2(model):
 def checker(w, m, b, train_images):
     x = train_images[0]
     theta = w*m
+    theta = theta[0]
     activation = torch.sigmoid(torch.dot(theta, x) + b)
     res = 2 * x * activation**2 * (1 - activation)
     return res
@@ -468,7 +469,7 @@ def checker(w, m, b, train_images):
 def loss_checker(w, m, b, train_images):
     x = train_images[0]
     theta = w*m
-    print(theta.shape, x.shape)
+    theta = theta[0]
     activation = torch.sigmoid(torch.dot(theta, x) + b)
     res = activation ** 2
     return res
