@@ -169,8 +169,8 @@ def train(
 
             mask_optimizer.zero_grad()
 
-            #print if mask_grad_vec and param * grad_z are equal
-            print('theory check : ', torch.norm(mask_grad_vec - param*grad_z, p=0).item())
+            print('Grad _ m : ', mask_grad_vec)
+            print('Theoretical_value : ', param * grad_z)
             
             def append_grad_to_vec(vec, parameters):
 
