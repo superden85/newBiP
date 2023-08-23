@@ -95,6 +95,7 @@ def train(
             param_list = []
             score_list = []
             name_list = []
+            b = None
             current_name = None
             current_score = None
             for (name, param), (_, dummy_param) in reversed(list(zip(model.named_parameters(), dummy_model.named_parameters()))):
@@ -107,6 +108,8 @@ def train(
                     name_list.append(name)
                     dummy_param.data.copy_(current_score * dummy_param.data)
                     param_list.append(param.data.detach())
+                if 'bias' in name:
+                    b = param.data
             
             param_list.reverse()
             score_list.reverse()
@@ -128,6 +131,9 @@ def train(
             
             grad_z = torch.cat(grad_z_list)
 
+            print('w : ', param_list[0])
+            print('m :', score_list[0])
+            print('b :', b)
             print('Iteration : ', i, ' ', grad_z)
             
             param = torch.cat([param.view(-1) for param in param_list])
