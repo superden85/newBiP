@@ -34,7 +34,6 @@ from utils.model import (
 from utils.schedules import get_lr_policy, get_optimizer
 
 
-
 def main():
     args = parse_args()
     if args.configs is not None:
@@ -90,6 +89,7 @@ def main():
         k=args.k, unstructured=False
     ).to(device)
 
+
     # Customize models for training/pruning/fine-tuning
     prepare_model(model, args)
     prepare_model(dummy_model, args)
@@ -100,6 +100,9 @@ def main():
 
     # autograd
     criterion = nn.CrossEntropyLoss()
+    if args.trainer == 'bilevel_corrected_mini':
+        #take the l2 norm between output and label
+        criterion = nn.MSELoss()
     optimizer = get_optimizer(model, args)
     lr_policy = get_lr_policy(args.lr_schedule)(optimizer, args)
 

@@ -33,6 +33,8 @@ from models.basic import (
 from models.resnet import ResNet18, ResNet34, ResNet50
 from models.resnets import resnet20s, resnet32s, resnet44s, resnet56s
 
+from models.test import mini_model
+
 __all__ = [
     "vgg2",
     "vgg2_bn",
@@ -71,6 +73,7 @@ __all__ = [
     "ResNet18",
     "ResNet34",
     "ResNet50",
-    "resnet20s"
-    "resnet56s"
+    "resnet20s",
+    "resnet56s",
+    "mini_model"
 ]
