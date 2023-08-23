@@ -40,8 +40,9 @@ def main():
         parse_configs_file(args)
 
     # sanity checks
-    if args.exp_mode in ["prune", "finetune"] and not args.resume:
-        assert args.source_net, "Provide checkpoint to prune/finetune"
+    if not args.trainer == 'bilevel_corrected_mini':
+        if args.exp_mode in ["prune", "finetune"] and not args.resume:
+            assert args.source_net, "Provide checkpoint to prune/finetune"
 
     # create resutls dir (for logs, checkpoints, etc.)
     result_main_dir = os.path.join(Path(args.result_dir), args.exp_name, args.exp_mode)
