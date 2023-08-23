@@ -135,6 +135,9 @@ def train(
             print('w : ', param_list[0])
             print('m :', score_list[0])
             print('b :', b)
+
+            for (name, param) in dummy_model.named_parameters():
+                print(name, param.data)
             print('Iteration : ', i, ' ', grad_z)
             t_value = checker(param_list[0], score_list[0], b, train_images)
             print('Theorical value : ', t_value)
