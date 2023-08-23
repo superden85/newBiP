@@ -220,6 +220,7 @@ def main():
         if 'bilevel' in args.trainer:
             optimizer = (optimizer, mask_optimizer)
 
+        print(epoch, optimizer)
         # train
         epoch_data = trainer(
             model,
