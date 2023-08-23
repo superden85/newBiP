@@ -44,7 +44,7 @@ class Mini(nn.Module):
                             vec.w = attr
                             pointer += attr.numel()
         
-        x = self.Linear(x)
+        x = self.hidden_layer(x)
         #choose sigmoid as activation function
         x = torch.sigmoid(x)
         return x
