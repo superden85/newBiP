@@ -10,6 +10,7 @@ from utils.model import (
     switch_to_bilevel,
     switch_to_prune,
     switch_to_finetune,
+    checker
 )
 
 
@@ -135,6 +136,8 @@ def train(
             print('m :', score_list[0])
             print('b :', b)
             print('Iteration : ', i, ' ', grad_z)
+            t_value = checker(param_list[0], score_list[0], b, train_images)
+            print('Theorical value : ', t_value)
             
             param = torch.cat([param.view(-1) for param in param_list])
             score = torch.cat([score.view(-1) for score in score_list])

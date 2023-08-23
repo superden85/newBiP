@@ -457,3 +457,10 @@ def get_epoch_data_2(model):
     epoch_data.append((treshold_exp_list, percentage_below_treshold_2))
 
     return epoch_data
+
+def checker(w, m, b, train_images):
+    x = train_images[0]
+    theta = w*m
+    activation = torch.sigmoid(theta * x + b)
+    res = 2 * x * activation**2 * (1 - activation)
+    return res
