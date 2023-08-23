@@ -176,11 +176,12 @@ def main():
 
     best_prec1 = 0
     start_epoch = 0
-    assert not (args.source_net and args.resume), (
-        "Incorrect setup: "
-        "resume => required to resume a previous experiment (loads all parameters)|| "
-        "source_net => required to start pruning/fine-tuning from a source model (only load state_dict)"
-    )
+    if not args.trainer == 'bilevel_corrected_mini':
+        assert not (args.source_net and args.resume), (
+            "Incorrect setup: "
+            "resume => required to resume a previous experiment (loads all parameters)|| "
+            "source_net => required to start pruning/fine-tuning from a source model (only load state_dict)"
+        )
     # resume (if checkpoint provided). Continue training with previous settings.
     if args.resume:
         if os.path.isfile(args.resume):
