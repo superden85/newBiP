@@ -40,6 +40,11 @@ def train(
     end = time.time()
 
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
+        if i == 0:
+            for (name, vec) in model.named_modules():
+                print(name, vec.shape)
+            for (name, vec) in dummy_model.named_modules():
+                print(name, vec.shape)
         print(train_data_batch)
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
         val_images, val_targets = val_data_batch[0].to(device), val_data_batch[1].to(device)
