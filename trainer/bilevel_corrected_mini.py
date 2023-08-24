@@ -42,9 +42,9 @@ def train(
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         if i == 0:
             for (name, vec) in model.named_modules():
-                print(name, vec.shape)
+                print(name, vec)
             for (name, vec) in dummy_model.named_modules():
-                print(name, vec.shape)
+                print(name, vec)
             for (name, param) in model.named_parameters():
                 print(name, param.shape)
             for (name, param) in dummy_model.named_parameters():
