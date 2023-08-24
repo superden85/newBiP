@@ -45,6 +45,10 @@ def train(
                 print(name, vec.shape)
             for (name, vec) in dummy_model.named_modules():
                 print(name, vec.shape)
+            for (name, param) in model.named_parameters():
+                print(name, param.shape)
+            for (name, param) in dummy_model.named_parameters():
+                print(name, param.shape)
         print(train_data_batch)
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
         val_images, val_targets = val_data_batch[0].to(device), val_data_batch[1].to(device)
