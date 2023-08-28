@@ -244,7 +244,7 @@ def train(
             #print("support of mstar: ", torch.sum(m_star).item())
 
             #print the duality gap 
-            print("duality gap: ", duality_gap)
+            #print("duality gap: ", duality_gap)
 
 
     #return data related to the mask of this epoch
