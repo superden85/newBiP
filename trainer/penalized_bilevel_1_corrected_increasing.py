@@ -241,7 +241,7 @@ def train(
             print("max of mask: ", maxi)
 
             #print the length of the support of mstar :
-            print("support of mstar: ", torch.sum(m_star).item())
+            #print("support of mstar: ", torch.sum(m_star).item())
 
             #print the duality gap 
             print("duality gap: ", duality_gap)
