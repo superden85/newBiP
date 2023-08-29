@@ -181,7 +181,7 @@ def train(
                     return torch.cat(params)
 
                 m_k = mask_tensor(model.named_parameters())
-                #then we update the parameters of both models
+                #then we update the parameters of the model
                 pointer = 0
                 for (name, param) in model.named_parameters():
                     num_param = param.numel()
