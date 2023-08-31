@@ -251,6 +251,9 @@ def train(
         elif name in name_list:
             weight_tensor.append(param.view(-1).detach())
 
+    weight_tensor = torch.cat(weight_tensor)
+    mask_tensor = torch.cat(mask_tensor)
+    
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
     epoch_data.append(duality_gaps)
