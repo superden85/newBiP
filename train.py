@@ -212,6 +212,8 @@ def main():
     # Start training
 
     epochs_data = []
+    previous_w = None
+    previous_m = None
     for epoch in range(start_epoch, args.epochs + args.warmup_epochs):
         start = time.time()
         lr_policy(epoch)
@@ -221,7 +223,7 @@ def main():
             optimizer = (optimizer, mask_optimizer)
 
         # train
-        epoch_data = trainer(
+        epoch_data, w, m = trainer(
             model,
             device,
             (train_loader, val_loader),
@@ -232,9 +234,17 @@ def main():
             dummy_model = dummy_model,
             n = mask_length
         )
-        
+        l2_stats = []
+        if epoch > start_epoch:
+            l2_stats.append(torch.norm(w - previous_w, p=2).item())
+            l2_stats.append(torch.norm(m - previous_m, p=2).item())
+            l2_stats.append(torch.norm(w, p=2).item())
+            l2_stats.append(torch.norm(m, p=2).item())
+        previous_w = w
+        previous_m = m
+        epoch_data.append(l2_stats)
         epochs_data.append(epoch_data)
-        
+
         # evaluate on test set
         if args.val_method == "smooth":
             prec1, radii = val(
