@@ -167,7 +167,7 @@ def train(
 
             #get the lowest elements of the gradient
             idx = torch.argsort(flat_hypergradient)
-            j = int(args.k * m_star.numel())
+            j = args.nonzero
             
             #set to 1 only if it the gradient is negative and we are in the top k%
             flat_m_star[idx[j:]] = 0

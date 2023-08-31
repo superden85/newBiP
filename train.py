@@ -167,9 +167,9 @@ def main():
             # With batch-norm its not really necessary.
             scale_rand_init(model, args.k) """
 
-        if '3' in args.trainer:
-            k = initialize_sparse(model, args.k)
-            args.k = k
+        if '2' in args.trainer:
+            nonzero = initialize_sparse(model, args.k)
+            args.nonzero = nonzero
         else:
             initialize_constant(model, 1.0)
             initialize_constant(dummy_model, 1.0)

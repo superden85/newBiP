@@ -207,7 +207,7 @@ def initialize_sparse(model, k):
             nonzero += m.popup_scores.nonzero().size(0)
 
     print(f"Effective Sparsity ratio: {nonzero/total}")
-    return nonzero/total
+    return nonzero
 
 def switch_to_prune(model):
     # print(f"#################### Pruning network ####################")
