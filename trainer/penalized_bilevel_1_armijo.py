@@ -210,7 +210,8 @@ def train(
             counter = 0
 
             while fk_new > fk + args.gamma * step_size * p:
-                
+                if i == 0:
+                    print(fk_new, fk, fk + args.gamma * step_size * p)
                 step_size *= args.gamma
                 current_m = m_k + step_size * dk
                 update_parameters(current_m)
@@ -225,6 +226,7 @@ def train(
 
             #then update the parameters
             update_parameters(current_m)
+
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
 
