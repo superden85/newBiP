@@ -23,6 +23,7 @@ from models.basic import (
     lin_3,
     lin_4,
     mnist_model,
+    mnist_model_mini,
     mnist_model_large,
     cifar_model,
     cifar_model_large,
