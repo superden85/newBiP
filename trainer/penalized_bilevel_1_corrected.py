@@ -180,10 +180,6 @@ def train(
             pointer = 0
             for (name, param) in model.named_parameters():
                 num_param = param.numel()
-
-                #update only if it is a popup score
-                #i.e. if param.requires_grad = True
-
                 if 'popup_scores' in name:
                     param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
 
@@ -253,7 +249,7 @@ def train(
 
     weight_tensor = torch.cat(weight_tensor)
     mask_tensor = torch.cat(mask_tensor)
-    
+
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
     epoch_data.append(duality_gaps)
