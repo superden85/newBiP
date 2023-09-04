@@ -75,5 +75,6 @@ __all__ = [
     "ResNet50",
     "resnet20s",
     "resnet56s",
-    "mini_model"
+    "mini_model",
+    "mnist_model_mini"
 ]
