@@ -183,7 +183,7 @@ def train(
 
                 for name, param in model.named_parameters():
                     if 'popup_scores' in name:
-                        loss_mask += (1 - args.lambd) * torch.exp(-args.alpha * param.view(-1).detach()).sum()
+                        loss_mask += (1 - args.lambd) * (1  - torch.exp(-args.alpha * param.view(-1).detach())).sum()
                 
                 return loss_mask
             
