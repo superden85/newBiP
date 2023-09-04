@@ -1,7 +1,7 @@
 # ->->->->-> Primary <-<-<-<-<-
 arch: "mnist_model"
 result_dir: "./trained_models"
-exp_name: "MNIST_mnist_model_Penalized_Bilevel_1"
+exp_name: "MNIST_mnist_model_Penalized_Bilevel_1_Corrected"
 exp_mode: "prune"
 normalize: True
 scaled_score_init: True
@@ -9,7 +9,7 @@ scaled_score_init: True
 #k: 0.1 no k here but a lambda and alpha
 
 # ->->->->-> Train <-<-<-<-<-
-trainer: "penalized_bilevel_1"
+trainer: "penalized_bilevel_1_corrected"
 layer_type: "unstructured"
 epochs: 100
 optimizer: "sgd"

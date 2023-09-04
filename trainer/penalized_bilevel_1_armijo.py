@@ -2,21 +2,22 @@ import time
 
 import torch
 
+import torch.nn as nn
+
 from utils.eval import accuracy
 from utils.general_utils import AverageMeter, ProgressMeter
 from utils.model import (
     switch_to_bilevel,
     switch_to_prune,
     switch_to_finetune,
-    get_epoch_data,
-    calculate_IOU
+    get_epoch_data
 )
 
 import numpy as np
 
 
 def train(
-        model, device, train_loader, criterion, optimizer_list, epoch, args
+        model, device, train_loader, criterion, optimizer_list, epoch, args, **kwargs
 ):
     print("->->->->->->->->->-> One epoch with Natural training <-<-<-<-<-<-<-<-<-<-")
     train_loader, val_loader = train_loader
@@ -32,16 +33,18 @@ def train(
         prefix="Epoch: [{}]".format(epoch),
     )
 
+    dummy_model = kwargs["dummy_model"]
+    n = kwargs["n"]
     optimizer, mask_optimizer = optimizer_list
 
     model.train()
+    dummy_model.train()
     end = time.time()
 
     duality_gaps = []
     losses_list = []
     supports = []
     counters = []
-
 
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
@@ -50,9 +53,6 @@ def train(
             switch_to_prune(model)
             output = model(train_images)
             loss = criterion(output, train_targets)
-            
-            # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
-            loss += args.lambd * (1 - torch.exp(-args.alpha * model.mask)).sum()
 
             mask_optimizer.zero_grad()
             loss.backward()
@@ -76,53 +76,6 @@ def train(
             top5.update(acc5[0], val_images.size(0))
 
         else:
-
-            def update_parameters(new_value):
-                if not isinstance(new_value, torch.Tensor):
-                    raise TypeError('expected torch.Tensor, but got: {}'
-                                    .format(torch.typename(vec)))
-
-                pointer = 0
-                for param in model.parameters():
-                    num_param = param.numel()
-
-                    #update only if it is a popup score
-                    #i.e. if param.requires_grad = True
-
-                    if param.requires_grad:
-                        param.data = new_value[pointer:pointer+num_param].view_as(param).data
-
-                    pointer += num_param
-
-            def mask_tensor(parameters):
-                params = []
-                for param in parameters:
-                    if param.requires_grad:
-                        params.append(param.view(-1).detach()) 
-                    else:
-                        params.append(torch.zeros_like(param.view(-1)).detach())
-                return torch.cat(params)
-            
-            def mask_tensor_only(parameters):
-                params = []
-                for param in parameters:
-                    if param.requires_grad:
-                        params.append(param.view(-1).detach()) 
-                return torch.cat(params)
-            
-            def mask_tensor_only_inverse(parameters):
-                params = []
-                for param in parameters:
-                    if not param.requires_grad:
-                        params.append(param.view(-1).detach()) 
-                return torch.cat(params)
-
-
-            """ print('-1-')
-            mk_only_old = mask_tensor_only(model.parameters())
-            print('Coefficient at 85 :', mk_only_old[85].item())
-            print('-1-') """
-            
             
             #Lower level step
             #We do 1 step of SGD on the parameters of the model
@@ -131,21 +84,10 @@ def train(
             output = model(val_images)
             loss = criterion(output, val_targets)
 
-            loss*=args.lambd
-
             optimizer.zero_grad()
             loss.backward()
-            
-            """ print('-1.25-')
-            mk_only = mask_tensor_only_inverse(model.parameters())
-            print('Coefficient at 85 :', mk_only[85].item())
-            print('Number of different coefficients :', (mk_only_old != mk_only).sum().item())
-            #print the dtypes of the two tensors
-            print('dtype of mk_only_old :', mk_only_old.dtype)
-            print('dtype of mk_only :', mk_only.dtype)
-            print('-1.25-') """
 
-            #patch to the rounding bug
+            #patch for the rounding bug
             #set to None all the gradients for the popup scores
             for param in model.parameters():
                 if not param.requires_grad:
@@ -153,101 +95,116 @@ def train(
             
             optimizer.step()
 
-            """ print('-1.5-')
-            mk_only = mask_tensor_only_inverse(model.parameters())
-            print('Coefficient at 85 :', mk_only[85].item())
-            print('Number of different coefficients :', (mk_only_old != mk_only).sum().item())
-            print('-1.5-') """
-
             acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
             losses.update(loss.item(), val_images.size(0))
             top1.update(acc1[0], val_images.size(0))
             top5.update(acc5[0], val_images.size(0))
 
             
-            #upper level step
-            #we have to calculate first the implicit gradient
-            
-            switch_to_bilevel(model)
-            optimizer.zero_grad()
-            output = model(train_images)
-            loss = criterion(output, train_targets)
-
-            loss*=args.lambd
-
-            # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
-            for (name, vec) in model.named_modules():
-                if hasattr(vec, "popup_scores"):
-                    attr = getattr(vec, "popup_scores")
-                    if attr is not None:
-                        loss += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum()
-            
-            loss.backward()
-
-            def grad2vec(parameters):
-                grad_vec = []
-                for param in parameters:
-                    grad_vec.append(param.grad.view(-1).detach())
-                return torch.cat(grad_vec)
-
-            param_grad_vec = grad2vec(model.parameters())
-
+            #upper level step 
             switch_to_prune(model)
-            mask_optimizer.zero_grad()
+            switch_to_finetune(dummy_model)
 
-            """ print('-2-')
-            mk_only = mask_tensor_only(model.parameters())
-            print('Coefficient at 85 :', mk_only[85].item())
-            print('-2-') """
+            #the parameters of the dummy model should be set to m * theta of the model
+            param_list = []
+            score_list = []
+            name_list = []
+            current_name = None
+            current_score = None
+            for (name, param), (_, dummy_param) in reversed(list(zip(model.named_parameters(), dummy_model.named_parameters()))):
+                dummy_param.data.copy_(param.data)
+                if 'popup_scores' in name:
+                    current_name = name[:-13]
+                    current_score = param.data
+                    score_list.append(param.data.detach())
+                if name == current_name + '.weight':
+                    name_list.append(name)
+                    dummy_param.data.copy_(current_score * dummy_param.data)
+                    param_list.append(param.data.detach())
+            
+            param_list.reverse()
+            score_list.reverse()
+        
+            with torch.no_grad():
+                for param in dummy_model.parameters():
+                    param.grad = torch.zeros_like(param.data)
+            
+            #compute grad_z l(z = m * theta)
+            z_loss = criterion(dummy_model(train_images), train_targets)
+            z_loss.backward()
 
-            def calculate_loss_mask():
-                loss_mask = criterion(model(train_images), train_targets)
+            #retrieve grad_z l(z = m * theta)
+            grad_z_list = []
+            
+            for (name, param) in dummy_model.named_parameters():
+                if name in name_list:
+                    grad_z_list.append(param.grad.view(-1).detach())                       
+            
+            grad_z = torch.cat(grad_z_list)
+            
+            param = torch.cat([param.view(-1) for param in param_list])
+            score = torch.cat([score.view(-1) for score in score_list])
 
-                loss_mask *= args.lambd
+            loss_grad_vec = (param - args.lr2 * score * grad_z) * grad_z
 
-                # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
-                for (name, vec) in model.named_modules():
-                    if hasattr(vec, "popup_scores"):
-                        attr = getattr(vec, "popup_scores")
-                        if attr is not None:
-                            loss_mask += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum()
+            def pen_grad2vec(parameters):
+                penalization_grad = []
+                for name, param in parameters:
+                    if 'popup_scores' in name:
+                        penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
+                return torch.cat(penalization_grad)
                 
-                return loss_mask
-            
-            loss_mask = calculate_loss_mask()
-            
-            loss_mask.backward()
+            pen_grad_vec = pen_grad2vec(model.named_parameters())
 
-            """ print('-3-')
-            mk_only = mask_tensor_only(model.parameters())
-            print('Coefficient at 85 :', mk_only[85].item())
-            print('-3-') """
-
-            mask_grad_vec = grad2vec(model.parameters())
-            implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec            
-            
-            #then the outer gradient is simply:
-            outer_gradient = mask_grad_vec + implicit_gradient
+            #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
+            hypergradient = args.lambd * (loss_grad_vec) + (1 - args.lambd) * pen_grad_vec
 
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
 
-            m_star = torch.zeros_like(outer_gradient)
-            m_star[outer_gradient < 0] = 1
+            m_star = torch.zeros_like(hypergradient)
+            m_star[hypergradient < 0] = 1
 
-            """ #we want to have a diminishing step size
-            step_size = 2/(epoch * len(train_loader) + i + 2) """
+            #we want to have a diminishing step size
+            #step_size = 2/(epoch * len(train_loader) + i + 2)
 
-            #here we are doing the armijo line search for the stepsize
+            #we want to do armijo line search for the step size
+            def mask_tensor(parameters):
+                params = []
+                for name, param in parameters:
+                    if 'popup_scores' in name:
+                        params.append(param.view(-1).detach())
+                return torch.cat(params)
+            
+            def calculate_loss_mask():
 
+                loss_mask = criterion(model(train_images), train_targets)
+                loss_mask *= args.lambd
+
+                for name, param in model.named_parameters():
+                    if 'popup_scores' in name:
+                        loss_mask += (1 - args.lambd) * torch.exp(-args.alpha * param.view(-1).detach()).sum()
+                
+                return loss_mask
+            
+            def update_parameters(m_k):
+                pointer = 0
+                for (name, param) in model.named_parameters():
+                    num_param = param.numel()
+                    if 'popup_scores' in name:
+                        param.data.copy_(m_k[pointer:pointer + num_param].view_as(param).data)
+                        pointer += num_param
+            
+            loss_mask = calculate_loss_mask()
+                
             step_size = 1.0
             fk = loss_mask.item()
-            mk = mask_tensor(model.parameters())
+            m_k = mask_tensor(model.named_parameters())
+            current_m = m_star
+            dk = m_star - m_k
+            p = torch.dot(hypergradient, dk).item()
 
-            dk = m_star - mk
-            p = torch.dot(outer_gradient, dk).item()
-
-            update_parameters(m_star)
+            update_parameters(current_m)
             fk_new = calculate_loss_mask().item()
 
             counter = 0
@@ -255,28 +212,28 @@ def train(
             while fk_new > fk + args.gamma * step_size * p:
                 
                 step_size *= args.gamma
-                new_value = mk + step_size * dk
-                update_parameters(new_value)
-
+                current_m = m_k + step_size * dk
+                update_parameters(current_m)
                 fk_new = calculate_loss_mask().item()
 
                 counter += 1
 
+            counters.append(counter)
+            if i <= 10:
+                #print the number of steps in armijo:
+                print("number of steps in armijo: ", counter)
+
+            #then update the parameters
+            update_parameters(current_m)
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
 
             duality_gap = -p
             duality_gaps.append(duality_gap)
 
-            #calculate the length of the support of mstar :
-            support = torch.sum(m_star != 0).item()
+            #calculate the length of the support of mstar
+            support = torch.sum(m_star).item()
             supports.append(support)
-
-            if i <= 10:
-                #print the number of steps in the armijo line search
-                print("number of steps in the line search: ", counter)
-            
-            counters.append(counter)
 
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
@@ -286,13 +243,17 @@ def train(
 
             losses_list.append(loss.item())
 
+            #print the l0 norm of the mask:
+            #print("L0 norm : ", torch.sum(mask_tensor(model.named_parameters()) != 0).item())
+
+
         batch_time.update(time.time() - end)
         end = time.time()
 
         if i % args.print_freq == 0:
             progress.display(i)
         
-        if i <= 5:
+        if i <= 3:
             #print stats
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
@@ -309,19 +270,34 @@ def train(
             print("l1 norm of mask: ", l1)
             print("min of mask: ", mini)
             print("max of mask: ", maxi)
-            
-            """ print('-5-')
-            mk_only = mask_tensor_only(model.parameters())
-            print('Coefficient at 85 :', mk_only[85].item())
-            print('-5-') """
 
-        
+            #print the length of the support of mstar :
+            print("support of mstar: ", torch.sum(m_star).item())
+
+            #print the duality gap 
+            print("duality gap: ", duality_gap)
+
+
+    #calculate the l2 norms and differences on the weights and on the mask
+    weight_tensor = []
+    mask_tensor = []
+    for (name, param) in model.named_parameters():
+        if 'popup_scores' in name:
+            mask_tensor.append(param.view(-1).detach())
+        elif name in name_list:
+            weight_tensor.append(param.view(-1).detach())
+
+    weight_tensor = torch.cat(weight_tensor)
+    mask_tensor = torch.cat(mask_tensor)
+    
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
     epoch_data.append(duality_gaps)
     epoch_data.append(losses_list)
-    epoch_data.append(counters)
     epoch_data.append(supports)
+    epoch_data.append(counters)
+
+    return epoch_data, weight_tensor, mask_tensor
 
 
-    return epoch_data
+

@@ -1,7 +1,0 @@
-RC_pb1_l5a01 l5a01
-RC_pb1_l6a01 l6a01
-RC_pb1_l7a01 l7a01
-RC_pb1_l8a01 l8a01
-RC_pb1_l9a01 l9a01
-RC_pb1_l10a01 l10a01
-RC_pb1_l11a01 l11a01

@@ -1,7 +1,7 @@
 # ->->->->-> Primary <-<-<-<-<-
-arch: "mnist_model"
+arch: "resnet20s"
 result_dir: "./trained_models"
-exp_name: "MNIST_mnist_model_Penalized_Bilevel_base"
+exp_name: "CIFAR10_resnet20s_Unstructured_Pen_BiP_1"
 exp_mode: "prune"
 normalize: True
 scaled_score_init: True
@@ -9,9 +9,9 @@ scaled_score_init: True
 #k: 0.1 no k here but a lambda and alpha
 
 # ->->->->-> Train <-<-<-<-<-
-trainer: "penalized_bilevel_base"
+trainer: "penalized_bilevel_1"
 layer_type: "unstructured"
-epochs: 1
+epochs: 100
 optimizer: "sgd"
 lr: 0.1
 lr_schedule: "cosine"
@@ -22,8 +22,8 @@ warmup_epochs: 0
 warmup_lr: 0.1
 
 #hyperparameters of penalty term
-lambd : 100
-alpha : 10
+lambd : 1
+alpha : 1
 
 
 # ->->->->-> Eval <-<-<-<-<-
@@ -31,7 +31,7 @@ val_method: base
 
 
 # ->->->->-> Dataset <-<-<-<-<-
-dataset: MNIST
+dataset: CIFAR10
 batch_size: 128
 test_batch_size: 128
 num_classes: 10

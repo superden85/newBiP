@@ -13,8 +13,6 @@ from utils.model import (
 
 import numpy as np
 
-#import copy
-
 
 def train(
         model, device, train_loader, criterion, optimizer_list, epoch, args
@@ -38,13 +36,9 @@ def train(
     model.train()
     end = time.time()
 
-    outer_gradients = []
-    masks = []
     duality_gaps = []
-    #duality_gaps_bis = []
     losses_list = []
-
-    #model_clone = copy.deepcopy(model)
+    supports = []
 
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
@@ -53,9 +47,6 @@ def train(
             switch_to_prune(model)
             output = model(train_images)
             loss = criterion(output, train_targets)
-            
-            # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
-            loss += args.lambd * (1 - torch.exp(-args.alpha * model.mask)).sum()
 
             mask_optimizer.zero_grad()
             loss.backward()
@@ -87,10 +78,16 @@ def train(
             output = model(val_images)
             loss = criterion(output, val_targets)
 
-            loss*=args.lambd
-
             optimizer.zero_grad()
             loss.backward()
+
+
+            #patch for the rounding bug
+            #set to None all the gradients for the popup scores
+            for param in model.parameters():
+                if not param.requires_grad:
+                    param.grad = None
+            
             optimizer.step()
 
             acc1, acc5 = accuracy(output, val_targets, topk=(1, 5))
@@ -132,26 +129,32 @@ def train(
 
             loss_mask *= args.lambd
 
-            # add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
+            #add a regularization term, defined as the (1-exp(-alpha*mask)) T vector full of ones
             for (name, vec) in model.named_modules():
                 if hasattr(vec, "popup_scores"):
                     attr = getattr(vec, "popup_scores")
                     if attr is not None:
                         loss_mask += (1 - args.lambd) * (1 - torch.exp(-args.alpha * attr)).sum()
-            
+
             loss_mask.backward()
 
             mask_grad_vec = grad2vec(model.parameters())
             implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec            
-            
-            #then the outer gradient is simply:
-            outer_gradient = mask_grad_vec + implicit_gradient
+
+            #then the hypergradient is the sum of the mask gradient and the implicit gradient
+            hypergradient = mask_grad_vec + implicit_gradient
 
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
 
-            m_star = torch.zeros_like(outer_gradient)
-            m_star[outer_gradient < 0] = 1
+            if i<=3:
+            #print the ten highest components and the linf norm and the 10 smallest ones
+                print("Linf norm: ", torch.norm(hypergradient, p=float("inf")))
+                print("Ten highest components: ", torch.topk(hypergradient, 10))
+                print("Ten lowest components: ", torch.topk(-hypergradient, 10))
+
+            m_star = torch.zeros_like(hypergradient)
+            m_star[hypergradient < 0] = 1
 
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
@@ -174,7 +177,6 @@ def train(
 
                 pointer += num_param
 
-
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
 
@@ -182,45 +184,26 @@ def train(
                 params = []
                 for param in parameters:
                     if param.requires_grad:
-                        params.append(torch.zeros_like(param.view(-1)).detach())
-                    else:
                         params.append(param.view(-1).detach())
+                    else:
+                        params.append(torch.zeros_like(param.view(-1)).detach())
                 return torch.cat(params)
 
             params = mask_tensor(model.parameters())
-            duality_gap = -torch.dot(outer_gradient, m_star - params).item()
+            duality_gap = -torch.dot(hypergradient, m_star - params).item()
             duality_gaps.append(duality_gap)
 
-            """ #calculate the duality gap in an another way:
-            #copy the weights of the model_clone into the model
+            #calculate the lenght of the support of mstar
+            support = torch.sum(m_star).item()
+            supports.append(support)
 
-            model_clone.load_state_dict(model.state_dict())
-            #calculate the loss of the model_clone
-            #update the mask parameters to m_star
-            pointer = 0
-            for param in model_clone.parameters():
-                num_param = param.numel()
-
-                #update only if it is a popup score
-                #i.e. if param.requires_grad = True
-
-                if param.requires_grad:
-                    param.data = m_star[pointer:pointer + num_param].view_as(param).data
-
-                pointer += num_param
-
-            #calculate the loss of the model_clone
-            loss_m_star = criterion(model_clone(train_images), train_targets)
-            duality_gap_bis = loss_mask.item() - loss_m_star.item()
-            duality_gaps_bis.append(duality_gap_bis) """
-            
-            losses_list.append(loss.item())
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
             losses.update(loss.item(), train_images.size(0))
             top1.update(acc1[0], train_images.size(0))
             top5.update(acc5[0], train_images.size(0))
 
+            losses_list.append(loss.item())
 
 
 
@@ -230,8 +213,7 @@ def train(
         if i % args.print_freq == 0:
             progress.display(i)
         
-        iteration_number = epoch * len(train_loader) + i
-        """ if iteration_number <= 40:
+        if i <= 3:
             #print stats
             l0, l1 = 0, 0
             mini, maxi = 1000, -1000
@@ -249,32 +231,16 @@ def train(
             print("min of mask: ", mini)
             print("max of mask: ", maxi)
 
-            #print stats for the outer gradient
-            print("l0 norm of outer gradient: ", torch.sum(outer_gradient != 0).item())
-            print("l1 norm of outer gradient: ", torch.sum(torch.abs(outer_gradient)).item())
-            print("min of outer gradient: ", torch.min(outer_gradient).item())
-            print("max of outer gradient: ", torch.max(outer_gradient).item())
+            #print the length of the support of mstar :
+            print("support of mstar: ", torch.sum(m_star).item())
 
-            #print the number of negative values in the outer gradient
-            print("number of negative values in the outer gradient: ", torch.sum(outer_gradient < 0).item())
-            #print the number of positive values in the outer gradient
-            print("number of positive values in the outer gradient: ", torch.sum(outer_gradient > 0).item())
-            #print the number of zero values in the outer gradient
-            print("number of zero values in the outer gradient: ", torch.sum(outer_gradient == 0).item())
-
-            #add the outer gradient to the list of outer gradients
-            #outer_gradients.append(outer_gradient.detach().cpu().numpy())
-
-            #add the mask to the list of masks
-            #masks.append(model.get_mask().cpu().numpy()) """
-        
+            #print the duality gap 
+            print("duality gap: ", duality_gap)
 
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
-    #epoch_data.append(outer_gradients)
-    #epoch_data.append(masks)
     epoch_data.append(duality_gaps)
-    epoch_data.append(duality_gaps_bis)
     epoch_data.append(losses_list)
+    epoch_data.append(supports)
 
     return epoch_data

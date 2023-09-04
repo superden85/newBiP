@@ -1,7 +1,7 @@
 # ->->->->-> Primary <-<-<-<-<-
 arch: "resnet20s"
 result_dir: "./trained_models"
-exp_name: "CIFAR10_resnet20s_Unstructured_Pen_BiP_1"
+exp_name: "CIFAR10_resnet20s_Penalized_Bilevel_1_Corrected"
 exp_mode: "prune"
 normalize: True
 scaled_score_init: True
@@ -9,9 +9,9 @@ scaled_score_init: True
 #k: 0.1 no k here but a lambda and alpha
 
 # ->->->->-> Train <-<-<-<-<-
-trainer: "penalized_bilevel_1"
+trainer: "penalized_bilevel_1_corrected"
 layer_type: "unstructured"
-epochs: 100
+epochs: 500
 optimizer: "sgd"
 lr: 0.1
 lr_schedule: "cosine"
@@ -22,8 +22,8 @@ warmup_epochs: 0
 warmup_lr: 0.1
 
 #hyperparameters of penalty term
-lambd : 1
-alpha : 1
+lambd : 100
+alpha : 10
 
 
 # ->->->->-> Eval <-<-<-<-<-

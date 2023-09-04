@@ -1,4 +1,0 @@
-python3 train.py --arch mnist_model --exp-mode prune --configs configs/MNIST/bip.yml --k 0.1 --source-net trained_models/MNIST_mnist_model/pretrain/latest_exp/checkpoint/model_best.pth.tar --seed 1234 --exp-name debug
-
-
-python3 train.py --arch mnist_model --exp-mode prune --configs configs/MNIST/pen_bip_1.yml --lambd 0.999 --alpha 0.01 --source-net trained_models/MNIST_mnist_model/pretrain/latest_exp/checkpoint/model_best.pth.tar --seed 1234 --exp-name MNIST_pb1_l0999a001
