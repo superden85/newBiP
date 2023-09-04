@@ -142,7 +142,7 @@ class MnistModelMini(nn.Module):
 
     def __init__(self, conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
         super(MnistModelMini, self).__init__()
-        self.fc1 = linear_layer(32 * 32, 10)
+        self.fc1 = linear_layer(28 * 28, 10)
         self.num_classes = kwargs['num_classes'] if 'num_classes' in kwargs else 10
         self.k = kwargs['k'] if 'k' in kwargs else None
         self.unstructured_pruning = kwargs['unstructured'] if 'unstructured' in kwargs else False
