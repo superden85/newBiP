@@ -202,16 +202,14 @@ def train(
             m_k = mask_tensor(model.named_parameters())
             current_m = m_star
             dk = m_star - m_k
-            p = torch.dot(hypergradient, dk).item()
+            p = args.c * torch.dot(hypergradient, dk).item()
 
             update_parameters(current_m)
             fk_new = calculate_loss_mask().item()
 
             counter = 0
 
-            while fk_new > fk + args.gamma * step_size * p:
-                if i == 0:
-                    print(fk_new, fk, fk + args.gamma * step_size * p)
+            while fk_new > fk + step_size * p:
                 step_size *= args.gamma
                 current_m = m_k + step_size * dk
                 update_parameters(current_m)
