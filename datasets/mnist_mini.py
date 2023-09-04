@@ -39,11 +39,11 @@ class MNIST_MINI:
         )
 
         # Modify trainset and valset to contain only the first 128 elements
-        trainset.data = trainset.data[:128]
-        trainset.targets = trainset.targets[:128]
+        trainset.data = trainset.data[:1]
+        trainset.targets = trainset.targets[:1]
 
-        valset.data = valset.data[:128]
-        valset.targets = valset.targets[:128]
+        valset.data = valset.data[:1]
+        valset.targets = valset.targets[:1]
 
         train_loader = DataLoader(
             trainset,
