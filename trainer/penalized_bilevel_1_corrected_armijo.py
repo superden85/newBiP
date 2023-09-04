@@ -224,7 +224,7 @@ def train(
                 print("number of steps in armijo: ", counter)
 
             #then update the parameters
-            update_parameters(m_k)
+            update_parameters(current_m)
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
 
