@@ -243,9 +243,6 @@ def train(
 
             losses_list.append(loss.item())
 
-            #print the l0 norm of the mask:
-            #print("L0 norm : ", torch.sum(mask_tensor(model.named_parameters()) != 0).item())
-
 
         batch_time.update(time.time() - end)
         end = time.time()

@@ -44,6 +44,7 @@ def train(
     duality_gaps = []
     losses_list = []
     supports = []
+    counters = []
 
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
@@ -150,7 +151,7 @@ def train(
                 penalization_grad = []
                 for name, param in parameters:
                     if 'popup_scores' in name:
-                        penalization_grad.append(1 - 2 * param.view(-1).detach())
+                        penalization_grad.append(args.alpha * (torch.exp(-args.alpha * param.view(-1).detach())))
                 return torch.cat(penalization_grad)
                 
             pen_grad_vec = pen_grad2vec(model.named_parameters())
@@ -171,33 +172,69 @@ def train(
             flat_m_star[flat_hypergradient >= 0] = 0
 
             #we want to have a diminishing step size
-            step_size = 2/(epoch * len(train_loader) + i + 2)
+            #step_size = 2/(epoch * len(train_loader) + i + 2)
 
+            #we want to do armijo line search for the step size
             def mask_tensor(parameters):
                 params = []
                 for name, param in parameters:
                     if 'popup_scores' in name:
                         params.append(param.view(-1).detach())
                 return torch.cat(params)
+            
+            def calculate_loss_mask():
 
+                loss_mask = criterion(model(train_images), train_targets)
+                loss_mask *= args.lambd
+
+                for name, param in model.named_parameters():
+                    if 'popup_scores' in name:
+                        loss_mask += (1 - args.lambd) * (1  - torch.exp(-args.alpha * param.view(-1).detach())).sum()
+                
+                return loss_mask
+            
+            def update_parameters(m_k):
+                pointer = 0
+                for (name, param) in model.named_parameters():
+                    num_param = param.numel()
+                    if 'popup_scores' in name:
+                        param.data.copy_(m_k[pointer:pointer + num_param].view_as(param).data)
+                        pointer += num_param
+            
+            loss_mask = calculate_loss_mask()
+                
+            step_size = 1.0
+            fk = loss_mask.item()
             m_k = mask_tensor(model.named_parameters())
-            #then we update the parameters of the model
-            pointer = 0
-            for (name, param) in model.named_parameters():
-                num_param = param.numel()
+            current_m = m_star
+            dk = m_star - m_k
+            p = args.c * torch.dot(hypergradient, dk).item()
 
-                #update only if it is a popup score
-                #i.e. if param.requires_grad = True
+            update_parameters(current_m)
+            fk_new = calculate_loss_mask().item()
 
-                if 'popup_scores' in name:
-                    param.data.copy_((1 - step_size) * param.data + step_size * m_star[pointer:pointer + num_param].view_as(param).data)
+            counter = 0
 
-                    pointer += num_param
+            while fk_new > fk + step_size * p:
+                step_size *= args.gamma
+                current_m = m_k + step_size * dk
+                update_parameters(current_m)
+                fk_new = calculate_loss_mask().item()
+
+                counter += 1
+
+            counters.append(counter)
+            if i <= 10:
+                #print the number of steps in armijo:
+                print("number of steps in armijo: ", counter)
+
+            #then update the parameters
+            update_parameters(current_m)
 
             #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
 
-            duality_gap = -torch.dot(hypergradient, m_star - m_k).item()
+            duality_gap = -p
             duality_gaps.append(duality_gap)
 
             #calculate the length of the support of mstar
@@ -244,10 +281,26 @@ def train(
             print("duality gap: ", duality_gap)
 
 
+    #calculate the l2 norms and differences on the weights and on the mask
+    weight_tensor = []
+    mask_tensor = []
+    for (name, param) in model.named_parameters():
+        if 'popup_scores' in name:
+            mask_tensor.append(param.view(-1).detach())
+        elif name in name_list:
+            weight_tensor.append(param.view(-1).detach())
+
+    weight_tensor = torch.cat(weight_tensor)
+    mask_tensor = torch.cat(mask_tensor)
+    
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
     epoch_data.append(duality_gaps)
     epoch_data.append(losses_list)
     epoch_data.append(supports)
+    epoch_data.append(counters)
 
-    return epoch_data
+    return epoch_data, weight_tensor, mask_tensor
+
+
+

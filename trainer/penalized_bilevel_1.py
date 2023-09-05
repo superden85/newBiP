@@ -34,7 +34,7 @@ def train(
     )
 
     dummy_model = kwargs["dummy_model"]
-    n = kwargs["n"]
+    #n = kwargs["n"], normalize the penalization sum
     optimizer, mask_optimizer = optimizer_list
 
     model.train()
@@ -167,7 +167,6 @@ def train(
             #we want to have a diminishing step size
             step_size = 2/(epoch * len(train_loader) + i + 2)
 
-
             def mask_tensor(parameters):
                 params = []
                 for name, param in parameters:
@@ -202,10 +201,6 @@ def train(
             top5.update(acc5[0], train_images.size(0))
 
             losses_list.append(loss.item())
-
-            #print the l0 norm of the mask:
-            #print("L0 norm : ", torch.sum(mask_tensor(model.named_parameters()) != 0).item())
-
 
         batch_time.update(time.time() - end)
         end = time.time()
