@@ -303,7 +303,7 @@ def main():
     
 
 
-    save_checkpoint(
+    """ save_checkpoint(
         {
             "epoch": args.epochs,
             "arch": args.arch,
@@ -315,15 +315,15 @@ def main():
         args,
         result_dir=os.path.join(result_sub_dir, "checkpoint"),
         save_dense=args.save_dense,
-    )
+    ) """
 
     clone_results_to_latest_subdir(
         result_sub_dir, os.path.join(result_main_dir, "latest_exp")
     )
 
-    current_model_pruned_fraction(
+    """current_model_pruned_fraction(
         model, os.path.join(result_sub_dir, "checkpoint"), verbose=True
-    )
+    ) """
 
     # save epochs data as a .npy file
     np.save(os.path.join(result_sub_dir, "epochs_data.npy"), epochs_data)
