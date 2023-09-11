@@ -244,10 +244,22 @@ def train(
             print("duality gap: ", duality_gap)
 
 
+    #calculate the l2 norms and differences on the weights and on the mask
+    weight_tensor = []
+    mask_tensor = []
+    for (name, param) in model.named_parameters():
+        if 'popup_scores' in name:
+            mask_tensor.append(param.view(-1).detach())
+        elif name in name_list:
+            weight_tensor.append(param.view(-1).detach())
+
+    weight_tensor = torch.cat(weight_tensor)
+    mask_tensor = torch.cat(mask_tensor)
+
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
     epoch_data.append(duality_gaps)
     epoch_data.append(losses_list)
     epoch_data.append(supports)
 
-    return epoch_data
+    return epoch_data, weight_tensor, mask_tensor
