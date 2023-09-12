@@ -173,6 +173,9 @@ def main():
         elif '1' in args.trainer:
             initialize_constant(model, 1.0)
             initialize_constant(dummy_model, 1.0)
+        elif args.scaled_score_init:
+            # NOTE: scaled_init_scores will overwrite the scores in the pre-trained net.
+            initialize_scaled_score(model)
         else:
             # Scaled random initialization. Useful when training a high sparse net from scratch.
             # If not used, a sparse net (without batch-norm) from scratch will not converge.
