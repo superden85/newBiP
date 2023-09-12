@@ -170,11 +170,15 @@ def main():
         if '2' in args.trainer:
             nonzero = initialize_sparse(model, args.k)
             args.nonzero = nonzero
-        else:
+        elif '1' in args.trainer:
             initialize_constant(model, 1.0)
             initialize_constant(dummy_model, 1.0)
+        else:
+            # Scaled random initialization. Useful when training a high sparse net from scratch.
+            # If not used, a sparse net (without batch-norm) from scratch will not converge.
+            # With batch-norm its not really necessary.
+            scale_rand_init(model, args.k)
     
-
     best_prec1 = 0
     start_epoch = 0
     if not args.trainer == 'bilevel_corrected_mini':
