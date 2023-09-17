@@ -63,6 +63,14 @@ def parse_args():
         help="Alpha for penalized BiP",
     )
 
+    #fw_momentum argument for penalized BiP
+    parser.add_argument(
+        "--fw-momentum",
+        type=float,
+        default=1.0,
+        help="fw_momentum for penalized BiP",
+    )
+
     parser.add_argument(
         "--scaled-score-init",
         action="store_true",
