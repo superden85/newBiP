@@ -142,14 +142,17 @@ def main():
         num_params += param.numel()
     print(f"Number of parameters: {num_params}")
 
-    #print the mask length
+    #print the mask length and initialize previous
+    previous = []
     mask_length = 0
     for (name, vec) in model.named_modules():
         if hasattr(vec, "popup_scores"):
             attr = getattr(vec, "popup_scores")
             if attr is not None:
                 mask_length += attr.numel()
+                previous.append(torch.zeros_like(attr.view(-1).detach()))
     print(f"Mask length: {mask_length}")
+    previous = torch.cat(previous)
 
     #print if CUDA is available
     print(f"Using CUDA: {torch.cuda.is_available()}")
@@ -219,8 +222,6 @@ def main():
     # Start training
 
     epochs_data = []
-    previous_w = None
-    previous_m = None
     for epoch in range(start_epoch, args.epochs + args.warmup_epochs):
         start = time.time()
         lr_policy(epoch)
@@ -230,7 +231,7 @@ def main():
             optimizer = (optimizer, mask_optimizer)
 
         # train
-        epoch_data, w, m = trainer(
+        epoch_data, previous = trainer(
             model,
             device,
             (train_loader, val_loader),
@@ -239,17 +240,9 @@ def main():
             epoch,
             args,
             dummy_model = dummy_model,
-            n = mask_length
+            previous = previous
         )
-        l2_stats = []
-        if epoch > start_epoch:
-            l2_stats.append(torch.norm(w - previous_w, p=2).item())
-            l2_stats.append(torch.norm(m - previous_m, p=2).item())
-            l2_stats.append(torch.norm(w, p=2).item())
-            l2_stats.append(torch.norm(m, p=2).item())
-        previous_w = w
-        previous_m = m
-        epoch_data.append(l2_stats)
+
         epochs_data.append(epoch_data)
 
         # evaluate on test set

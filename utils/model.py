@@ -417,46 +417,6 @@ def get_epoch_data(model):
 
     return epoch_data
 
-def get_epoch_data_2(model):
-    epoch_data = []
-
-    
-    #stats
-    l0, l1 = 0, 0
-    mini, maxi = 1000, -1000
-    total = 0
-    for (name, vec) in model.named_modules():
-        if hasattr(vec, "popup_scores"):
-            attr = getattr(vec, "popup_scores")
-            if attr is not None:
-                l0 += torch.sum(attr != 0).item()
-                l1 += (torch.sum(torch.abs(attr)).item())
-                mini = min(mini, torch.min(attr).item())
-                maxi = max(maxi, abs(torch.max(attr).item()))
-                total += attr.numel()
-
-    epoch_data.append(l0)
-    epoch_data.append(l1)
-    epoch_data.append(mini)
-    epoch_data.append(maxi)
-
-    #number of parameters under a certain treshold
-    treshold_exp_list = [-20 + i for i in range(0, 21)]
-    percentage_below_treshold = [0 for i in range(0, 21)]
-    percentage_below_treshold_2 = [0 for i in range(0, 21)]
-    
-    for (name, vec) in model.named_modules():
-        if hasattr(vec, "popup_scores"):
-            attr = getattr(vec, "popup_scores")
-            if attr is not None:
-                for i in range(0, 21):
-                    percentage_below_treshold[i] += torch.sum(attr < 10**treshold_exp_list[i]).item() / total
-                    percentage_below_treshold_2[i] += torch.sum(attr > 1 - 10**treshold_exp_list[i]).item() / total
-    
-    epoch_data.append((treshold_exp_list, percentage_below_treshold))
-    epoch_data.append((treshold_exp_list, percentage_below_treshold_2))
-
-    return epoch_data
 
 def checker(w, m, b, train_images):
     x = train_images[0]

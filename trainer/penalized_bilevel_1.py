@@ -34,16 +34,14 @@ def train(
     )
 
     dummy_model = kwargs["dummy_model"]
-    #n = kwargs["n"], normalize the penalization sum
+    previous = kwargs["previous"]
     optimizer, mask_optimizer = optimizer_list
 
     model.train()
     dummy_model.train()
     end = time.time()
 
-    duality_gaps = []
     losses_list = []
-    supports = []
 
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
@@ -158,6 +156,10 @@ def train(
             #then the hypergradient is the convex combination of the baseline hypergradient and the penalization gradient
             hypergradient = args.lambd * (loss_grad_vec) + (1 - args.lambd) * pen_grad_vec
 
+            #in case of stochastic FW, we use the momentum
+            hypergradient = (1 - args.fw_momentum) * previous + args.fw_momentum * hypergradient
+            previous = hypergradient
+
             #the linear minimization problem is very simple we don't need to use a solver
             #mstar is equal to 1 if c is negative, 0 otherwise
 
@@ -184,15 +186,15 @@ def train(
 
                     pointer += num_param
 
-            #we want to compute the duality gap as well
+            """ #we want to compute the duality gap as well
             #it is equal to d = - <outer_gradient, m_star - params>
 
             duality_gap = -torch.dot(hypergradient, m_star - m_k).item()
-            duality_gaps.append(duality_gap)
+            duality_gaps.append(duality_gap) """
 
-            #calculate the length of the support of mstar
+            """ #calculate the length of the support of mstar
             support = torch.sum(m_star).item()
-            supports.append(support)
+            supports.append(support) """
 
             output = model(train_images)
             acc1, acc5 = accuracy(output, train_targets, topk=(1, 5))  # log
@@ -200,7 +202,15 @@ def train(
             top1.update(acc1[0], train_images.size(0))
             top5.update(acc5[0], train_images.size(0))
 
-            losses_list.append(loss.item())
+            loss = criterion(output, train_targets)
+            #calculate the penalization term
+            penalization = 0
+            for name, param in model.named_parameters():
+                if 'popup_scores' in name:
+                    penalization += torch.sum(1 - torch.exp(-args.alpha * param.view(-1).detach()))
+
+            total_loss = args.lambd * loss.item() + (1 - args.lambd) * penalization
+            losses_list.append(total_loss.item())
 
         batch_time.update(time.time() - end)
         end = time.time()
@@ -226,29 +236,8 @@ def train(
             print("min of mask: ", mini)
             print("max of mask: ", maxi)
 
-            #print the length of the support of mstar :
-            print("support of mstar: ", torch.sum(m_star).item())
-
-            #print the duality gap 
-            print("duality gap: ", duality_gap)
-
-
-    #calculate the l2 norms and differences on the weights and on the mask
-    weight_tensor = []
-    mask_tensor = []
-    for (name, param) in model.named_parameters():
-        if 'popup_scores' in name:
-            mask_tensor.append(param.view(-1).detach())
-        elif name in name_list:
-            weight_tensor.append(param.view(-1).detach())
-
-    weight_tensor = torch.cat(weight_tensor)
-    mask_tensor = torch.cat(mask_tensor)
-
     #return data related to the mask of this epoch
     epoch_data = get_epoch_data(model)
-    epoch_data.append(duality_gaps)
     epoch_data.append(losses_list)
-    epoch_data.append(supports)
 
-    return epoch_data, weight_tensor, mask_tensor
+    return epoch_data, previous

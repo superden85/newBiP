@@ -25,6 +25,8 @@ warmup_lr: 0.1
 lambd : 100
 alpha : 10
 
+#parameters for stochastic FW
+fw_momentum : 1.0 #by default we don't use momentum
 
 # ->->->->-> Eval <-<-<-<-<-
 val_method: base
