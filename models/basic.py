@@ -167,7 +167,7 @@ class MnistModelMini(nn.Module):
 class FashionMnistModel(nn.Module):
 
     def __init__(self, conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
-        super(MnistModel, self).__init__()
+        super(FashionMnistModel, self).__init__()
         self.conv1 = conv_layer(1, 48, 4, stride=2, padding=1)  # Increase output channels to 48
         self.conv2 = conv_layer(48, 96, 4, stride=2, padding=1)  # Increase output channels to 96
         self.fc1 = linear_layer(96 * 7 * 7, 300)  # Increase the number of neurons in fc1 to 300
