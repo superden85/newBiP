@@ -143,16 +143,17 @@ def main():
     print(f"Number of parameters: {num_params}")
 
     #print the mask length and initialize previous
-    previous = []
-    mask_length = 0
-    for (name, vec) in model.named_modules():
-        if hasattr(vec, "popup_scores"):
-            attr = getattr(vec, "popup_scores")
-            if attr is not None:
-                mask_length += attr.numel()
-                previous.append(torch.zeros_like(attr.view(-1).detach()))
-    print(f"Mask length: {mask_length}")
-    previous = torch.cat(previous)
+    if args.exp_mode == "prune":
+        previous = []
+        mask_length = 0
+        for (name, vec) in model.named_modules():
+            if hasattr(vec, "popup_scores"):
+                attr = getattr(vec, "popup_scores")
+                if attr is not None:
+                    mask_length += attr.numel()
+                    previous.append(torch.zeros_like(attr.view(-1).detach()))
+        print(f"Mask length: {mask_length}")
+        previous = torch.cat(previous)
 
     #print if CUDA is available
     print(f"Using CUDA: {torch.cuda.is_available()}")
@@ -231,17 +232,30 @@ def main():
             optimizer = (optimizer, mask_optimizer)
 
         # train
-        epoch_data, previous = trainer(
-            model,
-            device,
-            (train_loader, val_loader),
-            criterion,
-            optimizer,
-            epoch,
-            args,
-            dummy_model = dummy_model,
-            previous = previous
-        )
+        if args.exp_mode == "prune":
+            epoch_data, previous = trainer(
+                model,
+                device,
+                (train_loader, val_loader),
+                criterion,
+                optimizer,
+                epoch,
+                args,
+                dummy_model = dummy_model,
+                previous = previous
+            )
+        
+        else:
+            trainer(
+                model,
+                device,
+                (train_loader, val_loader),
+                criterion,
+                optimizer,
+                epoch,
+                args,
+            )
+            epoch_data = None
 
         epochs_data.append(epoch_data)
 
