@@ -272,23 +272,26 @@ def main():
             optimizer = optimizer[0]
         is_best = prec1 > best_prec1
         best_prec1 = max(prec1, best_prec1)
-        """ save_checkpoint(
-            {
-                "epoch": epoch + 1,
-                "arch": args.arch,
-                "state_dict": model.state_dict(),
-                "best_prec1": best_prec1,
-                "optimizer": optimizer.state_dict(),
-            },
-            is_best,
-            args,
-            result_dir=os.path.join(result_sub_dir, "checkpoint"),
-            save_dense=args.save_dense,
-        )
 
-        clone_results_to_latest_subdir(
-            result_sub_dir, os.path.join(result_main_dir, "latest_exp")
-        ) """
+        #save checkpoint only for pretrain:
+        if args.exp_mode == "pretrain":
+            save_checkpoint(
+                {
+                    "epoch": epoch + 1,
+                    "arch": args.arch,
+                    "state_dict": model.state_dict(),
+                    "best_prec1": best_prec1,
+                    "optimizer": optimizer.state_dict(),
+                },
+                is_best,
+                args,
+                result_dir=os.path.join(result_sub_dir, "checkpoint"),
+                save_dense=args.save_dense,
+            )
+
+            clone_results_to_latest_subdir(
+                result_sub_dir, os.path.join(result_main_dir, "latest_exp")
+            )
 
         #stats on the mask: 
         if 'penalized_bilevel' in args.trainer:
@@ -315,29 +318,29 @@ def main():
             f"Epoch {epoch}, val-method {args.val_method}, validation accuracy {prec1}, best_prec {best_prec1}"
         )
     
+    #save checkpoint only for pretrain:
+    if args.exp_mode == "pretrain":
+        save_checkpoint(
+            {
+                "epoch": args.epochs,
+                "arch": args.arch,
+                "state_dict": model.state_dict(),
+                "best_prec1": best_prec1,
+                "optimizer": optimizer.state_dict(),
+            },
+            True if args.epochs == 0 else False,
+            args,
+            result_dir=os.path.join(result_sub_dir, "checkpoint"),
+            save_dense=args.save_dense,
+        )
 
+        clone_results_to_latest_subdir(
+            result_sub_dir, os.path.join(result_main_dir, "latest_exp")
+        )
 
-    """ save_checkpoint(
-        {
-            "epoch": args.epochs,
-            "arch": args.arch,
-            "state_dict": model.state_dict(),
-            "best_prec1": best_prec1,
-            "optimizer": optimizer.state_dict(),
-        },
-        True if args.epochs == 0 else False,
-        args,
-        result_dir=os.path.join(result_sub_dir, "checkpoint"),
-        save_dense=args.save_dense,
-    ) """
-
-    """ clone_results_to_latest_subdir(
-        result_sub_dir, os.path.join(result_main_dir, "latest_exp")
-    ) """
-
-    """current_model_pruned_fraction(
-        model, os.path.join(result_sub_dir, "checkpoint"), verbose=True
-    ) """
+        current_model_pruned_fraction(
+            model, os.path.join(result_sub_dir, "checkpoint"), verbose=True
+        )
 
     # save epochs data as a .npy file
     np.save(os.path.join(result_sub_dir, "epochs_data.npy"), epochs_data)
