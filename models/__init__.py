@@ -24,6 +24,7 @@ from models.basic import (
     lin_4,
     mnist_model,
     mnist_model_mini,
+    fmnist_model,
     mnist_model_large,
     cifar_model,
     cifar_model_large,
