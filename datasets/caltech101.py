@@ -27,14 +27,14 @@ class Caltech101:
     def data_loaders(self, **kwargs):
         trainset = datasets.Caltech101(
             root=os.path.join(self.args.data_dir, "Caltech101"),
-            split="train",
+            train=True,  # Use 'train' to specify the train split
             download=True,
             transform=self.tr_train,
         )
 
         valset = datasets.Caltech101(
             root=os.path.join(self.args.data_dir, "Caltech101"),
-            split="val",
+            train=False,  # Use 'train=False' to specify the validation/test split
             download=True,
             transform=self.tr_train,
         )
@@ -53,21 +53,7 @@ class Caltech101:
             **kwargs
         )
 
-        testset = datasets.Caltech101(
-            root=os.path.join(self.args.data_dir, "Caltech101"),
-            split="test",
-            download=True,
-            transform=self.tr_test,
-        )
-
-        test_loader = DataLoader(
-            testset,
-            batch_size=self.args.test_batch_size,
-            shuffle=False,
-            **kwargs
-        )
-
         print(
-            f"Training loader: {len(train_loader.dataset)} images, Test loader: {len(test_loader.dataset)} images"
+            f"Training loader: {len(train_loader.dataset)} images, Test loader: {len(val_loader.dataset)} images"
         )
-        return train_loader, val_loader, test_loader
+        return train_loader, val_loader
