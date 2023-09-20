@@ -14,8 +14,8 @@ class Caltech101:
 
         self.norm_layer = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # Adjust mean and std for Caltech101
 
-        self.tr_train = [transforms.Resize((3, 224, 224)), transforms.ToTensor()]
-        self.tr_test = [transforms.Resize((3, 224, 224)), transforms.ToTensor()]
+        self.tr_train = [transforms.Grayscale(num_output_channels=3), transforms.Resize((224, 224)), transforms.ToTensor()]
+        self.tr_test = [transforms.Grayscale(num_output_channels=3), transforms.Resize((224, 224)), transforms.ToTensor()]
 
         if normalize:
             self.tr_train.append(self.norm_layer)
