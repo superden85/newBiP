@@ -28,7 +28,7 @@ class Caltech101:
             download=download,
         )
 
-    def data_loaders(self, batch_size, shuffle=True, **kwargs):
+    def data_loaders(self, shuffle=True, **kwargs):
         # Split the dataset into train, validation, and test sets
         num_samples = len(self.dataset)
         num_train = int(0.7 * num_samples)
@@ -41,21 +41,21 @@ class Caltech101:
 
         train_loader = DataLoader(
             train_set,
-            batch_size=batch_size,
+            batch_size=self.args.batch_size,
             shuffle=shuffle,
             **kwargs
         )
 
         val_loader = DataLoader(
             val_set,
-            batch_size=batch_size,
+            batch_size=self.args.batch_size,
             shuffle=shuffle,
             **kwargs
         )
 
         test_loader = DataLoader(
             test_set,
-            batch_size=batch_size,
+            batch_size=self.args.batch_size,
             shuffle=False,
             **kwargs
         )
