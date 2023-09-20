@@ -25,14 +25,16 @@ class Caltech101:
         self.tr_test = transforms.Compose(self.tr_test)
 
     def data_loaders(self, **kwargs):
-        trainset = datasets.ImageFolder(
-            root=os.path.join(self.args.data_dir, "Caltech101", "train"),  # Adjust the folder structure
+        trainset = datasets.Caltech101(
+            root=os.path.join(self.args.data_dir, "Caltech101"),
+            split="train",
             download=True,
             transform=self.tr_train,
         )
 
-        valset = datasets.ImageFolder(
-            root=os.path.join(self.args.data_dir, "Caltech101", "val"),  # Adjust the folder structure
+        valset = datasets.Caltech101(
+            root=os.path.join(self.args.data_dir, "Caltech101"),
+            split="val",
             download=True,
             transform=self.tr_train,
         )
@@ -51,8 +53,10 @@ class Caltech101:
             **kwargs
         )
 
-        testset = datasets.ImageFolder(
-            root=os.path.join(self.args.data_dir, "Caltech101", "test"),  # Adjust the folder structure
+        testset = datasets.Caltech101(
+            root=os.path.join(self.args.data_dir, "Caltech101"),
+            split="test",
+            download=True,
             transform=self.tr_test,
         )
 
