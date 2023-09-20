@@ -8,52 +8,60 @@ class Caltech101:
     Caltech-101 dataset.
     """
 
-    def __init__(self, args, normalize=False):
+    def __init__(self, args, target_type='category', transform=None, target_transform=None, download=True, normalize=False):
         self.args = args
 
         # Normalize layer (you may need to adjust mean and std)
         self.norm_layer = transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
 
-        self.tr_train = [transforms.ToTensor()]
-        self.tr_test = [transforms.ToTensor()]
+        self.transform = transform
+        self.target_transform = target_transform
 
         if normalize:
-            self.tr_train.append(self.norm_layer)
-            self.tr_test.append(self.norm_layer)
+            self.transform = transforms.Compose([self.transform, self.norm_layer])
 
-        self.tr_train = transforms.Compose(self.tr_train)
-        self.tr_test = transforms.Compose(self.tr_test)
-
-    def data_loaders(self, **kwargs):
-        trainset = datasets.Caltech101(
+        self.dataset = datasets.Caltech101(
             root=os.path.join(self.args.data_dir, "Caltech101"),
-            train=True,  # Use 'train' to specify the train split
-            download=True,
-            transform=self.tr_train,
+            target_type=target_type,
+            transform=self.transform,
+            target_transform=self.target_transform,
+            download=download,
         )
 
-        valset = datasets.Caltech101(
-            root=os.path.join(self.args.data_dir, "Caltech101"),
-            train=False,  # Use 'train=False' to specify the validation/test split
-            download=True,
-            transform=self.tr_train,
+    def data_loaders(self, batch_size, shuffle=True, **kwargs):
+        # Split the dataset into train, validation, and test sets
+        num_samples = len(self.dataset)
+        num_train = int(0.7 * num_samples)
+        num_val = int(0.15 * num_samples)
+        num_test = num_samples - num_train - num_val
+
+        train_set, val_set, test_set = torch.utils.data.random_split(
+            self.dataset, [num_train, num_val, num_test]
         )
 
         train_loader = DataLoader(
-            trainset,
-            batch_size=self.args.batch_size,
-            shuffle=True,
+            train_set,
+            batch_size=batch_size,
+            shuffle=shuffle,
             **kwargs
         )
 
         val_loader = DataLoader(
-            valset,
-            batch_size=self.args.batch_size,
-            shuffle=True,
+            val_set,
+            batch_size=batch_size,
+            shuffle=shuffle,
+            **kwargs
+        )
+
+        test_loader = DataLoader(
+            test_set,
+            batch_size=batch_size,
+            shuffle=False,
             **kwargs
         )
 
         print(
-            f"Training loader: {len(train_loader.dataset)} images, Test loader: {len(val_loader.dataset)} images"
+            f"Training loader: {len(train_loader.dataset)} images, Validation loader: {len(val_loader.dataset)} images, Test loader: {len(test_loader.dataset)} images"
         )
-        return train_loader, val_loader
+
+        return train_loader, val_loader, test_loader
