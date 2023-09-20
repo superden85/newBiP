@@ -23,7 +23,7 @@ class Caltech101:
         self.dataset = datasets.Caltech101(
             root=os.path.join(self.args.data_dir, "Caltech101"),
             target_type=target_type,
-            #transform=self.transform,
+            transform=self.transform,
             #target_transform=self.target_transform,
             download=download,
         )
