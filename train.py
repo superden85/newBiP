@@ -343,7 +343,15 @@ def main():
         )
 
     # save epochs data as a .npy file
+
+    #create the directory if it does not exist
+    if not os.path.exists(os.path.join(result_main_dir, "latest_exp")):
+        os.makedirs(os.path.join(result_main_dir, "latest_exp"), exist_ok=True)
     np.save(os.path.join(result_sub_dir, "epochs_data.npy"), epochs_data)
+
+    #create the directory if it does not exist
+    if not os.path.exists(os.path.join(result_main_dir, "latest_exp")):
+        os.makedirs(os.path.join(result_main_dir, "latest_exp"), exist_ok=True)
     np.save(os.path.join(result_main_dir, "latest_exp/epochs_data.npy"), epochs_data)
 
 
