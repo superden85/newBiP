@@ -46,20 +46,6 @@ def lin_4(input_dim=3072, hidden_dim=100, num_classes=10):
     return model
 
 
-""" def mnist_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
-    assert init_type == "kaiming_normal", "only supporting kaiming_normal init"
-    model = nn.Sequential(
-        conv_layer(1, 16, 4, stride=2, padding=1),
-        nn.ReLU(),
-        conv_layer(16, 32, 4, stride=2, padding=1),
-        nn.ReLU(),
-        Flatten(),
-        linear_layer(32 * 7 * 7, 100),
-        nn.ReLU(),
-        linear_layer(100, 10),
-    )
-    return model """
-
 
 class MnistModel(nn.Module):
 
@@ -221,6 +207,60 @@ class FashionMnistModel(nn.Module):
     def forward(self, x):
         return self._forward_impl(x)
 
+class Caltech101Model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
+    def __init__(self, conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
+        super(Caltech101Model, self).__init__()
+        self.conv1 = conv_layer(3, 64, 3, stride=1, padding=1)  # Input channels: 3 (RGB), Output channels: 64
+        self.conv2 = conv_layer(64, 128, 3, stride=1, padding=1)  # Output channels: 128
+        self.conv3 = conv_layer(128, 256, 3, stride=1, padding=1)  # Output channels: 256
+        self.fc1 = linear_layer(256 * 8 * 8, 512)  # Increase the number of neurons in fc1 to 512
+        self.fc2 = linear_layer(512, 101)  # Adjust the output dimension to match the number of classes in Caltech-101
+
+
+    def _forward_impl(self, x):
+        if self.unstructured_pruning:
+            score_list = []
+            for (name, vec) in self.named_modules():
+                if hasattr(vec, "popup_scores"):
+                    attr = getattr(vec, "popup_scores")
+                    if attr is not None:
+                        score_list.append(attr.view(-1))
+            scores = torch.cat(score_list)
+            adj = GetSubnetUnstructured.apply(scores.abs(), self.k)
+
+            pointer = 0
+            for (name, vec) in self.named_modules():
+                if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
+                    if hasattr(vec, "weight"):
+                        attr = getattr(vec, "weight")
+                        if attr is not None:
+                            numel = attr.numel()
+                            vec.w = attr * adj[pointer: pointer + numel].view_as(attr)
+                            pointer += numel
+        else:
+            pointer = 0
+            for (name, vec) in self.named_modules():
+                if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
+                    if hasattr(vec, "weight"):
+                        attr = getattr(vec, "weight")
+                        if attr is not None:
+                            vec.w = attr
+                            pointer += attr.numel()
+        
+        x = self.conv1(x)
+        x = F.relu(x)
+        x = self.conv2(x)
+        x = F.relu(x)
+        x = self.conv3(x)
+        x = F.relu(x)
+        x = Flatten()(x)
+        x = self.fc1(x)
+        x = F.relu(x)
+        x = self.fc2(x)
+        
+        return x
+
+
 def mnist_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
     assert init_type == "kaiming_normal", "only supporting kaiming_normal init"
     model = MnistModel(conv_layer, linear_layer, init_type, **kwargs)
@@ -234,6 +274,11 @@ def mnist_model_mini(conv_layer, linear_layer, init_type='kaiming_normal', **kwa
 def fmnist_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
     assert init_type == "kaiming_normal", "only supporting kaiming_normal init"
     model = FashionMnistModel(conv_layer, linear_layer, init_type, **kwargs)
+    return model
+
+def caltech101_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
+    assert init_type == "kaiming_normal", "only supporting kaiming_normal init"
+    model = Caltech101Model(conv_layer, linear_layer, init_type, **kwargs)
     return model
     
 def mnist_model_large(conv_layer, linear_layer, init_type, **kwargs):

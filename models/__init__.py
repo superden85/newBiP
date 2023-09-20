@@ -25,6 +25,7 @@ from models.basic import (
     mnist_model,
     mnist_model_mini,
     fmnist_model,
+    caltech101_model,
     mnist_model_large,
     cifar_model,
     cifar_model_large,
