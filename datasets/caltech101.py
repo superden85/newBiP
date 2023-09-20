@@ -27,11 +27,13 @@ class Caltech101:
     def data_loaders(self, **kwargs):
         trainset = datasets.ImageFolder(
             root=os.path.join(self.args.data_dir, "Caltech101", "train"),  # Adjust the folder structure
+            download=True,
             transform=self.tr_train,
         )
 
         valset = datasets.ImageFolder(
             root=os.path.join(self.args.data_dir, "Caltech101", "val"),  # Adjust the folder structure
+            download=True,
             transform=self.tr_train,
         )
 
