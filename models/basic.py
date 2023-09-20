@@ -207,7 +207,8 @@ class FashionMnistModel(nn.Module):
     def forward(self, x):
         return self._forward_impl(x)
 
-class Caltech101Model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
+class Caltech101Model(nn.Module):
+
     def __init__(self, conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
         super(Caltech101Model, self).__init__()
         self.conv1 = conv_layer(3, 64, 3, stride=1, padding=1)  # Input channels: 3 (RGB), Output channels: 64
