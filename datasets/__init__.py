@@ -7,5 +7,6 @@ from datasets.mnist import MNIST
 from datasets.test import MINI
 from datasets.mnist_mini import MNIST_MINI
 from datasets.fmnist import FashionMNIST
+from datasets.svhn import SVHN
 
 __all__ = ["CIFAR10", "CIFAR100", "ImageNet", "ImageNetOrigin", "TinyImageNet", "ImageNetH5"]
