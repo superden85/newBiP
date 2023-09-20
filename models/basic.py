@@ -260,6 +260,9 @@ class Caltech101Model(nn.Module):
         x = self.fc2(x)
         
         return x
+    
+    def forward(self, x):
+        return self._forward_impl(x)
 
 
 def mnist_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
