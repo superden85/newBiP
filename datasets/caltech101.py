@@ -15,7 +15,7 @@ class Caltech101:
         self.norm_layer = transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
 
         self.transform = transform
-        self.target_transform = target_transform
+        self.target_transform = transforms.toTensor()
 
         if normalize:
             self.transform = transforms.Compose([self.transform, self.norm_layer])
