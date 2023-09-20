@@ -217,6 +217,10 @@ class Caltech101Model(nn.Module):
         self.fc1 = linear_layer(256 * 8 * 8, 512)  # Increase the number of neurons in fc1 to 512
         self.fc2 = linear_layer(512, 101)  # Adjust the output dimension to match the number of classes in Caltech-101
 
+        self.num_classes = kwargs['num_classes'] if 'num_classes' in kwargs else 101
+        self.k = kwargs['k'] if 'k' in kwargs else None
+        self.unstructured_pruning = kwargs['unstructured'] if 'unstructured' in kwargs else False
+
 
     def _forward_impl(self, x):
         if self.unstructured_pruning:
