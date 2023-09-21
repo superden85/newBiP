@@ -265,14 +265,18 @@ class Caltech101Model(nn.Module):
         x = self.conv2(x)
         x = self.maxpool2(x)
         x = self.conv3(x)
+        x = F.relu(x)
         x = self.conv4(x)
+        x = F.relu(x)
         x = self.conv5(x)
+        x = F.relu(x)
 
         # Flatten the output
         x = Flatten()(x)
 
         # Forward pass through fully connected layers
         x = self.fc1(x)
+        x = F.relu(x)
         x = self.fc2(x)
 
         return x
