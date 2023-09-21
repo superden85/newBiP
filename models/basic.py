@@ -276,25 +276,6 @@ class Caltech101Model(nn.Module):
         x = self.fc2(x)
 
         return x
-
-# Create an instance of the ReducedCaltech101Model
-model = ReducedCaltech101Model()
-In this adapted model:
-
-Max-pooling layers (maxpool1 and maxpool2) have been added after the first and second convolutional layers to reduce spatial dimensions and consequently reduce the number of parameters.
-
-The size of the fully connected layer (fc1) has been reduced to 1024 neurons to help control the parameter count.
-
-These adjustments should help keep the model's parameter count within a more manageable range while still being suitable for the Caltech-101 dataset. You can further fine-tune the hyperparameters as needed for your specific use case.
-
-
-
-
-
-
-        return x
-        
-        return x
     
     def forward(self, x):
         return self._forward_impl(x)
