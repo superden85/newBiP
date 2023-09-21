@@ -213,14 +213,16 @@ class Caltech101Model(nn.Module):
         super(Caltech101Model, self).__init__()
         # Convolutional Layers
         self.conv1 = conv_layer(3, 64, 3, stride=1, padding=1)
+        self.maxpool1 = nn.MaxPool2d(2, 2)  # Max-pooling layer
         self.conv2 = conv_layer(64, 128, 3, stride=1, padding=1)
+        self.maxpool2 = nn.MaxPool2d(2, 2)  # Max-pooling layer
         self.conv3 = conv_layer(128, 256, 3, stride=1, padding=1)
-        self.conv4 = conv_layer(256, 512, 3, stride=1, padding=1)
-        self.conv5 = conv_layer(512, 512, 3, stride=1, padding=1)
+        self.conv4 = conv_layer(256, 256, 3, stride=1, padding=1)
+        self.conv5 = conv_layer(256, 256, 3, stride=1, padding=1)
 
         # Fully Connected Layers
-        self.fc1 = linear_layer(512 * 7 * 7, 512)
-        self.fc2 = linear_layer(512, 101)  # Output dimension for Caltech-101
+        self.fc1 = linear_layer(256 * 7 * 7, 1024)  # Reduced FC layer
+        self.fc2 = linear_layer(1024, 101)  # Output dimension for Caltech-101
 
         self.num_classes = kwargs['num_classes'] if 'num_classes' in kwargs else 101
         self.k = kwargs['k'] if 'k' in kwargs else None
@@ -259,7 +261,9 @@ class Caltech101Model(nn.Module):
         
         # Forward pass through convolutional layers
         x = self.conv1(x)
+        x = self.maxpool1(x)
         x = self.conv2(x)
+        x = self.maxpool2(x)
         x = self.conv3(x)
         x = self.conv4(x)
         x = self.conv5(x)
@@ -270,7 +274,23 @@ class Caltech101Model(nn.Module):
         # Forward pass through fully connected layers
         x = self.fc1(x)
         x = self.fc2(x)
-        x = self.fc3(x)
+
+        return x
+
+# Create an instance of the ReducedCaltech101Model
+model = ReducedCaltech101Model()
+In this adapted model:
+
+Max-pooling layers (maxpool1 and maxpool2) have been added after the first and second convolutional layers to reduce spatial dimensions and consequently reduce the number of parameters.
+
+The size of the fully connected layer (fc1) has been reduced to 1024 neurons to help control the parameter count.
+
+These adjustments should help keep the model's parameter count within a more manageable range while still being suitable for the Caltech-101 dataset. You can further fine-tune the hyperparameters as needed for your specific use case.
+
+
+
+
+
 
         return x
         
