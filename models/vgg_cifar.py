@@ -58,7 +58,7 @@ class VGG(nn.Module):
         return x
 
 
-def initialize_weights(model="kaiming_normal"):
+def initialize_weights(model, init_type = "kaiming_normal"):
     print(f"Initializing model with {init_type}")
     assert init_type in ["kaiming_normal", "kaiming_uniform", "signed_const"]
     for m in model.modules():
