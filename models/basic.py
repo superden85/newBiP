@@ -219,9 +219,8 @@ class Caltech101Model(nn.Module):
         self.conv5 = conv_layer(512, 512, 3, stride=1, padding=1)
 
         # Fully Connected Layers
-        self.fc1 = linear_layer(512 * 7 * 7, 4096)
-        self.fc2 = linear_layer(4096, 4096)
-        self.fc3 = linear_layer(4096, 101)  # Output dimension for Caltech-101
+        self.fc1 = linear_layer(512 * 7 * 7, 512)
+        self.fc2 = linear_layer(512, 101)  # Output dimension for Caltech-101
 
         self.num_classes = kwargs['num_classes'] if 'num_classes' in kwargs else 101
         self.k = kwargs['k'] if 'k' in kwargs else None
