@@ -216,7 +216,7 @@ class Caltech101Model(nn.Module):
         self.conv3 = conv_layer(128, 256, 4, stride=2, padding=1)  # Output channels: 256
         self.conv4 = conv_layer(256, 256, 4, stride=2, padding=1)  # Output channels: 256
         self.conv5 = conv_layer(256, 256, 4, stride=2, padding=1)  # Output channels: 256
-        self.fc1 = linear_layer(256 * 8 * 8, 512)  # Increase the number of neurons in fc1 to 512
+        self.fc1 = linear_layer(256 * 7 * 7, 512)  # Increase the number of neurons in fc1 to 512
         self.fc2 = linear_layer(512, 101)  # Adjust the output dimension to match the number of classes in Caltech-101
 
         self.num_classes = kwargs['num_classes'] if 'num_classes' in kwargs else 101
