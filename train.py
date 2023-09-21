@@ -334,10 +334,13 @@ def main():
             save_dense=args.save_dense,
         )
 
-        clone_results_to_latest_subdir(
-            result_sub_dir, os.path.join(result_main_dir, "latest_exp")
-        )
+    #always cloning to have the latest experiment in the latest_exp folder
+    clone_results_to_latest_subdir(
+        result_sub_dir, os.path.join(result_main_dir, "latest_exp")
+    )
 
+    #only for pretraining:
+    if args.exp_mode == "pretrain":
         current_model_pruned_fraction(
             model, os.path.join(result_sub_dir, "checkpoint"), verbose=True
         )
