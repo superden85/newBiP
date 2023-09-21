@@ -211,9 +211,11 @@ class Caltech101Model(nn.Module):
 
     def __init__(self, conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
         super(Caltech101Model, self).__init__()
-        self.conv1 = conv_layer(3, 64, 4, stride=3, padding=1)  # Input channels: 3 (RGB), Output channels: 64
-        self.conv2 = conv_layer(64, 128, 4, stride=3, padding=1)  # Output channels: 128
-        self.conv3 = conv_layer(128, 256, 4, stride=3, padding=1)  # Output channels: 256
+        self.conv1 = conv_layer(3, 64, 4, stride=2, padding=1)  # Input channels: 3 (RGB), Output channels: 64
+        self.conv2 = conv_layer(64, 128, 4, stride=2, padding=1)  # Output channels: 128
+        self.conv3 = conv_layer(128, 256, 4, stride=2, padding=1)  # Output channels: 256
+        self.conv4 = conv_layer(256, 256, 4, stride=2, padding=1)  # Output channels: 256
+        self.conv5 = conv_layer(256, 256, 4, stride=2, padding=1)  # Output channels: 256
         self.fc1 = linear_layer(256 * 8 * 8, 512)  # Increase the number of neurons in fc1 to 512
         self.fc2 = linear_layer(512, 101)  # Adjust the output dimension to match the number of classes in Caltech-101
 
@@ -257,6 +259,10 @@ class Caltech101Model(nn.Module):
         x = self.conv2(x)
         x = F.relu(x)
         x = self.conv3(x)
+        x = F.relu(x)
+        x = self.conv4(x)
+        x = F.relu(x)
+        x = self.conv5(x)
         x = F.relu(x)
         x = Flatten()(x)
         x = self.fc1(x)
