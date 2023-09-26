@@ -3,7 +3,6 @@ arch: "resnet20s"
 exp_name: "CIFAR100_resnet20s_Pretrain"
 result_dir: "./trained_models"
 exp_mode: "pretrain"
-layer_type: "dense"
 normalize: True
 
 # ->->->->-> Train <-<-<-<-<-
