@@ -7,6 +7,7 @@ normalize: True
 
 # ->->->->-> Train <-<-<-<-<-
 trainer: "bilevel_baseline"
+layer_type: "unstructured"
 epochs: 100
 optimizer: "sgd"
 lr: 0.1
