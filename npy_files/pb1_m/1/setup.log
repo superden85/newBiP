@@ -1,403 +1,403 @@
-Namespace(configs='configs/CIFAR10/pen_bip_1.yml', result_dir='./trained_models', exp_name='RC_pb1_m_1', exp_mode='prune', arch='resnet18', num_classes=10, layer_type='unstructured', k=None, lambd=0.999991, alpha=1.0, fw_momentum=0.9, scaled_score_init=True, scale_rand_init=False, freeze_bn=False, source_net='trained_models/CIFAR10_resnet18_Pretrain/pretrain/latest_exp/checkpoint/model_best.pth.tar', scores_init_type=None, dataset='CIFAR10', batch_size=128, num_workers=2, test_batch_size=128, normalize=True, data_dir='./data', image_dim=32, trainer='penalized_bilevel_1', epochs=100, optimizer='sgd', wd=0.0001, mask_lr=0.1, lr=0.1, mask_lr_schedule='step', lr_schedule='cosine', momentum=0.9, warmup_epochs=0, warmup_lr=0.1, save_dense=False, evaluate=False, val_method='base', resume='', seed=1234, print_freq=100, lr2=0.0001, accelerate=False)
-=> loading source model from 'trained_models/CIFAR10_resnet18_Pretrain/pretrain/latest_exp/checkpoint/model_best.pth.tar'
-=> loaded checkpoint 'trained_models/CIFAR10_resnet18_Pretrain/pretrain/latest_exp/checkpoint/model_best.pth.tar'
-Epoch 0, l0 norm : 50547, l1 norm : 16760.524207854105
-Epoch 0, min : 0.0, max : 0.6463934183120728
-This epoch duration :1406.4163472652435
-Epoch 0, val-method base, validation accuracy 28.489999771118164, best_prec 28.489999771118164
-Epoch 1, l0 norm : 50710, l1 norm : 17533.149547863555
-Epoch 1, min : 0.0, max : 0.6146437525749207
-This epoch duration :1500.2044792175293
-Epoch 1, val-method base, validation accuracy 41.09000015258789, best_prec 41.09000015258789
-Epoch 2, l0 norm : 50784, l1 norm : 18080.151862808063
-Epoch 2, min : 0.0, max : 0.5842687487602234
-This epoch duration :1501.3345313072205
-Epoch 2, val-method base, validation accuracy 49.62999725341797, best_prec 49.62999725341797
-Epoch 3, l0 norm : 50824, l1 norm : 18467.433095696117
-Epoch 3, min : 0.0, max : 0.5774564743041992
-This epoch duration :1501.7887773513794
-Epoch 3, val-method base, validation accuracy 49.349998474121094, best_prec 49.62999725341797
-Epoch 4, l0 norm : 50851, l1 norm : 18786.67698564376
-Epoch 4, min : 0.0, max : 0.5803793668746948
-This epoch duration :1501.8898122310638
-Epoch 4, val-method base, validation accuracy 52.369998931884766, best_prec 52.369998931884766
-Epoch 5, l0 norm : 50867, l1 norm : 19051.007484020716
-Epoch 5, min : 0.0, max : 0.5715668797492981
-This epoch duration :1499.8667132854462
-Epoch 5, val-method base, validation accuracy 56.1099967956543, best_prec 56.1099967956543
-Epoch 6, l0 norm : 50873, l1 norm : 19264.69834219492
-Epoch 6, min : 0.0, max : 0.5732458829879761
-This epoch duration :1501.78067612648
-Epoch 6, val-method base, validation accuracy 53.21999740600586, best_prec 56.1099967956543
-Epoch 7, l0 norm : 50882, l1 norm : 19434.071999616368
-Epoch 7, min : 0.0, max : 0.5663651823997498
-This epoch duration :1502.591164112091
-Epoch 7, val-method base, validation accuracy 59.38999938964844, best_prec 59.38999938964844
-Epoch 8, l0 norm : 50895, l1 norm : 19568.78601432152
-Epoch 8, min : 0.0, max : 0.5589529275894165
-This epoch duration :1502.758290052414
-Epoch 8, val-method base, validation accuracy 64.18000030517578, best_prec 64.18000030517578
-Epoch 9, l0 norm : 50901, l1 norm : 19689.84875527904
-Epoch 9, min : 0.0, max : 0.5563896894454956
-This epoch duration :1501.5658011436462
-Epoch 9, val-method base, validation accuracy 61.459999084472656, best_prec 64.18000030517578
-Epoch 10, l0 norm : 50905, l1 norm : 19793.367586022203
-Epoch 10, min : 0.0, max : 0.5563626885414124
-This epoch duration :1500.647778749466
-Epoch 10, val-method base, validation accuracy 60.2599983215332, best_prec 64.18000030517578
-Epoch 11, l0 norm : 50908, l1 norm : 19880.657565968588
-Epoch 11, min : 0.0, max : 0.5573596954345703
-This epoch duration :1501.2585265636444
-Epoch 11, val-method base, validation accuracy 61.63999938964844, best_prec 64.18000030517578
-Epoch 12, l0 norm : 50909, l1 norm : 19956.93921116894
-Epoch 12, min : 0.0, max : 0.5547594428062439
-This epoch duration :1502.2012677192688
-Epoch 12, val-method base, validation accuracy 60.75, best_prec 64.18000030517578
-Epoch 13, l0 norm : 50912, l1 norm : 20022.90065237768
-Epoch 13, min : 0.0, max : 0.5446964502334595
-This epoch duration :1501.7462100982666
-Epoch 13, val-method base, validation accuracy 63.7599983215332, best_prec 64.18000030517578
-Epoch 14, l0 norm : 50913, l1 norm : 20084.690851547086
-Epoch 14, min : 0.0, max : 0.5452574491500854
-This epoch duration :1502.845064163208
-Epoch 14, val-method base, validation accuracy 64.54999542236328, best_prec 64.54999542236328
-Epoch 15, l0 norm : 50916, l1 norm : 20140.60275329902
-Epoch 15, min : 0.0, max : 0.5457749366760254
-This epoch duration :1501.9259734153748
-Epoch 15, val-method base, validation accuracy 64.5999984741211, best_prec 64.5999984741211
-Epoch 16, l0 norm : 50918, l1 norm : 20190.02666359522
-Epoch 16, min : 0.0, max : 0.5454057455062866
-This epoch duration :1502.059321641922
-Epoch 16, val-method base, validation accuracy 67.30999755859375, best_prec 67.30999755859375
-Epoch 17, l0 norm : 50918, l1 norm : 20232.24818092717
-Epoch 17, min : 0.0, max : 0.5431543588638306
-This epoch duration :1500.3348381519318
-Epoch 17, val-method base, validation accuracy 64.41999816894531, best_prec 67.30999755859375
-Epoch 18, l0 norm : 50919, l1 norm : 20270.595136067768
-Epoch 18, min : 0.0, max : 0.5427681803703308
-This epoch duration :1500.4554574489594
-Epoch 18, val-method base, validation accuracy 58.519996643066406, best_prec 67.30999755859375
-Epoch 19, l0 norm : 50920, l1 norm : 20306.02035669498
-Epoch 19, min : 0.0, max : 0.544692873954773
-This epoch duration :1502.038691997528
-Epoch 19, val-method base, validation accuracy 63.54999923706055, best_prec 67.30999755859375
-Epoch 20, l0 norm : 50920, l1 norm : 20335.833693013923
-Epoch 20, min : 0.0, max : 0.5469043254852295
-This epoch duration :1501.8314197063446
-Epoch 20, val-method base, validation accuracy 67.23999786376953, best_prec 67.30999755859375
-Epoch 21, l0 norm : 50920, l1 norm : 20364.29478356411
-Epoch 21, min : 0.0, max : 0.5474217534065247
-This epoch duration :1501.9902267456055
-Epoch 21, val-method base, validation accuracy 66.69999694824219, best_prec 67.30999755859375
-Epoch 22, l0 norm : 50920, l1 norm : 20391.60069035445
-Epoch 22, min : 0.0, max : 0.5493690967559814
-This epoch duration :1502.055570602417
-Epoch 22, val-method base, validation accuracy 63.269996643066406, best_prec 67.30999755859375
-Epoch 23, l0 norm : 50920, l1 norm : 20418.051250968947
-Epoch 23, min : 0.0, max : 0.5484065413475037
-This epoch duration :1502.0046310424805
-Epoch 23, val-method base, validation accuracy 67.13999938964844, best_prec 67.30999755859375
-Epoch 24, l0 norm : 50920, l1 norm : 20445.61708675079
-Epoch 24, min : 0.0, max : 0.5461506843566895
-This epoch duration :1502.597244977951
-Epoch 24, val-method base, validation accuracy 68.41999816894531, best_prec 68.41999816894531
-Epoch 25, l0 norm : 50921, l1 norm : 20472.959845016347
-Epoch 25, min : 0.0, max : 0.5461772680282593
-This epoch duration :1501.1374878883362
-Epoch 25, val-method base, validation accuracy 62.93000030517578, best_prec 68.41999816894531
-Epoch 26, l0 norm : 50921, l1 norm : 20496.516034895187
-Epoch 26, min : 0.0, max : 0.5458784699440002
-This epoch duration :1502.1935276985168
-Epoch 26, val-method base, validation accuracy 63.16999816894531, best_prec 68.41999816894531
-Epoch 27, l0 norm : 50921, l1 norm : 20522.680045299097
-Epoch 27, min : 0.0, max : 0.5456425547599792
-This epoch duration :1502.0739686489105
-Epoch 27, val-method base, validation accuracy 60.099998474121094, best_prec 68.41999816894531
-Epoch 28, l0 norm : 50921, l1 norm : 20544.786180558887
-Epoch 28, min : 0.0, max : 0.5476475358009338
-This epoch duration :1502.3128991127014
-Epoch 28, val-method base, validation accuracy 64.9000015258789, best_prec 68.41999816894531
-Epoch 29, l0 norm : 50921, l1 norm : 20566.664732897832
-Epoch 29, min : 0.0, max : 0.5459591746330261
-This epoch duration :1502.66192984581
-Epoch 29, val-method base, validation accuracy 68.1199951171875, best_prec 68.41999816894531
-Epoch 30, l0 norm : 50921, l1 norm : 20588.15682255765
-Epoch 30, min : 0.0, max : 0.5465596914291382
-This epoch duration :1502.6656992435455
-Epoch 30, val-method base, validation accuracy 65.51000213623047, best_prec 68.41999816894531
-Epoch 31, l0 norm : 50921, l1 norm : 20607.74092486946
-Epoch 31, min : 0.0, max : 0.5469223856925964
-This epoch duration :1502.819583415985
-Epoch 31, val-method base, validation accuracy 67.22999572753906, best_prec 68.41999816894531
-Epoch 32, l0 norm : 50921, l1 norm : 20625.392389496963
-Epoch 32, min : 0.0, max : 0.5471075177192688
-This epoch duration :1502.1283383369446
-Epoch 32, val-method base, validation accuracy 64.56999969482422, best_prec 68.41999816894531
-Epoch 33, l0 norm : 50921, l1 norm : 20641.77850068959
-Epoch 33, min : 0.0, max : 0.544615626335144
-This epoch duration :1503.993978023529
-Epoch 33, val-method base, validation accuracy 69.87999725341797, best_prec 69.87999725341797
-Epoch 34, l0 norm : 50921, l1 norm : 20656.130126309326
-Epoch 34, min : 0.0, max : 0.5470752120018005
-This epoch duration :1503.3494374752045
-Epoch 34, val-method base, validation accuracy 64.12999725341797, best_prec 69.87999725341797
-Epoch 35, l0 norm : 50921, l1 norm : 20672.906777397195
-Epoch 35, min : 0.0, max : 0.5466616153717041
-This epoch duration :1502.1453003883362
-Epoch 35, val-method base, validation accuracy 67.80999755859375, best_prec 69.87999725341797
-Epoch 36, l0 norm : 50921, l1 norm : 20687.76396580874
-Epoch 36, min : 0.0, max : 0.5458952188491821
-This epoch duration :1503.0918900966644
-Epoch 36, val-method base, validation accuracy 68.23999786376953, best_prec 69.87999725341797
-Epoch 37, l0 norm : 50921, l1 norm : 20703.00368968192
-Epoch 37, min : 0.0, max : 0.5457093715667725
-This epoch duration :1504.2707495689392
-Epoch 37, val-method base, validation accuracy 60.269996643066406, best_prec 69.87999725341797
-Epoch 38, l0 norm : 50921, l1 norm : 20716.68785606932
-Epoch 38, min : 0.0, max : 0.547333300113678
-This epoch duration :1502.0180795192719
-Epoch 38, val-method base, validation accuracy 71.00999450683594, best_prec 71.00999450683594
-Epoch 39, l0 norm : 50921, l1 norm : 20729.47507936764
-Epoch 39, min : 0.0, max : 0.5483335256576538
-This epoch duration :1502.497147321701
-Epoch 39, val-method base, validation accuracy 70.41999816894531, best_prec 71.00999450683594
-Epoch 40, l0 norm : 50921, l1 norm : 20742.910115035385
-Epoch 40, min : 0.0, max : 0.5486682653427124
-This epoch duration :1501.3892180919647
-Epoch 40, val-method base, validation accuracy 67.93000030517578, best_prec 71.00999450683594
-Epoch 41, l0 norm : 50921, l1 norm : 20755.21858238839
-Epoch 41, min : 0.0, max : 0.5491946339607239
-This epoch duration :1499.6537611484528
-Epoch 41, val-method base, validation accuracy 71.22999572753906, best_prec 71.22999572753906
-Epoch 42, l0 norm : 50921, l1 norm : 20766.816660844965
-Epoch 42, min : 0.0, max : 0.549925684928894
-This epoch duration :1499.7422573566437
-Epoch 42, val-method base, validation accuracy 66.37999725341797, best_prec 71.22999572753906
-Epoch 43, l0 norm : 50921, l1 norm : 20777.804642133877
-Epoch 43, min : 0.0, max : 0.5492375493049622
-This epoch duration :1499.8667621612549
-Epoch 43, val-method base, validation accuracy 66.88999938964844, best_prec 71.22999572753906
-Epoch 44, l0 norm : 50921, l1 norm : 20788.839347744248
-Epoch 44, min : 0.0, max : 0.5493676662445068
-This epoch duration :1499.5881743431091
-Epoch 44, val-method base, validation accuracy 69.95999908447266, best_prec 71.22999572753906
-Epoch 45, l0 norm : 50921, l1 norm : 20799.250547525702
-Epoch 45, min : 0.0, max : 0.5497108697891235
-This epoch duration :1500.0098068714142
-Epoch 45, val-method base, validation accuracy 66.61000061035156, best_prec 71.22999572753906
-Epoch 46, l0 norm : 50921, l1 norm : 20809.712384554015
-Epoch 46, min : 0.0, max : 0.5486592650413513
-This epoch duration :1499.9814615249634
-Epoch 46, val-method base, validation accuracy 70.6500015258789, best_prec 71.22999572753906
-Epoch 47, l0 norm : 50921, l1 norm : 20821.106814452676
-Epoch 47, min : 0.0, max : 0.5476444959640503
-This epoch duration :1499.265026807785
-Epoch 47, val-method base, validation accuracy 71.15999603271484, best_prec 71.22999572753906
-Epoch 48, l0 norm : 50921, l1 norm : 20829.691581772273
-Epoch 48, min : 0.0, max : 0.548147439956665
-This epoch duration :1500.9519665241241
-Epoch 48, val-method base, validation accuracy 67.48999786376953, best_prec 71.22999572753906
-Epoch 49, l0 norm : 50921, l1 norm : 20839.055255676965
-Epoch 49, min : 0.0, max : 0.5479128956794739
-This epoch duration :1499.7609333992004
-Epoch 49, val-method base, validation accuracy 66.02999877929688, best_prec 71.22999572753906
-Epoch 50, l0 norm : 50921, l1 norm : 20847.978312021514
-Epoch 50, min : 0.0, max : 0.5467942357063293
-This epoch duration :1499.4233577251434
-Epoch 50, val-method base, validation accuracy 68.27999877929688, best_prec 71.22999572753906
-Epoch 51, l0 norm : 50921, l1 norm : 20857.785434233658
-Epoch 51, min : 0.0, max : 0.5473917126655579
-This epoch duration :1502.0060858726501
-Epoch 51, val-method base, validation accuracy 65.75, best_prec 71.22999572753906
-Epoch 52, l0 norm : 50921, l1 norm : 20867.208064049515
-Epoch 52, min : 0.0, max : 0.5473088026046753
-This epoch duration :1502.3477716445923
-Epoch 52, val-method base, validation accuracy 71.5, best_prec 71.5
-Epoch 53, l0 norm : 50921, l1 norm : 20875.6985587612
-Epoch 53, min : 0.0, max : 0.5480444431304932
-This epoch duration :1501.9701902866364
-Epoch 53, val-method base, validation accuracy 72.58000183105469, best_prec 72.58000183105469
-Epoch 54, l0 norm : 50921, l1 norm : 20884.41715615779
-Epoch 54, min : 0.0, max : 0.5483896136283875
-This epoch duration :1502.6219398975372
-Epoch 54, val-method base, validation accuracy 72.2699966430664, best_prec 72.58000183105469
-Epoch 55, l0 norm : 50921, l1 norm : 20892.906150503066
-Epoch 55, min : 0.0, max : 0.548352062702179
-This epoch duration :1502.5804042816162
-Epoch 55, val-method base, validation accuracy 72.3699951171875, best_prec 72.58000183105469
-Epoch 56, l0 norm : 50921, l1 norm : 20901.092457442566
-Epoch 56, min : 0.0, max : 0.5483169555664062
-This epoch duration :1502.240821838379
-Epoch 56, val-method base, validation accuracy 73.33999633789062, best_prec 73.33999633789062
-Epoch 57, l0 norm : 50921, l1 norm : 20909.210068122335
-Epoch 57, min : 0.0, max : 0.5485300421714783
-This epoch duration :1502.4280042648315
-Epoch 57, val-method base, validation accuracy 71.2699966430664, best_prec 73.33999633789062
-Epoch 58, l0 norm : 50921, l1 norm : 20917.10670960263
-Epoch 58, min : 0.0, max : 0.5480642914772034
-This epoch duration :1502.5810089111328
-Epoch 58, val-method base, validation accuracy 69.72999572753906, best_prec 73.33999633789062
-Epoch 59, l0 norm : 50921, l1 norm : 20924.454872718605
-Epoch 59, min : 0.0, max : 0.5464372038841248
-This epoch duration :1502.2334456443787
-Epoch 59, val-method base, validation accuracy 72.68000030517578, best_prec 73.33999633789062
-Epoch 60, l0 norm : 50921, l1 norm : 20932.26520381345
-Epoch 60, min : 0.0, max : 0.5474628210067749
-This epoch duration :1502.5646796226501
-Epoch 60, val-method base, validation accuracy 73.06999969482422, best_prec 73.33999633789062
-Epoch 61, l0 norm : 50921, l1 norm : 20940.079353897636
-Epoch 61, min : 0.0, max : 0.5467249155044556
-This epoch duration :1502.034279346466
-Epoch 61, val-method base, validation accuracy 71.23999786376953, best_prec 73.33999633789062
-Epoch 62, l0 norm : 50921, l1 norm : 20948.18652518442
-Epoch 62, min : 0.0, max : 0.5468984842300415
-This epoch duration :1502.1759173870087
-Epoch 62, val-method base, validation accuracy 69.47999572753906, best_prec 73.33999633789062
-Epoch 63, l0 norm : 50921, l1 norm : 20955.258079835407
-Epoch 63, min : 0.0, max : 0.5472354292869568
-This epoch duration :1499.245103597641
-Epoch 63, val-method base, validation accuracy 73.11000061035156, best_prec 73.33999633789062
-Epoch 64, l0 norm : 50921, l1 norm : 20962.820185481713
-Epoch 64, min : 0.0, max : 0.5471584796905518
-This epoch duration :1499.0495343208313
-Epoch 64, val-method base, validation accuracy 71.93000030517578, best_prec 73.33999633789062
-Epoch 65, l0 norm : 50921, l1 norm : 20970.467091371826
-Epoch 65, min : 0.0, max : 0.5468558073043823
-This epoch duration :1499.0966465473175
-Epoch 65, val-method base, validation accuracy 71.29999542236328, best_prec 73.33999633789062
-Epoch 66, l0 norm : 50921, l1 norm : 20977.09618977866
-Epoch 66, min : 0.0, max : 0.5469411611557007
-This epoch duration :1499.0977146625519
-Epoch 66, val-method base, validation accuracy 70.91999816894531, best_prec 73.33999633789062
-Epoch 67, l0 norm : 50921, l1 norm : 20984.42078402975
-Epoch 67, min : 0.0, max : 0.5467237830162048
-This epoch duration :1499.6329445838928
-Epoch 67, val-method base, validation accuracy 74.43000030517578, best_prec 74.43000030517578
-Epoch 68, l0 norm : 50921, l1 norm : 20991.54902866038
-Epoch 68, min : 0.0, max : 0.5468195676803589
-This epoch duration :1499.5748178958893
-Epoch 68, val-method base, validation accuracy 71.66999816894531, best_prec 74.43000030517578
-Epoch 69, l0 norm : 50921, l1 norm : 20998.54344632029
-Epoch 69, min : 0.0, max : 0.5466172695159912
-This epoch duration :1499.5699763298035
-Epoch 69, val-method base, validation accuracy 73.7699966430664, best_prec 74.43000030517578
-Epoch 70, l0 norm : 50921, l1 norm : 21005.63295651553
-Epoch 70, min : 0.0, max : 0.5467097759246826
-This epoch duration :1498.7645766735077
-Epoch 70, val-method base, validation accuracy 74.7699966430664, best_prec 74.7699966430664
-Epoch 71, l0 norm : 50921, l1 norm : 21012.446429494874
-Epoch 71, min : 0.0, max : 0.5472140312194824
-This epoch duration :1499.1036772727966
-Epoch 71, val-method base, validation accuracy 74.18000030517578, best_prec 74.7699966430664
-Epoch 72, l0 norm : 50921, l1 norm : 21019.042849776375
-Epoch 72, min : 0.0, max : 0.5479154586791992
-This epoch duration :1499.7585790157318
-Epoch 72, val-method base, validation accuracy 74.75, best_prec 74.7699966430664
-Epoch 73, l0 norm : 50921, l1 norm : 21026.813183536982
-Epoch 73, min : 0.0, max : 0.5476914644241333
-This epoch duration :1499.1267538070679
-Epoch 73, val-method base, validation accuracy 72.83999633789062, best_prec 74.7699966430664
-Epoch 74, l0 norm : 50921, l1 norm : 21033.05926702891
-Epoch 74, min : 0.0, max : 0.5476764440536499
-This epoch duration :1501.1397774219513
-Epoch 74, val-method base, validation accuracy 75.38999938964844, best_prec 75.38999938964844
-Epoch 75, l0 norm : 50921, l1 norm : 21039.716033199296
-Epoch 75, min : 0.0, max : 0.5480024218559265
-This epoch duration :1500.5294580459595
-Epoch 75, val-method base, validation accuracy 75.22999572753906, best_prec 75.38999938964844
-Epoch 76, l0 norm : 50921, l1 norm : 21045.388913366416
-Epoch 76, min : 0.0, max : 0.5484511852264404
-This epoch duration :1502.2002685070038
-Epoch 76, val-method base, validation accuracy 75.6199951171875, best_prec 75.6199951171875
-Epoch 77, l0 norm : 50921, l1 norm : 21051.00545283932
-Epoch 77, min : 0.0, max : 0.5491999387741089
-This epoch duration :1500.755429983139
-Epoch 77, val-method base, validation accuracy 75.5199966430664, best_prec 75.6199951171875
-Epoch 78, l0 norm : 50921, l1 norm : 21057.258782111167
-Epoch 78, min : 0.0, max : 0.5494053959846497
-This epoch duration :1501.574658870697
-Epoch 78, val-method base, validation accuracy 74.69999694824219, best_prec 75.6199951171875
-Epoch 79, l0 norm : 50921, l1 norm : 21062.644921260602
-Epoch 79, min : 0.0, max : 0.5493495464324951
-This epoch duration :1502.1556234359741
-Epoch 79, val-method base, validation accuracy 75.19999694824219, best_prec 75.6199951171875
-Epoch 80, l0 norm : 50921, l1 norm : 21068.71459717818
-Epoch 80, min : 0.0, max : 0.5484930872917175
-This epoch duration :1502.1516468524933
-Epoch 80, val-method base, validation accuracy 76.12999725341797, best_prec 76.12999725341797
-Epoch 81, l0 norm : 50921, l1 norm : 21074.32660812935
-Epoch 81, min : 0.0, max : 0.5488364696502686
-This epoch duration :1502.7035915851593
-Epoch 81, val-method base, validation accuracy 75.83999633789062, best_prec 76.12999725341797
-Epoch 82, l0 norm : 50921, l1 norm : 21079.3953501617
-Epoch 82, min : 0.0, max : 0.548798143863678
-This epoch duration :1502.7397689819336
-Epoch 82, val-method base, validation accuracy 75.0999984741211, best_prec 76.12999725341797
-Epoch 83, l0 norm : 50921, l1 norm : 21084.926164566637
-Epoch 83, min : 0.0, max : 0.5495520234107971
-This epoch duration :1501.7804424762726
-Epoch 83, val-method base, validation accuracy 76.43000030517578, best_prec 76.43000030517578
-Epoch 84, l0 norm : 50921, l1 norm : 21090.274881059897
-Epoch 84, min : 0.0, max : 0.5499156713485718
-This epoch duration :1502.1041910648346
-Epoch 84, val-method base, validation accuracy 76.45999908447266, best_prec 76.45999908447266
-Epoch 85, l0 norm : 50921, l1 norm : 21095.38213651471
-Epoch 85, min : 0.0, max : 0.549504816532135
-This epoch duration :1502.4974641799927
-Epoch 85, val-method base, validation accuracy 76.45999908447266, best_prec 76.45999908447266
-Epoch 86, l0 norm : 50921, l1 norm : 21099.99999945066
-Epoch 86, min : 0.0, max : 0.5506859421730042
-This epoch duration :1501.902755022049
-Epoch 86, val-method base, validation accuracy 76.73999786376953, best_prec 76.73999786376953
-Epoch 87, l0 norm : 50921, l1 norm : 21104.94029728894
-Epoch 87, min : 0.0, max : 0.5510120391845703
-This epoch duration :1502.4046936035156
-Epoch 87, val-method base, validation accuracy 76.97999572753906, best_prec 76.97999572753906
-Epoch 88, l0 norm : 50921, l1 norm : 21109.45416323304
-Epoch 88, min : 0.0, max : 0.5517297387123108
-This epoch duration :1501.6663999557495
-Epoch 88, val-method base, validation accuracy 76.9000015258789, best_prec 76.97999572753906
-Epoch 89, l0 norm : 50921, l1 norm : 21114.287412798476
-Epoch 89, min : 0.0, max : 0.55219566822052
-This epoch duration :1501.290193080902
-Epoch 89, val-method base, validation accuracy 76.97999572753906, best_prec 76.97999572753906
-Epoch 90, l0 norm : 50921, l1 norm : 21118.5867082205
-Epoch 90, min : 0.0, max : 0.5525408983230591
-This epoch duration :1501.5005388259888
-Epoch 90, val-method base, validation accuracy 76.58000183105469, best_prec 76.97999572753906
-Epoch 91, l0 norm : 50921, l1 norm : 21122.582194953524
-Epoch 91, min : 0.0, max : 0.5528130531311035
-This epoch duration :1502.2324702739716
-Epoch 91, val-method base, validation accuracy 77.3499984741211, best_prec 77.3499984741211
-Epoch 92, l0 norm : 50921, l1 norm : 21126.971632387405
-Epoch 92, min : 0.0, max : 0.5535158514976501
-This epoch duration :1502.2210445404053
-Epoch 92, val-method base, validation accuracy 77.19999694824219, best_prec 77.3499984741211
-Epoch 93, l0 norm : 50921, l1 norm : 21131.04626550582
-Epoch 93, min : 0.0, max : 0.5538122057914734
-This epoch duration :1503.543646812439
-Epoch 93, val-method base, validation accuracy 77.05999755859375, best_prec 77.3499984741211
-Epoch 94, l0 norm : 50921, l1 norm : 21135.35226287452
-Epoch 94, min : 0.0, max : 0.5541605949401855
-This epoch duration :1502.4318132400513
-Epoch 94, val-method base, validation accuracy 77.22000122070312, best_prec 77.3499984741211
-Epoch 95, l0 norm : 50921, l1 norm : 21138.930546896823
-Epoch 95, min : 0.0, max : 0.5545442700386047
-This epoch duration :1502.17152094841
-Epoch 95, val-method base, validation accuracy 77.16999816894531, best_prec 77.3499984741211
-Epoch 96, l0 norm : 50921, l1 norm : 21142.594131603197
-Epoch 96, min : 0.0, max : 0.5548698306083679
-This epoch duration :1502.2604064941406
-Epoch 96, val-method base, validation accuracy 77.4000015258789, best_prec 77.4000015258789
-Epoch 97, l0 norm : 50921, l1 norm : 21146.135120999446
-Epoch 97, min : 0.0, max : 0.5552379488945007
-This epoch duration :1501.9524166584015
-Epoch 97, val-method base, validation accuracy 76.8499984741211, best_prec 77.4000015258789
-Epoch 98, l0 norm : 50921, l1 norm : 21149.20372475086
-Epoch 98, min : 0.0, max : 0.5558507442474365
-This epoch duration :1428.7046761512756
-Epoch 98, val-method base, validation accuracy 77.22999572753906, best_prec 77.4000015258789
-Epoch 99, l0 norm : 50921, l1 norm : 21152.64984238785
-Epoch 99, min : 0.0, max : 0.5565904378890991
-This epoch duration :1162.3561701774597
-Epoch 99, val-method base, validation accuracy 77.33999633789062, best_prec 77.4000015258789
+Namespace(configs='configs/FASHION_MNIST/pen_bip_1.yml', result_dir='./trained_models', exp_name='fm_m_1', exp_mode='prune', arch='fmnist_model', num_classes=10, layer_type='unstructured', k=None, lambd=0.9999, alpha=1.0, fw_momentum=0.9, scaled_score_init=True, scale_rand_init=False, freeze_bn=False, source_net='trained_models/FMNIST_fmnist_model/pretrain/latest_exp/checkpoint/model_best.pth.tar', scores_init_type=None, dataset='FashionMNIST', batch_size=128, num_workers=2, test_batch_size=128, normalize=True, data_dir='./data', image_dim=32, trainer='penalized_bilevel_1', epochs=100, optimizer='sgd', wd=0.0001, mask_lr=0.1, lr=0.1, mask_lr_schedule='step', lr_schedule='cosine', momentum=0.9, warmup_epochs=0, warmup_lr=0.1, save_dense=False, evaluate=False, val_method='base', resume='', seed=1234, print_freq=100, lr2=0.0001, accelerate=False)
+=> loading source model from 'trained_models/FMNIST_fmnist_model/pretrain/latest_exp/checkpoint/model_best.pth.tar'
+=> loaded checkpoint 'trained_models/FMNIST_fmnist_model/pretrain/latest_exp/checkpoint/model_best.pth.tar'
+Epoch 0, l0 norm : 48231, l1 norm : 4443.832382202148
+Epoch 0, min : 0.0, max : 0.712325930595398
+This epoch duration :95.68182229995728
+Epoch 0, val-method base, validation accuracy 86.94999694824219, best_prec 86.94999694824219
+Epoch 1, l0 norm : 48307, l1 norm : 4315.052444458008
+Epoch 1, min : 0.0, max : 0.7149738669395447
+This epoch duration :205.8320746421814
+Epoch 1, val-method base, validation accuracy 87.97999572753906, best_prec 87.97999572753906
+Epoch 2, l0 norm : 48357, l1 norm : 4251.093795776367
+Epoch 2, min : 0.0, max : 0.7131972908973694
+This epoch duration :207.606036901474
+Epoch 2, val-method base, validation accuracy 88.27999877929688, best_prec 88.27999877929688
+Epoch 3, l0 norm : 48379, l1 norm : 4198.26025390625
+Epoch 3, min : 0.0, max : 0.709568977355957
+This epoch duration :207.55396032333374
+Epoch 3, val-method base, validation accuracy 88.95999908447266, best_prec 88.95999908447266
+Epoch 4, l0 norm : 48392, l1 norm : 4168.93244934082
+Epoch 4, min : 0.0, max : 0.7315288186073303
+This epoch duration :207.9034550189972
+Epoch 4, val-method base, validation accuracy 88.72000122070312, best_prec 88.95999908447266
+Epoch 5, l0 norm : 48404, l1 norm : 4146.8348388671875
+Epoch 5, min : 0.0, max : 0.7306676506996155
+This epoch duration :207.80600500106812
+Epoch 5, val-method base, validation accuracy 89.13999938964844, best_prec 89.13999938964844
+Epoch 6, l0 norm : 48410, l1 norm : 4133.843490600586
+Epoch 6, min : 0.0, max : 0.7330871224403381
+This epoch duration :208.22595286369324
+Epoch 6, val-method base, validation accuracy 89.22000122070312, best_prec 89.22000122070312
+Epoch 7, l0 norm : 48422, l1 norm : 4126.857803344727
+Epoch 7, min : 0.0, max : 0.7341307997703552
+This epoch duration :207.20535159111023
+Epoch 7, val-method base, validation accuracy 88.5, best_prec 89.22000122070312
+Epoch 8, l0 norm : 48426, l1 norm : 4121.623321533203
+Epoch 8, min : 0.0, max : 0.733788788318634
+This epoch duration :208.31885504722595
+Epoch 8, val-method base, validation accuracy 89.36000061035156, best_prec 89.36000061035156
+Epoch 9, l0 norm : 48432, l1 norm : 4120.842575073242
+Epoch 9, min : 0.0, max : 0.7356088161468506
+This epoch duration :207.86676383018494
+Epoch 9, val-method base, validation accuracy 89.97000122070312, best_prec 89.97000122070312
+Epoch 10, l0 norm : 48436, l1 norm : 4119.28923034668
+Epoch 10, min : 0.0, max : 0.7313001155853271
+This epoch duration :208.6228380203247
+Epoch 10, val-method base, validation accuracy 89.45999908447266, best_prec 89.97000122070312
+Epoch 11, l0 norm : 48447, l1 norm : 4123.615127563477
+Epoch 11, min : 0.0, max : 0.7344356775283813
+This epoch duration :207.34756302833557
+Epoch 11, val-method base, validation accuracy 89.8699951171875, best_prec 89.97000122070312
+Epoch 12, l0 norm : 48451, l1 norm : 4125.682083129883
+Epoch 12, min : 0.0, max : 0.7364802956581116
+This epoch duration :206.90140199661255
+Epoch 12, val-method base, validation accuracy 89.57999420166016, best_prec 89.97000122070312
+Epoch 13, l0 norm : 48456, l1 norm : 4132.4559326171875
+Epoch 13, min : 0.0, max : 0.7349525094032288
+This epoch duration :205.3178687095642
+Epoch 13, val-method base, validation accuracy 90.04999542236328, best_prec 90.04999542236328
+Epoch 14, l0 norm : 48458, l1 norm : 4137.91389465332
+Epoch 14, min : 0.0, max : 0.7341252565383911
+This epoch duration :205.48538422584534
+Epoch 14, val-method base, validation accuracy 89.02999877929688, best_prec 90.04999542236328
+Epoch 15, l0 norm : 48460, l1 norm : 4145.761413574219
+Epoch 15, min : 0.0, max : 0.7287713885307312
+This epoch duration :205.54832530021667
+Epoch 15, val-method base, validation accuracy 89.72000122070312, best_prec 90.04999542236328
+Epoch 16, l0 norm : 48462, l1 norm : 4152.0823974609375
+Epoch 16, min : 0.0, max : 0.7280147075653076
+This epoch duration :205.64744758605957
+Epoch 16, val-method base, validation accuracy 90.04999542236328, best_prec 90.04999542236328
+Epoch 17, l0 norm : 48464, l1 norm : 4158.739105224609
+Epoch 17, min : 0.0, max : 0.7292616963386536
+This epoch duration :205.4607231616974
+Epoch 17, val-method base, validation accuracy 90.0999984741211, best_prec 90.0999984741211
+Epoch 18, l0 norm : 48466, l1 norm : 4164.664138793945
+Epoch 18, min : 0.0, max : 0.7305970191955566
+This epoch duration :205.3414318561554
+Epoch 18, val-method base, validation accuracy 89.48999786376953, best_prec 90.0999984741211
+Epoch 19, l0 norm : 48466, l1 norm : 4171.333770751953
+Epoch 19, min : 0.0, max : 0.7235889434814453
+This epoch duration :206.20289063453674
+Epoch 19, val-method base, validation accuracy 89.97999572753906, best_prec 90.0999984741211
+Epoch 20, l0 norm : 48466, l1 norm : 4177.595596313477
+Epoch 20, min : 0.0, max : 0.7206764817237854
+This epoch duration :205.47736048698425
+Epoch 20, val-method base, validation accuracy 90.25, best_prec 90.25
+Epoch 21, l0 norm : 48468, l1 norm : 4184.437042236328
+Epoch 21, min : 0.0, max : 0.7175659537315369
+This epoch duration :205.13164734840393
+Epoch 21, val-method base, validation accuracy 90.36000061035156, best_prec 90.36000061035156
+Epoch 22, l0 norm : 48468, l1 norm : 4190.966857910156
+Epoch 22, min : 0.0, max : 0.7176423668861389
+This epoch duration :205.67387008666992
+Epoch 22, val-method base, validation accuracy 89.86000061035156, best_prec 90.36000061035156
+Epoch 23, l0 norm : 48468, l1 norm : 4196.923034667969
+Epoch 23, min : 0.0, max : 0.7202792763710022
+This epoch duration :209.34350728988647
+Epoch 23, val-method base, validation accuracy 90.0199966430664, best_prec 90.36000061035156
+Epoch 24, l0 norm : 48469, l1 norm : 4203.333038330078
+Epoch 24, min : 0.0, max : 0.7206323742866516
+This epoch duration :209.78416752815247
+Epoch 24, val-method base, validation accuracy 90.15999603271484, best_prec 90.36000061035156
+Epoch 25, l0 norm : 48469, l1 norm : 4208.788314819336
+Epoch 25, min : 0.0, max : 0.7212345004081726
+This epoch duration :208.46265411376953
+Epoch 25, val-method base, validation accuracy 89.54999542236328, best_prec 90.36000061035156
+Epoch 26, l0 norm : 48469, l1 norm : 4214.935043334961
+Epoch 26, min : 0.0, max : 0.72067791223526
+This epoch duration :209.72406244277954
+Epoch 26, val-method base, validation accuracy 89.29999542236328, best_prec 90.36000061035156
+Epoch 27, l0 norm : 48469, l1 norm : 4220.137664794922
+Epoch 27, min : 0.0, max : 0.7196424007415771
+This epoch duration :209.55779433250427
+Epoch 27, val-method base, validation accuracy 90.04999542236328, best_prec 90.36000061035156
+Epoch 28, l0 norm : 48469, l1 norm : 4225.726898193359
+Epoch 28, min : 0.0, max : 0.7202959656715393
+This epoch duration :210.1218376159668
+Epoch 28, val-method base, validation accuracy 90.0199966430664, best_prec 90.36000061035156
+Epoch 29, l0 norm : 48470, l1 norm : 4231.311737060547
+Epoch 29, min : 0.0, max : 0.7208889722824097
+This epoch duration :209.8555772304535
+Epoch 29, val-method base, validation accuracy 89.70999908447266, best_prec 90.36000061035156
+Epoch 30, l0 norm : 48470, l1 norm : 4236.863174438477
+Epoch 30, min : 0.0, max : 0.7205785512924194
+This epoch duration :209.73357510566711
+Epoch 30, val-method base, validation accuracy 90.29000091552734, best_prec 90.36000061035156
+Epoch 31, l0 norm : 48470, l1 norm : 4242.189758300781
+Epoch 31, min : 0.0, max : 0.7190227508544922
+This epoch duration :209.11027193069458
+Epoch 31, val-method base, validation accuracy 89.98999786376953, best_prec 90.36000061035156
+Epoch 32, l0 norm : 48470, l1 norm : 4248.271240234375
+Epoch 32, min : 0.0, max : 0.7169894576072693
+This epoch duration :208.19313836097717
+Epoch 32, val-method base, validation accuracy 90.19999694824219, best_prec 90.36000061035156
+Epoch 33, l0 norm : 48470, l1 norm : 4253.261444091797
+Epoch 33, min : 0.0, max : 0.7163369059562683
+This epoch duration :209.88779520988464
+Epoch 33, val-method base, validation accuracy 90.25, best_prec 90.36000061035156
+Epoch 34, l0 norm : 48470, l1 norm : 4259.261444091797
+Epoch 34, min : 0.0, max : 0.7165854573249817
+This epoch duration :209.6375913619995
+Epoch 34, val-method base, validation accuracy 89.8499984741211, best_prec 90.36000061035156
+Epoch 35, l0 norm : 48470, l1 norm : 4264.148361206055
+Epoch 35, min : 0.0, max : 0.7176318168640137
+This epoch duration :207.34641194343567
+Epoch 35, val-method base, validation accuracy 90.40999603271484, best_prec 90.40999603271484
+Epoch 36, l0 norm : 48470, l1 norm : 4269.084564208984
+Epoch 36, min : 0.0, max : 0.717105507850647
+This epoch duration :205.73431825637817
+Epoch 36, val-method base, validation accuracy 90.41999816894531, best_prec 90.41999816894531
+Epoch 37, l0 norm : 48470, l1 norm : 4274.399597167969
+Epoch 37, min : 0.0, max : 0.7156273722648621
+This epoch duration :205.19850158691406
+Epoch 37, val-method base, validation accuracy 90.15999603271484, best_prec 90.41999816894531
+Epoch 38, l0 norm : 48470, l1 norm : 4279.9095458984375
+Epoch 38, min : 0.0, max : 0.7170596122741699
+This epoch duration :205.64078187942505
+Epoch 38, val-method base, validation accuracy 90.50999450683594, best_prec 90.50999450683594
+Epoch 39, l0 norm : 48470, l1 norm : 4285.20133972168
+Epoch 39, min : 0.0, max : 0.7171430587768555
+This epoch duration :205.94209623336792
+Epoch 39, val-method base, validation accuracy 90.32999420166016, best_prec 90.50999450683594
+Epoch 40, l0 norm : 48470, l1 norm : 4289.52978515625
+Epoch 40, min : 0.0, max : 0.716266930103302
+This epoch duration :205.39128184318542
+Epoch 40, val-method base, validation accuracy 90.3699951171875, best_prec 90.50999450683594
+Epoch 41, l0 norm : 48470, l1 norm : 4294.160064697266
+Epoch 41, min : 0.0, max : 0.7158675789833069
+This epoch duration :205.72559094429016
+Epoch 41, val-method base, validation accuracy 90.41999816894531, best_prec 90.50999450683594
+Epoch 42, l0 norm : 48470, l1 norm : 4298.703170776367
+Epoch 42, min : 0.0, max : 0.714332103729248
+This epoch duration :208.32822394371033
+Epoch 42, val-method base, validation accuracy 90.3499984741211, best_prec 90.50999450683594
+Epoch 43, l0 norm : 48471, l1 norm : 4304.135772705078
+Epoch 43, min : 0.0, max : 0.7146251201629639
+This epoch duration :208.37985610961914
+Epoch 43, val-method base, validation accuracy 90.50999450683594, best_prec 90.50999450683594
+Epoch 44, l0 norm : 48471, l1 norm : 4308.06184387207
+Epoch 44, min : 0.0, max : 0.7130109667778015
+This epoch duration :209.6797535419464
+Epoch 44, val-method base, validation accuracy 90.41999816894531, best_prec 90.50999450683594
+Epoch 45, l0 norm : 48471, l1 norm : 4312.421417236328
+Epoch 45, min : 0.0, max : 0.7144321203231812
+This epoch duration :209.11053729057312
+Epoch 45, val-method base, validation accuracy 89.90999603271484, best_prec 90.50999450683594
+Epoch 46, l0 norm : 48471, l1 norm : 4317.1143798828125
+Epoch 46, min : 0.0, max : 0.7141604423522949
+This epoch duration :208.1678991317749
+Epoch 46, val-method base, validation accuracy 90.52999877929688, best_prec 90.52999877929688
+Epoch 47, l0 norm : 48471, l1 norm : 4321.406890869141
+Epoch 47, min : 0.0, max : 0.7135549783706665
+This epoch duration :209.4050440788269
+Epoch 47, val-method base, validation accuracy 90.36000061035156, best_prec 90.52999877929688
+Epoch 48, l0 norm : 48471, l1 norm : 4325.828414916992
+Epoch 48, min : 0.0, max : 0.7134110927581787
+This epoch duration :209.3987374305725
+Epoch 48, val-method base, validation accuracy 90.43999481201172, best_prec 90.52999877929688
+Epoch 49, l0 norm : 48471, l1 norm : 4330.069488525391
+Epoch 49, min : 0.0, max : 0.7119351625442505
+This epoch duration :209.80717492103577
+Epoch 49, val-method base, validation accuracy 90.30999755859375, best_prec 90.52999877929688
+Epoch 50, l0 norm : 48471, l1 norm : 4333.819580078125
+Epoch 50, min : 0.0, max : 0.7125089168548584
+This epoch duration :208.92419290542603
+Epoch 50, val-method base, validation accuracy 90.58999633789062, best_prec 90.58999633789062
+Epoch 51, l0 norm : 48471, l1 norm : 4337.903015136719
+Epoch 51, min : 0.0, max : 0.711359441280365
+This epoch duration :210.2001974582672
+Epoch 51, val-method base, validation accuracy 90.06999969482422, best_prec 90.58999633789062
+Epoch 52, l0 norm : 48471, l1 norm : 4341.369323730469
+Epoch 52, min : 0.0, max : 0.7105926275253296
+This epoch duration :208.3738043308258
+Epoch 52, val-method base, validation accuracy 90.20999908447266, best_prec 90.58999633789062
+Epoch 53, l0 norm : 48471, l1 norm : 4345.293487548828
+Epoch 53, min : 0.0, max : 0.710650622844696
+This epoch duration :209.39716577529907
+Epoch 53, val-method base, validation accuracy 90.63999938964844, best_prec 90.63999938964844
+Epoch 54, l0 norm : 48471, l1 norm : 4348.794006347656
+Epoch 54, min : 0.0, max : 0.7094083428382874
+This epoch duration :209.96362781524658
+Epoch 54, val-method base, validation accuracy 90.44999694824219, best_prec 90.63999938964844
+Epoch 55, l0 norm : 48471, l1 norm : 4352.406188964844
+Epoch 55, min : 0.0, max : 0.7087514400482178
+This epoch duration :206.98733067512512
+Epoch 55, val-method base, validation accuracy 90.1500015258789, best_prec 90.63999938964844
+Epoch 56, l0 norm : 48471, l1 norm : 4356.005813598633
+Epoch 56, min : 0.0, max : 0.7087982892990112
+This epoch duration :204.99641251564026
+Epoch 56, val-method base, validation accuracy 90.61000061035156, best_prec 90.63999938964844
+Epoch 57, l0 norm : 48471, l1 norm : 4359.202209472656
+Epoch 57, min : 0.0, max : 0.7088378667831421
+This epoch duration :205.3001651763916
+Epoch 57, val-method base, validation accuracy 90.52999877929688, best_prec 90.63999938964844
+Epoch 58, l0 norm : 48471, l1 norm : 4362.597717285156
+Epoch 58, min : 0.0, max : 0.7077306509017944
+This epoch duration :205.69124245643616
+Epoch 58, val-method base, validation accuracy 90.66999816894531, best_prec 90.66999816894531
+Epoch 59, l0 norm : 48471, l1 norm : 4366.031600952148
+Epoch 59, min : 0.0, max : 0.7061828374862671
+This epoch duration :205.50667929649353
+Epoch 59, val-method base, validation accuracy 90.37999725341797, best_prec 90.66999816894531
+Epoch 60, l0 norm : 48471, l1 norm : 4369.310638427734
+Epoch 60, min : 0.0, max : 0.7052645683288574
+This epoch duration :205.4369294643402
+Epoch 60, val-method base, validation accuracy 90.54999542236328, best_prec 90.66999816894531
+Epoch 61, l0 norm : 48471, l1 norm : 4372.70768737793
+Epoch 61, min : 0.0, max : 0.7039796710014343
+This epoch duration :205.51147317886353
+Epoch 61, val-method base, validation accuracy 90.45999908447266, best_prec 90.66999816894531
+Epoch 62, l0 norm : 48471, l1 norm : 4375.932357788086
+Epoch 62, min : 0.0, max : 0.7029608488082886
+This epoch duration :205.07016944885254
+Epoch 62, val-method base, validation accuracy 90.47999572753906, best_prec 90.66999816894531
+Epoch 63, l0 norm : 48471, l1 norm : 4378.724472045898
+Epoch 63, min : 0.0, max : 0.70197993516922
+This epoch duration :205.01617193222046
+Epoch 63, val-method base, validation accuracy 90.44999694824219, best_prec 90.66999816894531
+Epoch 64, l0 norm : 48471, l1 norm : 4381.559600830078
+Epoch 64, min : 0.0, max : 0.7002718448638916
+This epoch duration :205.65398502349854
+Epoch 64, val-method base, validation accuracy 90.52999877929688, best_prec 90.66999816894531
+Epoch 65, l0 norm : 48471, l1 norm : 4383.947555541992
+Epoch 65, min : 0.0, max : 0.6995445489883423
+This epoch duration :205.3606560230255
+Epoch 65, val-method base, validation accuracy 90.72999572753906, best_prec 90.72999572753906
+Epoch 66, l0 norm : 48471, l1 norm : 4386.609756469727
+Epoch 66, min : 0.0, max : 0.698271632194519
+This epoch duration :205.55121541023254
+Epoch 66, val-method base, validation accuracy 90.61000061035156, best_prec 90.72999572753906
+Epoch 67, l0 norm : 48471, l1 norm : 4389.104385375977
+Epoch 67, min : 0.0, max : 0.6976862549781799
+This epoch duration :205.41958594322205
+Epoch 67, val-method base, validation accuracy 90.47999572753906, best_prec 90.72999572753906
+Epoch 68, l0 norm : 48471, l1 norm : 4391.70703125
+Epoch 68, min : 0.0, max : 0.69638991355896
+This epoch duration :206.02859354019165
+Epoch 68, val-method base, validation accuracy 90.41999816894531, best_prec 90.72999572753906
+Epoch 69, l0 norm : 48471, l1 norm : 4394.07795715332
+Epoch 69, min : 0.0, max : 0.6941152215003967
+This epoch duration :205.48660588264465
+Epoch 69, val-method base, validation accuracy 90.6199951171875, best_prec 90.72999572753906
+Epoch 70, l0 norm : 48471, l1 norm : 4396.448577880859
+Epoch 70, min : 0.0, max : 0.6934869885444641
+This epoch duration :207.1012945175171
+Epoch 70, val-method base, validation accuracy 90.40999603271484, best_prec 90.72999572753906
+Epoch 71, l0 norm : 48471, l1 norm : 4398.637145996094
+Epoch 71, min : 0.0, max : 0.6927129030227661
+This epoch duration :209.46408605575562
+Epoch 71, val-method base, validation accuracy 90.63999938964844, best_prec 90.72999572753906
+Epoch 72, l0 norm : 48471, l1 norm : 4400.868576049805
+Epoch 72, min : 0.0, max : 0.6920225024223328
+This epoch duration :209.34075045585632
+Epoch 72, val-method base, validation accuracy 90.56999969482422, best_prec 90.72999572753906
+Epoch 73, l0 norm : 48471, l1 norm : 4403.227676391602
+Epoch 73, min : 0.0, max : 0.6915919184684753
+This epoch duration :208.81641268730164
+Epoch 73, val-method base, validation accuracy 90.55999755859375, best_prec 90.72999572753906
+Epoch 74, l0 norm : 48471, l1 norm : 4405.37272644043
+Epoch 74, min : 0.0, max : 0.6917345523834229
+This epoch duration :204.8999376296997
+Epoch 74, val-method base, validation accuracy 90.95999908447266, best_prec 90.95999908447266
+Epoch 75, l0 norm : 48471, l1 norm : 4407.342666625977
+Epoch 75, min : 0.0, max : 0.6900352835655212
+This epoch duration :205.74463534355164
+Epoch 75, val-method base, validation accuracy 90.56999969482422, best_prec 90.95999908447266
+Epoch 76, l0 norm : 48471, l1 norm : 4409.329727172852
+Epoch 76, min : 0.0, max : 0.6896129250526428
+This epoch duration :208.0093343257904
+Epoch 76, val-method base, validation accuracy 90.55999755859375, best_prec 90.95999908447266
+Epoch 77, l0 norm : 48471, l1 norm : 4411.27294921875
+Epoch 77, min : 0.0, max : 0.6888321042060852
+This epoch duration :207.83718299865723
+Epoch 77, val-method base, validation accuracy 90.56999969482422, best_prec 90.95999908447266
+Epoch 78, l0 norm : 48471, l1 norm : 4412.9412841796875
+Epoch 78, min : 0.0, max : 0.6878612637519836
+This epoch duration :209.45320081710815
+Epoch 78, val-method base, validation accuracy 90.5199966430664, best_prec 90.95999908447266
+Epoch 79, l0 norm : 48471, l1 norm : 4414.678634643555
+Epoch 79, min : 0.0, max : 0.6868724226951599
+This epoch duration :206.90504932403564
+Epoch 79, val-method base, validation accuracy 90.66999816894531, best_prec 90.95999908447266
+Epoch 80, l0 norm : 48471, l1 norm : 4416.118576049805
+Epoch 80, min : 0.0, max : 0.6861847639083862
+This epoch duration :205.0965027809143
+Epoch 80, val-method base, validation accuracy 90.68999481201172, best_prec 90.95999908447266
+Epoch 81, l0 norm : 48471, l1 norm : 4417.640777587891
+Epoch 81, min : 0.0, max : 0.6854215264320374
+This epoch duration :207.06297373771667
+Epoch 81, val-method base, validation accuracy 90.69999694824219, best_prec 90.95999908447266
+Epoch 82, l0 norm : 48471, l1 norm : 4419.27522277832
+Epoch 82, min : 0.0, max : 0.6849398612976074
+This epoch duration :209.51671481132507
+Epoch 82, val-method base, validation accuracy 90.68000030517578, best_prec 90.95999908447266
+Epoch 83, l0 norm : 48471, l1 norm : 4420.593444824219
+Epoch 83, min : 0.0, max : 0.6847221851348877
+This epoch duration :209.48769688606262
+Epoch 83, val-method base, validation accuracy 90.62999725341797, best_prec 90.95999908447266
+Epoch 84, l0 norm : 48471, l1 norm : 4421.978698730469
+Epoch 84, min : 0.0, max : 0.6844672560691833
+This epoch duration :206.41438913345337
+Epoch 84, val-method base, validation accuracy 90.55999755859375, best_prec 90.95999908447266
+Epoch 85, l0 norm : 48471, l1 norm : 4423.287551879883
+Epoch 85, min : 0.0, max : 0.6835345029830933
+This epoch duration :206.71785306930542
+Epoch 85, val-method base, validation accuracy 90.61000061035156, best_prec 90.95999908447266
+Epoch 86, l0 norm : 48471, l1 norm : 4424.602600097656
+Epoch 86, min : 0.0, max : 0.6829233765602112
+This epoch duration :209.51311612129211
+Epoch 86, val-method base, validation accuracy 90.57999420166016, best_prec 90.95999908447266
+Epoch 87, l0 norm : 48471, l1 norm : 4425.740310668945
+Epoch 87, min : 0.0, max : 0.6814146041870117
+This epoch duration :210.04915308952332
+Epoch 87, val-method base, validation accuracy 90.5999984741211, best_prec 90.95999908447266
+Epoch 88, l0 norm : 48471, l1 norm : 4426.821716308594
+Epoch 88, min : 0.0, max : 0.6799554824829102
+This epoch duration :208.11853408813477
+Epoch 88, val-method base, validation accuracy 90.55999755859375, best_prec 90.95999908447266
+Epoch 89, l0 norm : 48471, l1 norm : 4427.83024597168
+Epoch 89, min : 0.0, max : 0.6796743273735046
+This epoch duration :209.1774938106537
+Epoch 89, val-method base, validation accuracy 90.62999725341797, best_prec 90.95999908447266
+Epoch 90, l0 norm : 48471, l1 norm : 4428.923095703125
+Epoch 90, min : 0.0, max : 0.6792646646499634
+This epoch duration :209.42763662338257
+Epoch 90, val-method base, validation accuracy 90.5199966430664, best_prec 90.95999908447266
+Epoch 91, l0 norm : 48471, l1 norm : 4429.839935302734
+Epoch 91, min : 0.0, max : 0.6786442399024963
+This epoch duration :209.76047253608704
+Epoch 91, val-method base, validation accuracy 90.63999938964844, best_prec 90.95999908447266
+Epoch 92, l0 norm : 48471, l1 norm : 4430.731781005859
+Epoch 92, min : 0.0, max : 0.6779940724372864
+This epoch duration :209.5423126220703
+Epoch 92, val-method base, validation accuracy 90.55999755859375, best_prec 90.95999908447266
+Epoch 93, l0 norm : 48471, l1 norm : 4431.579498291016
+Epoch 93, min : 0.0, max : 0.6776803135871887
+This epoch duration :209.51931858062744
+Epoch 93, val-method base, validation accuracy 90.61000061035156, best_prec 90.95999908447266
+Epoch 94, l0 norm : 48471, l1 norm : 4432.430267333984
+Epoch 94, min : 0.0, max : 0.6771954894065857
+This epoch duration :209.46295046806335
+Epoch 94, val-method base, validation accuracy 90.54999542236328, best_prec 90.95999908447266
+Epoch 95, l0 norm : 48471, l1 norm : 4433.2403564453125
+Epoch 95, min : 0.0, max : 0.6765954494476318
+This epoch duration :208.3302617073059
+Epoch 95, val-method base, validation accuracy 90.48999786376953, best_prec 90.95999908447266
+Epoch 96, l0 norm : 48471, l1 norm : 4433.872085571289
+Epoch 96, min : 0.0, max : 0.6754069328308105
+This epoch duration :200.2227110862732
+Epoch 96, val-method base, validation accuracy 90.47999572753906, best_prec 90.95999908447266
+Epoch 97, l0 norm : 48471, l1 norm : 4434.543655395508
+Epoch 97, min : 0.0, max : 0.6756782531738281
+This epoch duration :195.4306104183197
+Epoch 97, val-method base, validation accuracy 90.47000122070312, best_prec 90.95999908447266
+Epoch 98, l0 norm : 48471, l1 norm : 4435.30192565918
+Epoch 98, min : 0.0, max : 0.6757269501686096
+This epoch duration :185.1923849582672
+Epoch 98, val-method base, validation accuracy 90.48999786376953, best_prec 90.95999908447266
+Epoch 99, l0 norm : 48471, l1 norm : 4435.968719482422
+Epoch 99, min : 0.0, max : 0.6757731437683105
+This epoch duration :165.27116346359253
+Epoch 99, val-method base, validation accuracy 90.47000122070312, best_prec 90.95999908447266
