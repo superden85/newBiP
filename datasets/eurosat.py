@@ -25,6 +25,11 @@ class EuroSAT:
         self.tr_test = transforms.Compose(self.tr_test)
 
     def data_loaders(self, **kwargs):
+        import urllib.request
+
+        # Disable SSL certificate verification (not recommended for production)
+        import ssl
+        ssl._create_default_https_context = ssl._create_unverified_context
         trainset = datasets.EuroSAT(
             root=os.path.join(self.args.data_dir, "eurosat"),
             transform=self.tr_train,
