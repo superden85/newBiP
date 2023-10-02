@@ -4,6 +4,7 @@ arch: "flowers102"
 exp_name: "Flowers102_ResNet"
 result_dir: "./trained_models"
 exp_mode: "pretrain"
+layers_type: "dense"
 normalize: True
 
 # ->->->->-> Train <-<-<-<-<-
