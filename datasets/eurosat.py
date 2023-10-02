@@ -25,12 +25,13 @@ class EuroSAT:
         self.tr_test = transforms.Compose(self.tr_test)
 
         help(EuroSAT)
+        help(EuroSAT.__init__)
 
     def data_loaders(self, **kwargs):
         trainset = EuroSAT(
+            root=os.path.join(self.args.data_dir, "eurosat"),
             transform=self.tr_train,
             download=True,
-            root=os.path.join(self.args.data_dir, "eurosat"),
         )
 
         valset = EuroSAT(
