@@ -600,6 +600,11 @@ def fgvca_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
     assert init_type == "kaiming_normal", "only supporting kaiming_normal init"
     model = FGVCAircraftModel(conv_layer, linear_layer, init_type, **kwargs)
     return model
+
+def flowers102_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
+    assert init_type == "kaiming_normal", "only supporting kaiming_normal init"
+    model = Flowers102_Model(conv_layer, linear_layer, init_type, **kwargs)
+    return model
     
 def mnist_model_large(conv_layer, linear_layer, init_type, **kwargs):
     assert init_type == "kaiming_normal", "only supporting kaiming_normal init"

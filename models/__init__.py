@@ -29,6 +29,7 @@ from models.basic import (
     eurosat_model,
     fer2013_model,
     fgvca_model,
+    flowers102_model,
     caltech101_model,
     mnist_model_large,
     cifar_model,
