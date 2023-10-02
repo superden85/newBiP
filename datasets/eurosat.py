@@ -24,7 +24,7 @@ class EuroSAT:
         self.tr_train = transforms.Compose(self.tr_train)
         self.tr_test = transforms.Compose(self.tr_test)
 
-        EuroSAT?
+        help(EuroSAT)
 
     def data_loaders(self, **kwargs):
         trainset = EuroSAT(
