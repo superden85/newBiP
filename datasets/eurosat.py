@@ -26,9 +26,9 @@ class EuroSAT:
 
     def data_loaders(self, **kwargs):
         trainset = EuroSAT(
-            root=os.path.join(self.args.data_dir, "eurosat"),
             transform=self.tr_train,
             download=True,
+            root=os.path.join(self.args.data_dir, "eurosat"),
         )
 
         valset = EuroSAT(
