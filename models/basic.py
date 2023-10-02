@@ -379,7 +379,7 @@ class FER2013Model(nn.Module):
         return self._forward_impl(x)
 
 class FGVC_Aircraft_Model(nn.Module):
-    def __init__(self, num_classes):
+    def __init__(self, conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
         super(FGVC_Aircraft_Model, self).__init__()
         self.conv1 = nn.Conv2d(3, 64, kernel_size=4, stride=2, padding=1)  # Input channels: 3 (RGB), Output channels: 64
         self.conv2 = nn.Conv2d(64, 128, kernel_size=4, stride=2, padding=1)  # Output channels: 128
