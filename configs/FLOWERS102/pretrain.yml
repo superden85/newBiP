@@ -1,0 +1,33 @@
+# config_flowers102.yaml
+
+arch: "flowers102"
+exp_name: "Flowers102_ResNet"
+result_dir: "./trained_models"
+exp_mode: "pretrain"
+normalize: True
+
+# ->->->->-> Train <-<-<-<-<-
+trainer: "base"
+epochs: 100
+optimizer: "sgd"
+lr: 0.01
+lr_schedule: "cosine"
+wd: 0.0001
+momentum: 0.9
+warmup_epochs: 0
+warmup_lr: 0.01
+
+# ->->->->-> Eval <-<-<-<-<-
+val_method: base
+
+# ->->->->-> Dataset <-<-<-<-<-
+dataset: Flowers102
+batch_size: 64
+test_batch_size: 64
+num_classes: 102
+image_dim: 224
+data_dir: "./data"
+
+# ->->->->-> Misc <-<-<-<-<-
+seed: 1234
+print_freq: 100

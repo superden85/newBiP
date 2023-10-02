@@ -13,5 +13,6 @@ from datasets.emnist import EMNIST
 from datasets.eurosat import EuroSAT
 from datasets.fer2013 import FER2013
 from datasets.fgvca import FGVCAircraft
+from datasets.flowers102 import Flowers102
 
 __all__ = ["CIFAR10", "CIFAR100", "ImageNet", "ImageNetOrigin", "TinyImageNet", "ImageNetH5"]
