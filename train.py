@@ -29,7 +29,8 @@ from utils.model import (
     scale_rand_init,
     current_model_pruned_fraction,
     initialize_constant,
-    initialize_sparse
+    initialize_sparse,
+    initialize_rand_init,
 )
 from utils.schedules import get_lr_policy, get_optimizer
 
@@ -185,6 +186,9 @@ def main():
             # If not used, a sparse net (without batch-norm) from scratch will not converge.
             # With batch-norm its not really necessary.
             scale_rand_init(model, args.k)
+    
+    if args.exp_mode == "pretrain":
+        initialize_rand_init(model)
     
     best_prec1 = 0
     start_epoch = 0

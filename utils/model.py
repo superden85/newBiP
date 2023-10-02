@@ -183,6 +183,12 @@ def scale_rand_init(model, k):
         if isinstance(m, (nn.Conv2d, nn.Linear)):
             m.weight.data = 1 / math.sqrt(k) * m.weight.data
 
+def initialize_rand_init(model):
+    for m in model.modules():
+        if isinstance(m, (nn.Conv2d, nn.Linear)):
+            nn.init.kaiming_uniform_(m.weight.data)
+            if m.bias is not None:
+                nn.init.constant_(m.bias.data, 0)
 
 def initialize_constant(model, value):
     print(
