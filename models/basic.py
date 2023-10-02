@@ -443,7 +443,7 @@ class Flowers102_Model(nn.Module):
         self.k = kwargs['k'] if 'k' in kwargs else None
         self.unstructured_pruning = kwargs['unstructured'] if 'unstructured' in kwargs else False
     
-    def forward(self, x):
+    def _forward_impl(self, x):
         if self.unstructured_pruning:
             score_list = []
             for (name, vec) in self.named_modules():
