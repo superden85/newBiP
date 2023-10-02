@@ -1,0 +1,34 @@
+# FER2013 Configuration
+
+arch: "cnn"  # You can specify your preferred architecture
+exp_name: "FER2013_experiment"
+result_dir: "./trained_models"
+exp_mode: "pretrain"
+layer_type: "dense"
+normalize: True
+
+# Training Parameters
+trainer: "base"
+epochs: 200
+optimizer: "sgd"
+lr: 0.01
+lr_schedule: "step_lr"
+wd: 0.0005
+momentum: 0.9
+warmup_epochs: 0
+warmup_lr: 0.01
+
+# Evaluation Parameters
+val_method: "base"
+
+# Dataset Parameters
+dataset: "FER2013"
+batch_size: 64
+test_batch_size: 64
+num_classes: 7  # FER2013 has 7 emotion classes
+image_dim: 48  # FER2013 image dimensions
+data_dir: "./data"
+
+# Miscellaneous
+seed: 1234
+print_freq: 100

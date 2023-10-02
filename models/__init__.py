@@ -27,6 +27,7 @@ from models.basic import (
     fmnist_model,
     emnist_model,
     eurosat_model,
+    fer2013_model,
     caltech101_model,
     mnist_model_large,
     cifar_model,
