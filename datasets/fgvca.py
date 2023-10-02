@@ -24,12 +24,12 @@ class FGVCAircraft:
             transforms.RandomHorizontalFlip(),
             transforms.RandomRotation(10),
             transforms.RandomCrop(224),
-            transforms.PILToTensor(),
+            #transforms.PILToTensor(),
         ])
 
         self.tr_test.extend([
             transforms.CenterCrop(224),
-            transforms.PILToTensor(),
+            #transforms.PILToTensor(),
         ])
 
         self.tr_train = transforms.Compose(self.tr_train)
