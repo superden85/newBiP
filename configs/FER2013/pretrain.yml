@@ -1,5 +1,4 @@
 # FER2013 Configuration
-
 arch: "cnn"  # You can specify your preferred architecture
 exp_name: "FER2013_experiment"
 result_dir: "./trained_models"

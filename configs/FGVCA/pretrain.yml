@@ -1,0 +1,33 @@
+arch: "resnet50"  # You can choose your desired architecture
+exp_name: "FGVC_Aircraft_ResNet50"
+result_dir: "./trained_models"
+exp_mode: "pretrain"
+layer_type: "dense"
+normalize: True
+
+# ->->->->-> Train <-<-<-<-<-
+trainer: "base"
+epochs: 100
+optimizer: "sgd"
+lr: 0.01
+lr_schedule: "cosine"
+wd: 0.0005
+momentum: 0.9
+warmup_epochs: 0
+warmup_lr: 0.01
+
+# ->->->->-> Eval <-<-<-<-<-
+val_method: base
+
+# ->->->->-> Dataset <-<-<-<-<-
+dataset: FGVC_Aircraft
+batch_size: 64
+test_batch_size: 64
+num_classes: 100
+image_dim: 224
+data_dir: "./data"
+download_data: True  # Set to True to download the dataset if not already downloaded
+
+# ->->->->-> Misc <-<-<-<-<-
+seed: 1234
+print_freq: 100
