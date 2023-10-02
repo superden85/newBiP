@@ -433,16 +433,24 @@ class FGVCAircraftModel(nn.Module):
 
 class Flowers102_Model(nn.Module):
     def __init__(self, conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
-        super(Flowers102_Model, self).__init__()
-        self.conv1 = conv_layer(3, 64, 3, stride=1, padding=1)  # Input channels: 3 (RGB), Output channels: 64
-        self.conv2 = conv_layer(64, 128, 3, stride=1, padding=1)  # Output channels: 128
-        self.fc1 = linear_layer(300)  # Increase the number of neurons in fc1 to 300
-        self.fc2 = linear_layer(300, 102)  # Adjust the output dimension to match the number of classes in Flowers-102
+         # Convolutional Layers
+        self.conv1 = conv_layer(3, 64, 3, stride=1, padding=1)
+        self.maxpool1 = nn.MaxPool2d(2, 2)  # Max-pooling layer
+        self.conv2 = conv_layer(64, 128, 3, stride=1, padding=1)
+        self.maxpool2 = nn.MaxPool2d(2, 2)  # Max-pooling layer
+        self.conv3 = conv_layer(128, 256, 3, stride=1, padding=1)
+        self.conv4 = conv_layer(256, 256, 3, stride=1, padding=1)
+        self.conv5 = conv_layer(256, 256, 3, stride=1, padding=1)
+
+        # Fully Connected Layers
+        self.fc1 = linear_layer(256 * 7 * 7, 1024)  # Reduced FC layer
+        self.fc2 = linear_layer(1024, 102)  # Output dimension for Caltech-101
 
         self.num_classes = kwargs['num_classes'] if 'num_classes' in kwargs else 102
         self.k = kwargs['k'] if 'k' in kwargs else None
         self.unstructured_pruning = kwargs['unstructured'] if 'unstructured' in kwargs else False
-    
+
+
     def _forward_impl(self, x):
         if self.unstructured_pruning:
             score_list = []
@@ -456,25 +464,39 @@ class Flowers102_Model(nn.Module):
 
             pointer = 0
             for (name, vec) in self.named_modules():
-                if hasattr(vec, "weight"):
-                    attr = getattr(vec, "weight")
-                    if attr is not None:
-                        numel = attr.numel()
-                        vec.w = attr * adj[pointer: pointer + numel].view_as(attr)
-                        pointer += numel
+                if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
+                    if hasattr(vec, "weight"):
+                        attr = getattr(vec, "weight")
+                        if attr is not None:
+                            numel = attr.numel()
+                            vec.w = attr * adj[pointer: pointer + numel].view_as(attr)
+                            pointer += numel
         else:
             pointer = 0
             for (name, vec) in self.named_modules():
-                if hasattr(vec, "weight"):
-                    attr = getattr(vec, "weight")
-                    if attr is not None:
-                        vec.w = attr
-                        pointer += attr.numel()
+                if not isinstance(vec, (nn.BatchNorm2d, nn.BatchNorm2d)):
+                    if hasattr(vec, "weight"):
+                        attr = getattr(vec, "weight")
+                        if attr is not None:
+                            vec.w = attr
+                            pointer += attr.numel()
+        
+        # Forward pass through convolutional layers
         x = self.conv1(x)
-        x = F.relu(x)
+        x = self.maxpool1(x)
         x = self.conv2(x)
+        x = self.maxpool2(x)
+        x = self.conv3(x)
         x = F.relu(x)
+        x = self.conv4(x)
+        x = F.relu(x)
+        x = self.conv5(x)
+        x = F.relu(x)
+
+        # Flatten the output
         x = Flatten()(x)
+
+        # Forward pass through fully connected layers
         x = self.fc1(x)
         x = F.relu(x)
         x = self.fc2(x)
