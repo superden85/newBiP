@@ -39,7 +39,6 @@ class FGVC_Aircraft:
         trainset = datasets.FGVC_Aircraft(
             root=os.path.join(self.args.data_dir, "FGVC_Aircraft"),
             split='train',
-            annotation_level='variant',
             transform=self.tr_train,
             download=True,
         )
@@ -47,7 +46,6 @@ class FGVC_Aircraft:
         valset = datasets.FGVC_Aircraft(
             root=os.path.join(self.args.data_dir, "FGVC_Aircraft"),
             split='val',
-            annotation_level='variant',
             transform=self.tr_test,  # Use test transform for validation set
             download=True if self.args.download_data else False,
         )
@@ -55,7 +53,6 @@ class FGVC_Aircraft:
         testset = datasets.FGVC_Aircraft(
             root=os.path.join(self.args.data_dir, "FGVC_Aircraft"),
             split='test',
-            annotation_level='variant',
             transform=self.tr_test,
             download=True,
         )
