@@ -28,13 +28,13 @@ class EuroSAT:
         trainset = EuroSAT(
             root=os.path.join(self.args.data_dir, "eurosat"),
             transform=self.tr_train,
-            download=True if self.args.download else False,
+            download=True
         )
 
         valset = EuroSAT(
             root=os.path.join(self.args.data_dir, "eurosat"),
             transform=self.tr_train,
-            download=True if self.args.download else False,
+            download=True
         )
 
         train_loader = DataLoader(
@@ -54,7 +54,7 @@ class EuroSAT:
         testset = EuroSAT(
             root=os.path.join(self.args.data_dir, "eurosat"),
             transform=self.tr_test,
-            download=True if self.args.download else False,
+            download=True
         )
         test_loader = DataLoader(
             testset, batch_size=self.args.test_batch_size, shuffle=False, **kwargs
