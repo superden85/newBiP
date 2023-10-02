@@ -3,6 +3,8 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 from torchvision import datasets, transforms
 
+import inspect
+
 class EMNIST:
     """
     EMNIST dataset.
@@ -22,6 +24,15 @@ class EMNIST:
 
         self.tr_train = transforms.Compose(self.tr_train)
         self.tr_test = transforms.Compose(self.tr_test)
+    
+        # Get the constructor (init) of the EuroSAT class
+        constructor = EMNIST.__init__
+
+        # Use the inspect module to get the argument names and default values
+        argspec = inspect.getfullargspec(constructor)
+
+        # Print the argument names and their default values
+        print("Arguments:", argspec.args)
 
     def data_loaders(self, **kwargs):
         trainset = datasets.EMNIST(
