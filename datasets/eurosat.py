@@ -4,6 +4,9 @@ from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
 from torchvision.datasets import EuroSAT
 
+import inspect
+
+
 class EuroSAT:
     """
     EuroSAT dataset.
@@ -24,8 +27,15 @@ class EuroSAT:
         self.tr_train = transforms.Compose(self.tr_train)
         self.tr_test = transforms.Compose(self.tr_test)
 
-        help(EuroSAT)
-        help(EuroSAT.__init__)
+        # Get the constructor (init) of the EuroSAT class
+        constructor = EuroSAT.__init__
+
+        # Use the inspect module to get the argument names and default values
+        argspec = inspect.getfullargspec(constructor)
+
+        # Print the argument names and their default values
+        print("Arguments:", argspec.args)
+        print("Defaults:", argspec.defaults)
 
     def data_loaders(self, **kwargs):
         trainset = EuroSAT(
