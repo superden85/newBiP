@@ -433,6 +433,7 @@ class FGVCAircraftModel(nn.Module):
 
 class Flowers102_Model(nn.Module):
     def __init__(self, conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
+        super(Flowers102_Model, self).__init__()
          # Convolutional Layers
         self.conv1 = conv_layer(3, 64, 3, stride=1, padding=1)
         self.maxpool1 = nn.MaxPool2d(2, 2)  # Max-pooling layer
