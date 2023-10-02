@@ -23,6 +23,8 @@ class FER2013:
         self.tr_train = transforms.Compose(self.tr_train)
         self.tr_test = transforms.Compose(self.tr_test)
 
+        help(datasets.FER2013)
+
     def data_loaders(self, **kwargs):
         trainset = datasets.FER2013(
             root=os.path.join(self.args.data_dir, "FER2013"),
