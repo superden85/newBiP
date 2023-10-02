@@ -378,9 +378,9 @@ class FER2013Model(nn.Module):
     def forward(self, x):
         return self._forward_impl(x)
 
-class FGVC_Aircraft_Model(nn.Module):
+class FGVCAircraftModel(nn.Module):
     def __init__(self, conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
-        super(FGVC_Aircraft_Model, self).__init__()
+        super(FGVCAircraftModel, self).__init__()
         self.conv1 = nn.Conv2d(3, 64, kernel_size=4, stride=2, padding=1)  # Input channels: 3 (RGB), Output channels: 64
         self.conv2 = nn.Conv2d(64, 128, kernel_size=4, stride=2, padding=1)  # Output channels: 128
         self.fc1 = nn.Linear(128 * 14 * 14, 300)  # Increase the number of neurons in fc1 to 300
@@ -545,7 +545,7 @@ def fer2013_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs
 
 def fgvca_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
     assert init_type == "kaiming_normal", "only supporting kaiming_normal init"
-    model = FGVC_Aircraft_Model(conv_layer, linear_layer, init_type, **kwargs)
+    model = FGVCAircraftModel(conv_layer, linear_layer, init_type, **kwargs)
     return model
     
 def mnist_model_large(conv_layer, linear_layer, init_type, **kwargs):

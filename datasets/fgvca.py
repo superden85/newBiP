@@ -3,7 +3,7 @@ import torch
 from torch.utils.data import DataLoader, Dataset
 from torchvision import datasets, transforms
 
-class FGVC_Aircraft:
+class FGVCAircraft:
     """
     FGVC Aircraft dataset.
     """
@@ -36,22 +36,22 @@ class FGVC_Aircraft:
         self.tr_test = transforms.Compose(self.tr_test)
 
     def data_loaders(self, **kwargs):
-        trainset = datasets.FGVC_Aircraft(
-            root=os.path.join(self.args.data_dir, "FGVC_Aircraft"),
+        trainset = datasets.FGVCAircraft(
+            root=os.path.join(self.args.data_dir, "FGVCAircraft"),
             split='train',
             transform=self.tr_train,
             download=True,
         )
 
-        valset = datasets.FGVC_Aircraft(
-            root=os.path.join(self.args.data_dir, "FGVC_Aircraft"),
+        valset = datasets.FGVCAircraft(
+            root=os.path.join(self.args.data_dir, "FGVCAircraft"),
             split='val',
             transform=self.tr_test,  # Use test transform for validation set
             download=True if self.args.download_data else False,
         )
 
-        testset = datasets.FGVC_Aircraft(
-            root=os.path.join(self.args.data_dir, "FGVC_Aircraft"),
+        testset = datasets.FGVCAircraft(
+            root=os.path.join(self.args.data_dir, "FGVCAircraft"),
             split='test',
             transform=self.tr_test,
             download=True,

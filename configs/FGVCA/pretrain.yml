@@ -1,5 +1,5 @@
 arch: "resnet50"  # You can choose your desired architecture
-exp_name: "FGVC_Aircraft_ResNet50"
+exp_name: "FGVCAircraftResNet50"
 result_dir: "./trained_models"
 exp_mode: "pretrain"
 layer_type: "dense"
@@ -20,7 +20,7 @@ warmup_lr: 0.01
 val_method: base
 
 # ->->->->-> Dataset <-<-<-<-<-
-dataset: FGVC_Aircraft
+dataset: FGVCAircraft
 batch_size: 64
 test_batch_size: 64
 num_classes: 100
