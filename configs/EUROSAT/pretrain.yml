@@ -1,0 +1,32 @@
+arch: "resnet50"
+exp_name: "EuroSAT_resnet50_Pretrain"
+result_dir: "./trained_models"
+exp_mode: "pretrain"
+layer_type: "dense"
+normalize: True
+
+# ->->->->-> Train <-<-<-<-<-
+trainer: "base"
+epochs: 200
+optimizer: "sgd"
+lr: 0.1
+lr_schedule: "cosine"
+wd: 0.0005
+momentum: 0.9
+warmup_epochs: 0
+warmup_lr: 0.1
+
+# ->->->->-> Eval <-<-<-<-<-
+val_method: base
+
+# ->->->->-> Dataset <-<-<-<-<-
+dataset: EuroSAT
+batch_size: 128
+test_batch_size: 128
+num_classes: 10  # EuroSAT dataset has 10 classes
+image_dim: 64  # EuroSAT images are 64x64 pixels
+data_dir: "./data"
+
+# ->->->->-> Misc <-<-<-<-<-
+seed: 1234
+print_freq: 100

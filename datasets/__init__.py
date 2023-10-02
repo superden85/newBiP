@@ -10,5 +10,6 @@ from datasets.fmnist import FashionMNIST
 from datasets.svhn import SVHN
 from datasets.caltech101 import Caltech101
 from datasets.emnist import EMNIST
+from datasets.eurosat import EuroSAT
 
 __all__ = ["CIFAR10", "CIFAR100", "ImageNet", "ImageNetOrigin", "TinyImageNet", "ImageNetH5"]

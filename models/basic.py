@@ -264,6 +264,19 @@ class EmnistModel(nn.Module):
     def forward(self, x):
         return self._forward_impl(x)
 
+class EuroSATModel(nn.Module):
+    def __init__(self, conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
+        super(EuroSATModel, self).__init__()
+        self.conv1 = conv_layer(3, 64, 4, stride=2, padding=1)  # Input channels: 3 (RGB), Output channels: 64
+        self.conv2 = conv_layer(64, 128, 4, stride=2, padding=1)  # Increase output channels to 128
+        self.fc1 = linear_layer(128 * 16 * 16, 300)  # Increase the number of neurons in fc1 to 300
+        self.fc2 = linear_layer(300, 10)  # Adjust the output dimension to match the number of classes in EuroSAT
+
+        self.num_classes = kwargs['num_classes'] if 'num_classes' in kwargs else 10
+        self.k = kwargs['k'] if 'k' in kwargs else None
+        self.unstructured_pruning = kwargs['unstructured'] if 'unstructured' in kwargs else False
+    
+
 class Caltech101Model(nn.Module):
 
     def __init__(self, conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
@@ -360,6 +373,11 @@ def fmnist_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs)
 def emnist_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
     assert init_type == "kaiming_normal", "only supporting kaiming_normal init"
     model = EmnistModel(conv_layer, linear_layer, init_type, **kwargs)
+    return model
+
+def eurosat_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
+    assert init_type == "kaiming_normal", "only supporting kaiming_normal init"
+    model = EuroSATModel(conv_layer, linear_layer, init_type, **kwargs)
     return model
 
 def caltech101_model(conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
