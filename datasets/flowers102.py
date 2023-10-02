@@ -46,7 +46,7 @@ class Flowers102:
             root=os.path.join(self.args.data_dir, "Flowers102"),
             split='val',
             transform=self.tr_test,  # Use test transform for validation set
-            download=True if self.args.download_data else False,
+            download=True,
         )
 
         testset = datasets.Flowers102(
