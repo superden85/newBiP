@@ -434,9 +434,9 @@ class FGVCAircraftModel(nn.Module):
 class Flowers102_Model(nn.Module):
     def __init__(self, conv_layer, linear_layer, init_type='kaiming_normal', **kwargs):
         super(Flowers102_Model, self).__init__()
-        self.conv1 = conv_layer(3, 64, 4, stride=2, padding=1)  # Increase output channels to 64
-        self.conv2 = conv_layer(64, 128, 4, stride=2, padding=1)  # Increase output channels to 128
-        self.fc1 = linear_layer(128 * 7 * 7, 300)  # Increase the number of neurons in fc1 to 300
+        self.conv1 = conv_layer(3, 64, 3, stride=1, padding=1)  # Input channels: 3 (RGB), Output channels: 64
+        self.conv2 = conv_layer(64, 128, 3, stride=1, padding=1)  # Output channels: 128
+        self.fc1 = linear_layer(300)  # Increase the number of neurons in fc1 to 300
         self.fc2 = linear_layer(300, 102)  # Adjust the output dimension to match the number of classes in Flowers-102
 
         self.num_classes = kwargs['num_classes'] if 'num_classes' in kwargs else 102
