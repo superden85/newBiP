@@ -1,7 +1,8 @@
 import os
 import torch
 from torch.utils.data import DataLoader, Dataset
-from torchvision import datasets, transforms
+from torchvision import transforms
+from torchvision.datasets import EuroSAT
 
 class EuroSAT:
     """
@@ -24,14 +25,16 @@ class EuroSAT:
         self.tr_test = transforms.Compose(self.tr_test)
 
     def data_loaders(self, **kwargs):
-        trainset = datasets.ImageFolder(
-            root=os.path.join(self.args.data_dir, "EuroSAT", "train"),
+        trainset = EuroSAT(
+            root=os.path.join(self.args.data_dir, "eurosat"),
             transform=self.tr_train,
+            download=True if self.args.download else False,
         )
 
-        valset = datasets.ImageFolder(
-            root=os.path.join(self.args.data_dir, "EuroSAT", "val"),
+        valset = EuroSAT(
+            root=os.path.join(self.args.data_dir, "eurosat"),
             transform=self.tr_train,
+            download=True if self.args.download else False,
         )
 
         train_loader = DataLoader(
@@ -48,9 +51,10 @@ class EuroSAT:
             **kwargs
         )
 
-        testset = datasets.ImageFolder(
-            root=os.path.join(self.args.data_dir, "EuroSAT", "test"),
+        testset = EuroSAT(
+            root=os.path.join(self.args.data_dir, "eurosat"),
             transform=self.tr_test,
+            download=True if self.args.download else False,
         )
         test_loader = DataLoader(
             testset, batch_size=self.args.test_batch_size, shuffle=False, **kwargs
