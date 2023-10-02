@@ -12,6 +12,6 @@ from datasets.caltech101 import Caltech101
 from datasets.emnist import EMNIST
 from datasets.eurosat import EuroSAT
 from datasets.fer2013 import FER2013
-from datasets.fgvca import FGVC_Aircraft
+from datasets.fgvca import FGVCAircraft
 
 __all__ = ["CIFAR10", "CIFAR100", "ImageNet", "ImageNetOrigin", "TinyImageNet", "ImageNetH5"]
