@@ -29,14 +29,14 @@ class FER2013:
         trainset = datasets.FER2013(
             root=os.path.join(self.args.data_dir, "FER2013"),
             split='train',
-            download=True,
+            #download=True,
             transform=self.tr_train,
         )
 
         testset = datasets.FER2013(
             root=os.path.join(self.args.data_dir, "FER2013"),
             split='test',
-            download=True,
+            #download=True,
             transform=self.tr_test,
         )
 
