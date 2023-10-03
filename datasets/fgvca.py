@@ -13,24 +13,12 @@ class FGVCAircraft:
 
         self.norm_layer = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 
-        self.tr_train = [transforms.Resize((256, 256))]
-        self.tr_test = [transforms.Resize((256, 256))]
+        self.tr_train = [transforms.Resize((224, 224)), transforms.ToTensor()]
+        self.tr_test = [transforms.Resize((224, 224)), transforms.ToTensor()]
 
         if normalize:
             self.tr_train.append(self.norm_layer)
             self.tr_test.append(self.norm_layer)
-
-        self.tr_train.extend([
-            transforms.RandomHorizontalFlip(),
-            transforms.RandomRotation(10),
-            transforms.RandomCrop(224),
-            transforms.ToTensor(),
-        ])
-
-        self.tr_test.extend([
-            transforms.CenterCrop(224),
-            transforms.ToTensor(),
-        ])
 
         self.tr_train = transforms.Compose(self.tr_train)
         self.tr_test = transforms.Compose(self.tr_test)
