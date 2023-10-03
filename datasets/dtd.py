@@ -12,8 +12,8 @@ class DTD:
         self.args = args
 
         # Define data transformations
-        self.tr_train = [transforms.Resize(224), transforms.ToTensor()]
-        self.tr_test = [transforms.Resize(224), transforms.ToTensor()]
+        self.tr_train = [transforms.Resize((224, 224)), transforms.ToTensor()]
+        self.tr_test = [transforms.Resize((224, 224)), transforms.ToTensor()]
 
         if normalize:
             # You can add normalization if needed
