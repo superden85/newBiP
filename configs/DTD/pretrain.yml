@@ -1,0 +1,31 @@
+# DTD (Describable Textures Dataset) Configuration
+
+exp_name: "DTD_experiment"  # Experiment name
+result_dir: "./trained_models"  # Directory to save trained models
+exp_mode: "pretrain"  # Experiment mode
+
+# Training Parameters
+trainer: "base"
+epochs: 200 # Specify the number of training epochs
+optimizer: "sgd"  # Optimizer (e.g., "sgd", "adam", etc.)
+lr: 0.01  # Learning rate
+lr_schedule: "cosine"  # Learning rate schedule
+wd: 0.0005  # Weight decay
+momentum: 0.9  # Momentum
+warmup_epochs: 0
+warmup_lr: 0.1
+
+# Evaluation Parameters
+val_method: base
+
+# Dataset Parameters
+dataset: DTD  # Specify the dataset name
+batch_size: 64  # Batch size for training
+test_batch_size: 64  # Batch size for testing
+num_classes: 47  # Number of classes in the DTD dataset
+image_dim: 224  # Input image dimensions (e.g., 224x224 for ResNet-like models)
+data_dir: "./data"  # Root directory for dataset
+
+# Miscellaneous Parameters
+seed: 1234  # Random seed for reproducibility
+print_freq: 100  # Print frequency during training
