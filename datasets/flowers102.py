@@ -33,7 +33,7 @@ class Flowers102:
     def data_loaders(self, **kwargs):
         trainset = datasets.Flowers102(
             root=os.path.join(self.args.data_dir, "Flowers102"),
-            split='train',
+            split='test',
             transform=self.tr_train,
             download=True,
         )
@@ -47,7 +47,7 @@ class Flowers102:
 
         testset = datasets.Flowers102(
             root=os.path.join(self.args.data_dir, "Flowers102"),
-            split='test',
+            split='train',
             transform=self.tr_test,
             download=True,
         )

@@ -445,7 +445,7 @@ class Flowers102_Model(nn.Module):
 
         # Fully Connected Layers
         self.fc1 = linear_layer(256 * 7 * 7, 1024)  # Reduced FC layer
-        self.fc2 = linear_layer(1024, 102)  # Output dimension for Caltech-101
+        self.fc2 = linear_layer(1024, 102)
 
         self.num_classes = kwargs['num_classes'] if 'num_classes' in kwargs else 102
         self.k = kwargs['k'] if 'k' in kwargs else None
