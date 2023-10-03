@@ -3,6 +3,8 @@
 exp_name: "DTD_experiment"  # Experiment name
 result_dir: "./trained_models"  # Directory to save trained models
 exp_mode: "pretrain"  # Experiment mode
+layer_type: "dense"
+normalize: True
 
 # Training Parameters
 trainer: "base"
