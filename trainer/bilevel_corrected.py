@@ -37,6 +37,8 @@ def train(
     dummy_model.train()
     end = time.time()
 
+    losses_list = []
+
     for i, (train_data_batch, val_data_batch) in enumerate(zip(train_loader, val_loader)):
         train_images, train_targets = train_data_batch[0].to(device), train_data_batch[1].to(device)
         val_images, val_targets = val_data_batch[0].to(device), val_data_batch[1].to(device)
@@ -182,10 +184,12 @@ def train(
             top1.update(acc1[0], train_images.size(0))
             top5.update(acc5[0], train_images.size(0))
 
+            losses_list.append(loss.item())
+
         batch_time.update(time.time() - end)
         end = time.time()
 
         if i % args.print_freq == 0:
             progress.display(i)
     
-    return None, None
+    return losses_list, None
