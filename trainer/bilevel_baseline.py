@@ -101,14 +101,6 @@ def train(
             mask_grad_vec = grad2vec(model.parameters())
 
             implicit_gradient = -args.lr2 * mask_grad_vec * param_grad_vec
-
-            """ if i == 2:
-                pointer = 0
-                for param in model.parameters():
-                    print(param.shape, param.requires_grad)
-                    num_param = param.numel()
-                    print("Mask grad vec and Param grad vec are equal: ", torch.all(mask_grad_vec[pointer: pointer + num_param] == param_grad_vec[pointer: pointer + num_param]))
-                    pointer += num_param """
             
             def append_grad_to_vec(vec, parameters):
 
