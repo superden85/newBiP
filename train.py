@@ -41,7 +41,7 @@ def main():
         parse_configs_file(args)
 
     # sanity checks
-    if not args.trainer == 'bilevel_corrected_mini':
+    if not args.trainer == 'bilevel_mini':
         if args.exp_mode in ["prune", "finetune"] and not args.resume:
             assert args.source_net, "Provide checkpoint to prune/finetune"
 
@@ -102,7 +102,7 @@ def main():
 
     # autograd
     criterion = nn.CrossEntropyLoss()
-    if args.trainer == 'bilevel_corrected_mini':
+    if args.trainer == 'bilevel_mini':
         #take the l2 norm between output and label
         criterion = nn.MSELoss()
     optimizer = get_optimizer(model, args)
